@@ -23,30 +23,29 @@ SOFTWARE. */
 
 package com.github.martincooper.datatable
 
-import scala.util.{ Try, Success }
+import org.scalatest._
 
-/** DataTable class. Handles the immutable storage of data in a Row / Column format. */
-class DataTable(tableName: String, dataColumns: Iterable[GenericColumn]) {
+class DataColumnSpec extends FlatSpec with Matchers {
 
-  def name = tableName
-  def columns = dataColumns.toIndexedSeq
+  "A Data Column" should "be able to be created with a name and default data" in {
+    val newSeq = (0 to 19) map { i => i }
+    val dataColumn = new DataColumn[Int]("TestCol", newSeq)
 
-  /** Returns the data column at the selected index. */
-  def apply(index: Int) = {
-    Try(columns(index)) match {
-      case Success(col) => Some(col)
-      case _ => None
-    }
+    dataColumn.name should be ("TestCol")
+    dataColumn.data.length should be (20)
+    dataColumn.data(11) should be (11)
   }
 
-  /** Returns the column with the specified name. */
-  def apply(columnName: String) = columns.find(_.name == columnName)
+  "A Generic Column" should "be able to be cast beck to its original type" in {
+    val newSeq = (0 to 19) map { i => i }
+    val dataColumn = new DataColumn[Int]("TestCol", newSeq)
 
-  /** Outputs a more detailed toString implementation. */
-  override def toString = {
-    val tableDetails = "DataTable:" + name + "[Rows:" + columns.head.data.length + "]"
-    val colDetails = columns.map(col => "[" + col.toString + "]").mkString(" ")
+    val genericColumn = dataColumn.asInstanceOf[GenericColumn]
 
-    tableDetails + colDetails
+    genericColumn.name should be ("TestCol")
+    genericColumn.data.length should be (20)
+
+    val typedCol = genericColumn.as[Int]
+    typedCol.data(10) should be (10)
   }
 }

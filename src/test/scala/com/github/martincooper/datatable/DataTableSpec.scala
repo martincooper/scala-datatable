@@ -23,30 +23,34 @@ SOFTWARE. */
 
 package com.github.martincooper.datatable
 
-import scala.util.{ Try, Success }
+import org.scalatest.{Matchers, FlatSpec}
 
-/** DataTable class. Handles the immutable storage of data in a Row / Column format. */
-class DataTable(tableName: String, dataColumns: Iterable[GenericColumn]) {
+class DataTableSpec extends FlatSpec with Matchers {
 
-  def name = tableName
-  def columns = dataColumns.toIndexedSeq
+  "A new DataTable" should "be created with a name and no data" in {
+    val dataTable = new DataTable("TestTable", Array().toIndexedSeq)
 
-  /** Returns the data column at the selected index. */
-  def apply(index: Int) = {
-    Try(columns(index)) match {
-      case Success(col) => Some(col)
-      case _ => None
-    }
+    dataTable.name should be ("TestTable")
+    dataTable.columns.length should be (0)
   }
 
-  /** Returns the column with the specified name. */
-  def apply(columnName: String) = columns.find(_.name == columnName)
+  "A new DataTable" should "be created with a name and default columns" in {
 
-  /** Outputs a more detailed toString implementation. */
-  override def toString = {
-    val tableDetails = "DataTable:" + name + "[Rows:" + columns.head.data.length + "]"
-    val colDetails = columns.map(col => "[" + col.toString + "]").mkString(" ")
+    val seqOne = (0 to 19) map { i => i }
+    val dataColOne = new DataColumn[Int]("ColOne", seqOne)
 
-    tableDetails + colDetails
+    val seqTwo = (0 to 19) map { i => "Value : " + i }
+    val dataColTwo = new DataColumn[String]("ColTwo", seqTwo)
+
+    val dataTable = new DataTable("TestTable", Array(dataColOne, dataColTwo))
+
+    dataTable.name should be ("TestTable")
+    dataTable.columns.length should be (2)
+
+    dataTable.columns(0).data(4) shouldBe a [Integer]
+    dataTable.columns(0).data(4) should be (4)
+
+    dataTable.columns(1).data(4) shouldBe a [String]
+    dataTable.columns(1).data(4) should be ("Value : 4")
   }
 }

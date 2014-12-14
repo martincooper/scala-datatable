@@ -23,30 +23,31 @@ SOFTWARE. */
 
 package com.github.martincooper.datatable
 
-import scala.util.{ Try, Success }
+/** Generic Column Trait.
+  * Allows a collection of columns storing data of distinct types to be stored
+  * in a generic collection. */
+trait GenericColumn {
+  def name: String
+  def data: IndexedSeq[Any]
+}
 
-/** DataTable class. Handles the immutable storage of data in a Row / Column format. */
-class DataTable(tableName: String, dataColumns: Iterable[GenericColumn]) {
+/** Strongly typed data column. */
+class DataColumn[T](columnName: String, columnData: Iterable[T]) extends GenericColumn {
 
-  def name = tableName
-  def columns = dataColumns.toIndexedSeq
+  def name = columnName
+  def data = Vector.empty ++ columnData
+  override def toString = "Col : " + name
+}
 
-  /** Returns the data column at the selected index. */
-  def apply(index: Int) = {
-    Try(columns(index)) match {
-      case Success(col) => Some(col)
-      case _ => None
-    }
+
+
+object GenericColumn {
+
+  implicit class GenericColExt(val col: GenericColumn) extends AnyVal {
+
+    /** Casts the generic column back to the specified type. */
+    def as[T] : DataColumn[T] =
+      col.asInstanceOf[DataColumn[T]]
   }
 
-  /** Returns the column with the specified name. */
-  def apply(columnName: String) = columns.find(_.name == columnName)
-
-  /** Outputs a more detailed toString implementation. */
-  override def toString = {
-    val tableDetails = "DataTable:" + name + "[Rows:" + columns.head.data.length + "]"
-    val colDetails = columns.map(col => "[" + col.toString + "]").mkString(" ")
-
-    tableDetails + colDetails
-  }
 }
