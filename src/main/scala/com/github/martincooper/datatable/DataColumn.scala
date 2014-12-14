@@ -33,13 +33,10 @@ trait GenericColumn {
 
 /** Strongly typed data column. */
 class DataColumn[T](columnName: String, columnData: Iterable[T]) extends GenericColumn {
-
   def name = columnName
   def data = Vector.empty ++ columnData
   override def toString = "Col : " + name
 }
-
-
 
 object GenericColumn {
 
@@ -49,5 +46,4 @@ object GenericColumn {
     def as[T] : DataColumn[T] =
       col.asInstanceOf[DataColumn[T]]
   }
-
 }
