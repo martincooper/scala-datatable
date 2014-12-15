@@ -53,9 +53,10 @@ class DataTableSpec extends FlatSpec with Matchers {
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 20) map { i => "Value : " + i })
 
-    val result = DataTable("TestTable", Array(dataColOne, dataColTwo))
+    val result = DataTable("TestTable", Seq(dataColOne, dataColTwo))
 
     result.isFailure should be (true)
+    result.failed.get should be (DataTableException("Columns have uneven row count."))
   }
 
   "A new DataTable" should "validate duplicate column names" in {
@@ -63,8 +64,43 @@ class DataTableSpec extends FlatSpec with Matchers {
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColOne", (0 to 10) map { i => "Value : " + i })
 
-    val result = DataTable("TestTable", Array(dataColOne, dataColTwo))
+    val result = DataTable("TestTable", Seq(dataColOne, dataColTwo))
 
     result.isFailure should be (true)
+    result.failed.get should be (DataTableException("Columns contain duplicate names."))
+  }
+
+  "A DataTable" should "add new column" in {
+
+    val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
+    val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })
+
+    val originalTable = DataTable("TestTable", Seq(dataColOne, dataColTwo)).get
+
+    val dataColThree = new DataColumn[Boolean]("ColThree", (0 to 10) map (i => if (i > 5) true else false))
+
+    val newTable = DataTable.addColumn(originalTable, dataColThree)
+
+    newTable.isSuccess should be (true)
+    newTable.get.columns.length should be (3)
+
+    originalTable.columns.length should be (2)
+  }
+
+  "A DataTable" should "remove new column" in {
+
+    val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
+    val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })
+    val dataColThree = new DataColumn[Boolean]("ColThree", (0 to 10) map (i => if (i > 5) true else false))
+
+    val originalTable = DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
+
+    val newTable = DataTable.removeColumn(originalTable, "ColTwo")
+
+    newTable.isSuccess should be (true)
+    newTable.get.columns.length should be (2)
+    newTable.get.columns.map(_.name) should be (Seq("ColOne","ColThree"))
+
+    originalTable.columns.length should be (3)
   }
 }
