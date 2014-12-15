@@ -21,21 +21,22 @@ import org.scalatest.{Matchers, FlatSpec}
 class DataTableSpec extends FlatSpec with Matchers {
 
   "A new DataTable" should "be created with a name and no data" in {
-    val dataTable = new DataTable("TestTable", Array().toIndexedSeq)
+    val dataTable = DataTable("TestTable", Array().toIndexedSeq)
 
-    dataTable.name should be ("TestTable")
-    dataTable.columns.length should be (0)
+    dataTable.isSuccess should be (true)
+    dataTable.get.name should be ("TestTable")
+    dataTable.get.columns.length should be (0)
   }
 
   "A new DataTable" should "be created with a name and default columns" in {
 
-    val seqOne = (0 to 19) map { i => i }
-    val dataColOne = new DataColumn[Int]("ColOne", seqOne)
+    val dataColOne = new DataColumn[Int]("ColOne", (0 to 19) map { i => i })
+    val dataColTwo = new DataColumn[String]("ColTwo", (0 to 19) map { i => "Value : " + i })
 
-    val seqTwo = (0 to 19) map { i => "Value : " + i }
-    val dataColTwo = new DataColumn[String]("ColTwo", seqTwo)
+    val result = DataTable("TestTable", Array(dataColOne, dataColTwo))
 
-    val dataTable = new DataTable("TestTable", Array(dataColOne, dataColTwo))
+    result.isSuccess should be (true)
+    val dataTable = result.get
 
     dataTable.name should be ("TestTable")
     dataTable.columns.length should be (2)
@@ -45,5 +46,25 @@ class DataTableSpec extends FlatSpec with Matchers {
 
     dataTable.columns(1).data(4) shouldBe a [String]
     dataTable.columns(1).data(4) should be ("Value : 4")
+  }
+
+  "A new DataTable" should "validate different column lengths" in {
+
+    val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
+    val dataColTwo = new DataColumn[String]("ColTwo", (0 to 20) map { i => "Value : " + i })
+
+    val result = DataTable("TestTable", Array(dataColOne, dataColTwo))
+
+    result.isFailure should be (true)
+  }
+
+  "A new DataTable" should "validate duplicate column names" in {
+
+    val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
+    val dataColTwo = new DataColumn[String]("ColOne", (0 to 10) map { i => "Value : " + i })
+
+    val result = DataTable("TestTable", Array(dataColOne, dataColTwo))
+
+    result.isFailure should be (true)
   }
 }
