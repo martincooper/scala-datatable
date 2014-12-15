@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable
 
-import scala.util.{ Try, Success }
+import scala.util.{Failure, Try, Success}
 
 /** DataTable class. Handles the immutable storage of data in a Row / Column format. */
 class DataTable(tableName: String, dataColumns: Iterable[GenericColumn]) {
@@ -42,4 +42,50 @@ class DataTable(tableName: String, dataColumns: Iterable[GenericColumn]) {
 
     tableDetails + colDetails
   }
+}
+
+object DataTable {
+
+  /** Validates columns and builds a new DataTable. */
+  def apply(tableName: String, columns: Iterable[GenericColumn]): Try[DataTable] = {
+
+    validateDataColumns(columns) match {
+      case Failure(ex) => new Failure(ex)
+      case Success(_) => Success(new DataTable(tableName, columns))
+    }
+  }
+
+  def validateDataColumns(columns: Iterable[GenericColumn]): Try[Unit] = {
+    val colSeq = columns.toSeq
+
+    /** Check all columns have the same number of rows. */
+    if (colSeq.groupBy(_.data.length).toSeq.length > 1)
+      return Failure(DataTableException("Columns have uneven row count."))
+
+    /** Check all columns have distinct column names. */
+    if (colSeq.groupBy(_.name).toSeq.length != colSeq.length)
+      return Failure(DataTableException("Columns contain duplicate names."))
+
+    Success(Unit)
+  }
+
+  /** Creates a new table with the additional column. */
+  def addColumn(table: DataTable, newColumn: GenericColumn): Try[DataTable] = {
+    val newColSet = table.columns :+ newColumn
+
+    validateDataColumns(newColSet) match {
+      case Failure(ex) => new Failure(ex)
+      case Success(_) => Success(new DataTable(table.name, newColSet))
+    }
+  }
+
+  /** Creates a new table with the column removed. */
+  def removeColumn(table: DataTable, columnName: String): Try[DataTable] = {
+
+    table.columns.exists(_.name == columnName) match {
+      case true => Success(new DataTable(table.name, table.columns.filterNot(_.name == columnName)))
+      case _ => Failure(DataTableException("Column " + columnName + " not found."))
+    }
+  }
+
 }
