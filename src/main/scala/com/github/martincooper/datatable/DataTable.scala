@@ -53,6 +53,11 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
 object DataTable {
 
+  /** Builds an empty DataTable. */
+  def apply(tableName: String): Try[DataTable] = {
+    Success(new DataTable(tableName, Array().toIndexedSeq))
+  }
+
   /** Validates columns and builds a new DataTable. */
   def apply(tableName: String, columns: Iterable[GenericColumn]): Try[DataTable] = {
 

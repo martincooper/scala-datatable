@@ -20,7 +20,7 @@ import org.scalatest.{ Matchers, FlatSpec }
 
 class DataTableSpec extends FlatSpec with Matchers {
 
-  "A new DataTable" should "be created with a name and no data" in {
+  "A new DataTable" should "be creatable with a name and no columns" in {
     val dataTable = DataTable("TestTable", Array().toIndexedSeq)
 
     dataTable.isSuccess should be(true)
