@@ -22,7 +22,7 @@ import scala.util.{ Failure, Try, Success }
 class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]) {
 
   def name = tableName
-  def columns = dataColumns.toIndexedSeq
+  def columns = dataColumns.toVector
 
   def rowCount() = {
     columns.length == 0 match {
