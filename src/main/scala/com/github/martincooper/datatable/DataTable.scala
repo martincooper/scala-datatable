@@ -19,10 +19,17 @@ package com.github.martincooper.datatable
 import scala.util.{Failure, Try, Success}
 
 /** DataTable class. Handles the immutable storage of data in a Row / Column format. */
-class DataTable(tableName: String, dataColumns: Iterable[GenericColumn]) {
+class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]) {
 
   def name = tableName
   def columns = dataColumns.toIndexedSeq
+
+  def rowCount() = {
+    columns.length == 0 match {
+      case false => columns.head.data.length
+      case _ => 0
+    }
+  }
 
   /** Returns the data column at the selected index. */
   def apply(index: Int) = {

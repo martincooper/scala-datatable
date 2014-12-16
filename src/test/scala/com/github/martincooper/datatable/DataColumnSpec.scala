@@ -29,7 +29,7 @@ class DataColumnSpec extends FlatSpec with Matchers {
     dataColumn.data(11) should be (11)
   }
 
-  "A Generic Column" should "be able to be cast beck to its original type" in {
+  "A Generic Column" should "be able to be cast back to its original type" in {
     val newSeq = (0 to 19) map { i => i }
     val dataColumn = new DataColumn[Int]("TestCol", newSeq)
 

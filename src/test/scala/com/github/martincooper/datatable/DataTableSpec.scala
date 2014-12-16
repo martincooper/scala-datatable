@@ -48,6 +48,25 @@ class DataTableSpec extends FlatSpec with Matchers {
     dataTable.columns(1).data(4) should be ("Value : 4")
   }
 
+  "A new DataTable" should " return correct row count when valid data." in {
+
+    val dataColOne = new DataColumn[Int]("ColOne", (0 to 19) map { i => i })
+    val dataColTwo = new DataColumn[String]("ColTwo", (0 to 19) map { i => "Value : " + i })
+
+    val result = DataTable("TestTable", Array(dataColOne, dataColTwo))
+
+    result.isSuccess should be (true)
+    result.get.rowCount() should be (20)
+  }
+
+  "A new DataTable" should " return correct row count when no columns." in {
+
+    val result = DataTable("TestTable", List[GenericColumn]())
+
+    result.isSuccess should be (true)
+    result.get.rowCount() should be (0)
+  }
+
   "A new DataTable" should "validate different column lengths" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
