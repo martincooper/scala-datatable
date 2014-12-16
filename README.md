@@ -1,14 +1,20 @@
-scala-datatable
-===============
+#scala-datatable
 
-DataTable style implementation in Scala
+Scala DataTable is an immutable table implementation allowing the access of data in a row / column format where the column data types may not be known at design time. The data is stored as a collection of immutable, strongly typed lists. Any modifications to the table or its data will always return a new table, leaving the existing one without change.
+
+
+#build.sbt
+
+```scala
+libraryDependencies += "com.github.martincooper" %% "scala-datatable" % "0.1"
+```
+
+
+## Example
+
+
+
 
 ## License
 
-Copyright 2014 Martin Cooper.
-
-Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
