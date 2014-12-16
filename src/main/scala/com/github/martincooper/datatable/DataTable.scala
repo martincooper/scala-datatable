@@ -31,6 +31,9 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
     }
   }
 
+  /** Returns the column with the specified name. */
+  def apply(columnName: String) = columns.find(_.name == columnName)
+
   /** Returns the data column at the selected index. */
   def apply(index: Int) = {
     Try(columns(index)) match {
@@ -38,9 +41,6 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
       case _ => None
     }
   }
-
-  /** Returns the column with the specified name. */
-  def apply(columnName: String) = columns.find(_.name == columnName)
 
   /** Outputs a more detailed toString implementation. */
   override def toString = {
@@ -108,6 +108,5 @@ object DataTable {
         case _ => Failure(DataTableException("Column not found."))
       }
     }
-
   }
 }

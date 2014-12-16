@@ -21,41 +21,41 @@ import org.scalatest.{ Matchers, FlatSpec }
 class DataSetSpec extends FlatSpec with Matchers {
 
   "A new DataSet" should "be creatable with a name and no tables" in {
-    val dataSet = DataSet("TestDataSet", Array().toIndexedSeq)
+    val dataSet = DataSet("TestDataSet", Seq())
 
     dataSet.isSuccess should be(true)
-    dataSet.get.Name should be("TestDataSet")
-    dataSet.get.Tables.length should be(0)
+    dataSet.get.name should be("TestDataSet")
+    dataSet.get.tables.length should be(0)
   }
 
   "A new DataSet" should "be creatable with a name and tables" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
-    val dataSet = DataSet("TestDataSet", Array(tableOne, tableTwo))
+    val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo))
 
     dataSet.isSuccess should be(true)
-    dataSet.get.Name should be("TestDataSet")
-    dataSet.get.Tables.length should be(2)
+    dataSet.get.name should be("TestDataSet")
+    dataSet.get.tables.length should be(2)
   }
 
   "A DataSet" should "allow a table to be added" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
-    val dataSet = DataSet("TestDataSet", Array(tableOne, tableTwo)).get
+    val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo)).get
 
     val tableThree = DataTable("TableThree").get
 
     val newDataSet = dataSet.addTable(tableThree)
 
     newDataSet.isSuccess should be(true)
-    newDataSet.get.Tables.length should be(3)
-    newDataSet.get.Tables.map(_.name) should be(Seq("TableOne", "TableTwo", "TableThree"))
+    newDataSet.get.tables.length should be(3)
+    newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "TableTwo", "TableThree"))
   }
 
   "A DataSet" should "disallow a table with a duplicate name to be added" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
-    val dataSet = DataSet("TestDataSet", Array(tableOne, tableTwo)).get
+    val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo)).get
 
     val tableThree = DataTable("TableOne").get
 
@@ -70,20 +70,20 @@ class DataSetSpec extends FlatSpec with Matchers {
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get
 
-    val dataSet = DataSet("TestDataSet", Array(tableOne, tableTwo, tableThree)).get
+    val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo, tableThree)).get
 
     val newDataSet = dataSet.removeTable("TableTwo")
 
     newDataSet.isSuccess should be(true)
-    newDataSet.get.Tables.length should be(2)
-    newDataSet.get.Tables.map(_.name) should be(Seq("TableOne", "TableThree"))
+    newDataSet.get.tables.length should be(2)
+    newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "TableThree"))
   }
 
   "A DataSet" should "disallow a table to be removed by name when its name is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
 
-    val dataSet = DataSet("TestDataSet", Array(tableOne, tableTwo)).get
+    val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo)).get
 
     val newDataSet = dataSet.removeTable("TableOneHundred")
 
@@ -96,20 +96,20 @@ class DataSetSpec extends FlatSpec with Matchers {
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get
 
-    val dataSet = DataSet("TestDataSet", Array(tableOne, tableTwo, tableThree)).get
+    val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo, tableThree)).get
 
     val newDataSet = dataSet.removeTable(tableTwo)
 
     newDataSet.isSuccess should be(true)
-    newDataSet.get.Tables.length should be(2)
-    newDataSet.get.Tables should be(Seq(tableOne, tableThree))
+    newDataSet.get.tables.length should be(2)
+    newDataSet.get.tables should be(Seq(tableOne, tableThree))
   }
 
   "A DataSet" should "disallow a table to be removed by reference when its is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
 
-    val dataSet = DataSet("TestDataSet", Array(tableOne, tableTwo)).get
+    val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo)).get
 
     val newTable = DataTable("TableThree").get
 
@@ -118,5 +118,4 @@ class DataSetSpec extends FlatSpec with Matchers {
     newDataSet.isSuccess should be(false)
     newDataSet.failed.get should be(DataTableException("Table not found."))
   }
-
 }

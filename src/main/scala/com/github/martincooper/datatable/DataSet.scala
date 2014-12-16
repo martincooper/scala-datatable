@@ -19,7 +19,7 @@ package com.github.martincooper.datatable
 import scala.util.{Success, Failure, Try}
 
 /** DataSet stores a collection of DataTables */
-case class DataSet private (Name: String, Tables: Vector[DataTable]) {
+case class DataSet private (name: String, tables: Vector[DataTable]) {
 }
 
 /** DataSet companion object. */
@@ -48,19 +48,19 @@ object DataSet {
 
     /** Creates a new DataSet with the additional table. */
     def addTable(newTable: DataTable): Try[DataSet] = {
-      val newTableSet = dataSet.Tables :+ newTable
+      val newTableSet = dataSet.tables :+ newTable
 
       validateDataTables(newTableSet) match {
         case Failure(ex) => new Failure(ex)
-        case Success(_) => Success(new DataSet(dataSet.Name, newTableSet))
+        case Success(_) => Success(new DataSet(dataSet.name, newTableSet))
       }
     }
 
     /** Creates a new DataSet with the specified table removed. */
     def removeTable(tableName: String): Try[DataSet] = {
 
-      dataSet.Tables.exists(_.name == tableName) match {
-        case true => Success(new DataSet(dataSet.Name, dataSet.Tables.filterNot(_.name == tableName)))
+      dataSet.tables.exists(_.name == tableName) match {
+        case true => Success(new DataSet(dataSet.name, dataSet.tables.filterNot(_.name == tableName)))
         case _ => Failure(DataTableException("Table " + tableName + " not found."))
       }
     }
@@ -68,11 +68,10 @@ object DataSet {
     /** Creates a new DataSet with the specified table removed. */
     def removeTable(table: DataTable): Try[DataSet] = {
 
-      dataSet.Tables.exists(_ eq table) match {
-        case true => Success(new DataSet(dataSet.Name, dataSet.Tables.filterNot(_ eq table)))
+      dataSet.tables.exists(_ eq table) match {
+        case true => Success(new DataSet(dataSet.name, dataSet.tables.filterNot(_ eq table)))
         case _ => Failure(DataTableException("Table not found."))
       }
     }
   }
-
 }
