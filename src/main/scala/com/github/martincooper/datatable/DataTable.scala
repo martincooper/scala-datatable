@@ -81,23 +81,33 @@ object DataTable {
     Success(Unit)
   }
 
-  /** Creates a new table with the additional column. */
-  def addColumn(table: DataTable, newColumn: GenericColumn): Try[DataTable] = {
-    val newColSet = table.columns :+ newColumn
+  implicit class DataTableExt(val table: DataTable) extends AnyVal {
 
-    validateDataColumns(newColSet) match {
-      case Failure(ex) => new Failure(ex)
-      case Success(_) => Success(new DataTable(table.name, newColSet))
+    /** Creates a new table with the additional column. */
+    def addColumn(newColumn: GenericColumn): Try[DataTable] = {
+      val newColSet = table.columns :+ newColumn
+
+      validateDataColumns(newColSet) match {
+        case Failure(ex) => new Failure(ex)
+        case Success(_) => Success(new DataTable(table.name, newColSet))
+      }
     }
-  }
 
-  /** Creates a new table with the column removed. */
-  def removeColumn(table: DataTable, columnName: String): Try[DataTable] = {
-
-    table.columns.exists(_.name == columnName) match {
-      case true => Success(new DataTable(table.name, table.columns.filterNot(_.name == columnName)))
-      case _ => Failure(DataTableException("Column " + columnName + " not found."))
+    /** Creates a new table with the column removed. */
+    def removeColumn(columnName: String): Try[DataTable] = {
+      table.columns.exists(_.name == columnName) match {
+        case true => Success(new DataTable(table.name, table.columns.filterNot(_.name == columnName)))
+        case _ => Failure(DataTableException("Column " + columnName + " not found."))
+      }
     }
-  }
 
+    /** Creates a new table with the column removed. */
+    def removeColumn(column: GenericColumn): Try[DataTable] = {
+      table.columns.exists(_ eq column) match {
+        case true => Success(new DataTable(table.name, table.columns.filterNot(_ eq column)))
+        case _ => Failure(DataTableException("Column not found."))
+      }
+    }
+
+  }
 }
