@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Class-Path: ivy-2.3.0.jar sbt-scalariform-1.3.0.jar incremental-compil
+ er-0.13.5.jar logic-0.13.5.jar jansi.jar logging-0.13.5.jar test-agen
+ t-0.13.5.jar task-system-0.13.5.jar cache-0.13.5.jar compiler-ivy-int
+ egration-0.13.5.jar scala-library.jar ivy-0.13.5.jar completion-0.13.
+ 5.jar apply-macro-0.13.5.jar actions-0.13.5.jar command-0.13.5.jar sc
+ ala-compiler.jar scala-reflect.jar jsch-0.1.46.jar scala-reflect-2.10
+ .4.jar main-settings-0.13.5.jar scalariform_2.10-0.1.4.jar persist-0.
+ 13.5.jar launcher-interface-0.13.5.jar jline.jar httpcore-4.2.5.jar i
+ nterface-0.13.5.jar sbt-sonatype-0.2.1.jar compile-0.13.5.jar run-0.1
+ 3.5.jar main-0.13.5.jar io-0.13.5.jar test-interface-1.0.jar httpclie
+ nt-4.2.6.jar process-0.13.5.jar jline-2.11.jar collections-0.13.5.jar
+  compiler-integration-0.13.5.jar classpath-0.13.5.jar relation-0.13.5
+ .jar tracking-0.13.5.jar cross-0.13.5.jar commons-logging-1.1.1.jar c
+ ommons-codec-1.6.jar api-0.13.5.jar control-0.13.5.jar tasks-0.13.5.j
+ ar sbinary_2.10-0.4.2.jar scala-library-2.10.0.jar testing-0.13.5.jar
+  sbt-0.13.5.jar classfile-0.13.5.jar
+Main-Class: 
+

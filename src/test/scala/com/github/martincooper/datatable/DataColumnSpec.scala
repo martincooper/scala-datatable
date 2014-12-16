@@ -24,9 +24,9 @@ class DataColumnSpec extends FlatSpec with Matchers {
     val newSeq = (0 to 19) map { i => i }
     val dataColumn = new DataColumn[Int]("TestCol", newSeq)
 
-    dataColumn.name should be ("TestCol")
-    dataColumn.data.length should be (20)
-    dataColumn.data(11) should be (11)
+    dataColumn.name should be("TestCol")
+    dataColumn.data.length should be(20)
+    dataColumn.data(11) should be(11)
   }
 
   "A Generic Column" should "be able to be cast back to its original type" in {
@@ -35,10 +35,10 @@ class DataColumnSpec extends FlatSpec with Matchers {
 
     val genericColumn = dataColumn.asInstanceOf[GenericColumn]
 
-    genericColumn.name should be ("TestCol")
-    genericColumn.data.length should be (20)
+    genericColumn.name should be("TestCol")
+    genericColumn.data.length should be(20)
 
     val typedCol = genericColumn.as[Int]
-    typedCol.data(10) should be (10)
+    typedCol.data(10) should be(10)
   }
 }

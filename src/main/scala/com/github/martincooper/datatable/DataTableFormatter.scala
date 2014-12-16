@@ -46,7 +46,7 @@ object DataTableFormatter {
 
   private def printHeader(colDetails: Seq[ColumnDetails]) = {
     /** Calculate total length required for the header row. */
-    val totalLength = colDetails.map(_.Width).sum + (colDetails.length  * 2)
+    val totalLength = colDetails.map(_.Width).sum + (colDetails.length * 2)
     val headerFooter = "".padTo(totalLength, "-")
 
     println()

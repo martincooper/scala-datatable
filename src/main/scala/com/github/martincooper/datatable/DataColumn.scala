@@ -18,15 +18,17 @@ package com.github.martincooper.datatable
 
 import scala.reflect.runtime.universe._
 
-/** Generic Column Trait.
-  * Allows a collection of columns storing data of distinct types to be stored in a generic collection. */
+/**
+ * Generic Column Trait.
+ * Allows a collection of columns storing data of distinct types to be stored in a generic collection.
+ */
 trait GenericColumn {
   def name: String
   def data: IndexedSeq[Any]
 }
 
 /** Strongly typed data column. */
-class DataColumn[T : TypeTag](columnName: String, columnData: Iterable[T]) extends GenericColumn {
+class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extends GenericColumn {
   def name = columnName
   def data = Vector.empty ++ columnData
   override def toString = "Col : " + name
@@ -37,7 +39,7 @@ object GenericColumn {
   implicit class GenericColExt(val col: GenericColumn) extends AnyVal {
 
     /** Casts the generic column back to the specified type. */
-    def as[T] : DataColumn[T] =
+    def as[T]: DataColumn[T] =
       col.asInstanceOf[DataColumn[T]]
   }
 }

@@ -5,7 +5,7 @@ import scala.reflect.runtime.universe._
 
 object DataColumnBuilder {
 
-  def createColumnOfType[T : TypeTag](args: AnyRef*)(ctor: Int = 0): DataColumn[T] = {
+  def createColumnOfType[T: TypeTag](args: AnyRef*)(ctor: Int = 0): DataColumn[T] = {
     val tt = typeTag[DataColumn[T]]
 
     currentMirror.reflectClass(tt.tpe.typeSymbol.asClass).reflectConstructor(
@@ -15,7 +15,7 @@ object DataColumnBuilder {
     )(args: _*).asInstanceOf[DataColumn[T]]
   }
 
-  def createInstance[T : TypeTag](args: AnyRef*)(ctor: Int = 0): T = {
+  def createInstance[T: TypeTag](args: AnyRef*)(ctor: Int = 0): T = {
     val tt = typeTag[T]
 
     currentMirror.reflectClass(tt.tpe.typeSymbol.asClass).reflectConstructor(

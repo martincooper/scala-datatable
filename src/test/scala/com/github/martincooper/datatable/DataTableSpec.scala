@@ -16,16 +16,16 @@
 
 package com.github.martincooper.datatable
 
-import org.scalatest.{Matchers, FlatSpec}
+import org.scalatest.{ Matchers, FlatSpec }
 
 class DataTableSpec extends FlatSpec with Matchers {
 
   "A new DataTable" should "be created with a name and no data" in {
     val dataTable = DataTable("TestTable", Array().toIndexedSeq)
 
-    dataTable.isSuccess should be (true)
-    dataTable.get.name should be ("TestTable")
-    dataTable.get.columns.length should be (0)
+    dataTable.isSuccess should be(true)
+    dataTable.get.name should be("TestTable")
+    dataTable.get.columns.length should be(0)
   }
 
   "A new DataTable" should "be created with a name and default columns" in {
@@ -35,17 +35,17 @@ class DataTableSpec extends FlatSpec with Matchers {
 
     val result = DataTable("TestTable", Array(dataColOne, dataColTwo))
 
-    result.isSuccess should be (true)
+    result.isSuccess should be(true)
     val dataTable = result.get
 
-    dataTable.name should be ("TestTable")
-    dataTable.columns.length should be (2)
+    dataTable.name should be("TestTable")
+    dataTable.columns.length should be(2)
 
-    dataTable.columns(0).data(4) shouldBe a [Integer]
-    dataTable.columns(0).data(4) should be (4)
+    dataTable.columns(0).data(4) shouldBe a[Integer]
+    dataTable.columns(0).data(4) should be(4)
 
-    dataTable.columns(1).data(4) shouldBe a [String]
-    dataTable.columns(1).data(4) should be ("Value : 4")
+    dataTable.columns(1).data(4) shouldBe a[String]
+    dataTable.columns(1).data(4) should be("Value : 4")
   }
 
   "A new DataTable" should " return correct row count when valid data." in {
@@ -55,16 +55,16 @@ class DataTableSpec extends FlatSpec with Matchers {
 
     val result = DataTable("TestTable", Array(dataColOne, dataColTwo))
 
-    result.isSuccess should be (true)
-    result.get.rowCount() should be (20)
+    result.isSuccess should be(true)
+    result.get.rowCount() should be(20)
   }
 
   "A new DataTable" should " return correct row count when no columns." in {
 
     val result = DataTable("TestTable", List[GenericColumn]())
 
-    result.isSuccess should be (true)
-    result.get.rowCount() should be (0)
+    result.isSuccess should be(true)
+    result.get.rowCount() should be(0)
   }
 
   "A new DataTable" should "validate different column lengths" in {
@@ -74,8 +74,8 @@ class DataTableSpec extends FlatSpec with Matchers {
 
     val result = DataTable("TestTable", Seq(dataColOne, dataColTwo))
 
-    result.isFailure should be (true)
-    result.failed.get should be (DataTableException("Columns have uneven row count."))
+    result.isFailure should be(true)
+    result.failed.get should be(DataTableException("Columns have uneven row count."))
   }
 
   "A new DataTable" should "validate duplicate column names" in {
@@ -85,8 +85,8 @@ class DataTableSpec extends FlatSpec with Matchers {
 
     val result = DataTable("TestTable", Seq(dataColOne, dataColTwo))
 
-    result.isFailure should be (true)
-    result.failed.get should be (DataTableException("Columns contain duplicate names."))
+    result.isFailure should be(true)
+    result.failed.get should be(DataTableException("Columns contain duplicate names."))
   }
 
   "A DataTable" should "add new column" in {
@@ -100,10 +100,10 @@ class DataTableSpec extends FlatSpec with Matchers {
 
     val newTable = DataTable.addColumn(originalTable, dataColThree)
 
-    newTable.isSuccess should be (true)
-    newTable.get.columns.length should be (3)
+    newTable.isSuccess should be(true)
+    newTable.get.columns.length should be(3)
 
-    originalTable.columns.length should be (2)
+    originalTable.columns.length should be(2)
   }
 
   "A DataTable" should "remove new column" in {
@@ -116,10 +116,10 @@ class DataTableSpec extends FlatSpec with Matchers {
 
     val newTable = DataTable.removeColumn(originalTable, "ColTwo")
 
-    newTable.isSuccess should be (true)
-    newTable.get.columns.length should be (2)
-    newTable.get.columns.map(_.name) should be (Seq("ColOne","ColThree"))
+    newTable.isSuccess should be(true)
+    newTable.get.columns.length should be(2)
+    newTable.get.columns.map(_.name) should be(Seq("ColOne", "ColThree"))
 
-    originalTable.columns.length should be (3)
+    originalTable.columns.length should be(3)
   }
 }

@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable
 
-import scala.util.{Failure, Try, Success}
+import scala.util.{ Failure, Try, Success }
 
 /** DataTable class. Handles the immutable storage of data in a Row / Column format. */
 class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]) {
