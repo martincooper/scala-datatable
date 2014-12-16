@@ -21,41 +21,47 @@ object DataTableFormatter {
 
   private case class ColumnDetails(Col: GenericColumn, Width: Int)
 
-  def prettyPrint(table: DataTable) = {
+  private val lineSeparator = System.getProperty("line.separator")
+
+  def prettyPrint(table: DataTable): String = {
+
+    val builder = new StringBuilder
 
     /** Calculate column details, default widths for each. */
     val colDetails = table.columns.map(column => ColumnDetails(column, colWidth(column)))
 
-    printHeader(colDetails)
-    printRows(table, colDetails)
+    printHeader(builder, colDetails)
+    printRows(builder, table, colDetails)
+
+    builder.mkString
   }
 
-  private def printRows(table: DataTable, colDetails: Seq[ColumnDetails]) = {
+  private def printRows(builder: StringBuilder, table: DataTable, colDetails: Seq[ColumnDetails]) = {
     val rowCount = table.columns.head.data.length
-    (0 to rowCount - 1).foreach(rowIdx => printRow(rowIdx, colDetails))
+    (0 to rowCount - 1).foreach(rowIdx => printRow(builder, rowIdx, colDetails))
   }
 
-  private def printRow(rowIndex: Int, colDetails: Seq[ColumnDetails]) = {
+  private def printRow(builder: StringBuilder, rowIndex: Int, colDetails: Seq[ColumnDetails]) = {
     val formattedValues = colDetails.map(details => {
       val textValue = details.Col.data(rowIndex).toString
       "|" + colDataString(textValue, details.Width)
     })
 
-    printlnExt(formattedValues)
+    writelnExt(builder, formattedValues)
   }
 
-  private def printHeader(colDetails: Seq[ColumnDetails]) = {
+  private def printHeader(builder: StringBuilder, colDetails: Seq[ColumnDetails]) = {
     /** Calculate total length required for the header row. */
     val totalLength = colDetails.map(_.Width).sum + (colDetails.length * 2)
     val headerFooter = "".padTo(totalLength, "-")
 
-    println()
-    printlnExt(headerFooter)
+    writeln(builder)
+    writelnExt(builder, headerFooter)
 
     val formattedHeaders = colDetails.map(col => "|" + colDataString(col.Col.name, col.Width))
 
-    printlnExt(formattedHeaders)
-    printlnExt(headerFooter)
+    writelnExt(builder, formattedHeaders)
+    writelnExt(builder, headerFooter)
   }
 
   /** Returns the value correctly formatted according to the width. */
@@ -73,7 +79,12 @@ object DataTableFormatter {
     values.map(_.toString.length).max
   }
 
-  private def printlnExt(value: Traversable[Any]) = {
-    println(value.mkString)
+  private def writeln(builder: StringBuilder) = {
+    builder ++= lineSeparator
+  }
+
+  private def writelnExt(builder: StringBuilder, value: Traversable[Any]) = {
+    builder ++= value.mkString
+    builder ++= lineSeparator
   }
 }
