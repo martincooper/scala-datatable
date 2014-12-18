@@ -24,30 +24,25 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   def name = tableName
   def columns = dataColumns.toVector
 
+  /** Mappers, name to col and index to col. */
   private val columnNameMapper = columns.map(col => col.name -> col).toMap
   private val columnIndexMapper = columns.zipWithIndex.map { case (col, idx) => idx -> col }.toMap
 
+  /** Gets column by index / name. */
   def col(columnIndex: Int) = columnIndexMapper(columnIndex)
   def col(columnName: String) = columnNameMapper(columnName)
 
+  /** Gets column by index / name as Option in case it doesn't exist. */
   def getCol(columnIndex: Int) = columnIndexMapper.get(columnIndex)
   def getCol(columnName: String) = columnNameMapper.get(columnName)
 
-  def colAs[T](columnIndex: Int): DataColumn[T] = {
-    columnIndexMapper(columnIndex).asInstanceOf[DataColumn[T]]
-  }
+  /** Gets typed column by index / name. */
+  def colAs[T](columnIndex: Int): DataColumn[T] = columnIndexMapper(columnIndex).asInstanceOf[DataColumn[T]]
+  def colAs[T](columnName: String): DataColumn[T] = columnNameMapper(columnName).asInstanceOf[DataColumn[T]]
 
-  def colAs[T](columnName: String): DataColumn[T] = {
-    columnNameMapper(columnName).asInstanceOf[DataColumn[T]]
-  }
-
-  def getColAs[T](columnIndex: Int): Option[DataColumn[T]] = {
-    toTypedCol(getCol(columnIndex))
-  }
-
-  def getColAs[T](columnName: String): Option[DataColumn[T]] = {
-    toTypedCol(getCol(columnName))
-  }
+  /** Gets typed column by index / name as Option in case it doesn't exist or invalid type. */
+  def getColAs[T](columnIndex: Int): Option[DataColumn[T]] = toTypedCol(getCol(columnIndex))
+  def getColAs[T](columnName: String): Option[DataColumn[T]] = toTypedCol(getCol(columnName))
 
   private def toTypedCol[T](column: Option[GenericColumn]): Option[DataColumn[T]] = {
     column match {
