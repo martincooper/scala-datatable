@@ -29,7 +29,7 @@ class DataTableAccessSpec extends FlatSpec with Matchers {
 
     val table = DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
 
-    val column = table("ColTwo")
+    val column = table.getCol("ColTwo")
 
     column.isDefined should be(true)
     column.get.name should be("ColTwo")

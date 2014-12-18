@@ -24,21 +24,42 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   def name = tableName
   def columns = dataColumns.toVector
 
-  def rowCount() = {
-    columns.length == 0 match {
-      case false => columns.head.data.length
-      case _ => 0
+  private val columnNameMapper = columns.map(col => col.name -> col).toMap
+  private val columnIndexMapper = columns.zipWithIndex.map { case (col, idx) => idx -> col }.toMap
+
+  def col(columnIndex: Int) = columnIndexMapper(columnIndex)
+  def col(columnName: String) = columnNameMapper(columnName)
+
+  def getCol(columnIndex: Int) = columnIndexMapper.get(columnIndex)
+  def getCol(columnName: String) = columnNameMapper.get(columnName)
+
+  def colAs[T](columnIndex: Int): DataColumn[T] = {
+    columnIndexMapper(columnIndex).asInstanceOf[DataColumn[T]]
+  }
+
+  def colAs[T](columnName: String): DataColumn[T] = {
+    columnNameMapper(columnName).asInstanceOf[DataColumn[T]]
+  }
+
+  def getColAs[T](columnIndex: Int): Option[DataColumn[T]] = {
+    toTypedCol(getCol(columnIndex))
+  }
+
+  def getColAs[T](columnName: String): Option[DataColumn[T]] = {
+    toTypedCol(getCol(columnName))
+  }
+
+  private def toTypedCol[T](column: Option[GenericColumn]): Option[DataColumn[T]] = {
+    column match {
+      case Some(col) => Try(col.asInstanceOf[DataColumn[T]]).toOption
+      case _ => None
     }
   }
 
-  /** Returns the column with the specified name. */
-  def apply(columnName: String) = columns.find(_.name == columnName)
-
-  /** Returns the data column at the selected index. */
-  def apply(index: Int) = {
-    Try(columns(index)) match {
-      case Success(col) => Some(col)
-      case _ => None
+  def rowCount() = {
+    columns.length match {
+      case 0 => 0
+      case _ => columns.head.data.length
     }
   }
 
