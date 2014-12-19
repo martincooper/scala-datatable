@@ -16,13 +16,13 @@
 
 package com.github.martincooper.datatable.examples
 
-import com.github.martincooper.datatable.{DataTable, DataColumn}
+import com.github.martincooper.datatable.{ DataTable, DataColumn }
 
 import scala.util.Try
 
 class DataTableExamples {
 
-  def createDataTable() : Try[DataTable] = {
+  def createDataTable(): Try[DataTable] = {
 
     // Data columns created using a column name and a collection of values.
     val stringCol = new DataColumn[String]("StringColumn", (1 to 100).map(i => "Cell Value " + i))
@@ -37,7 +37,7 @@ class DataTableExamples {
     dataTableOption
   }
 
-  def addColumn(dataTable: DataTable) : Try[DataTable] = {
+  def addColumn(dataTable: DataTable): Try[DataTable] = {
 
     // New column.
     val stringCol = new DataColumn[String]("New Column", (1 to 100).map(i => "Another " + i))
@@ -50,7 +50,7 @@ class DataTableExamples {
     updatedTable
   }
 
-  def removeColumn(dataTable: DataTable) : Try[DataTable] = {
+  def removeColumn(dataTable: DataTable): Try[DataTable] = {
 
     // Call addColumn to return a new DataTable structure with the additional column.
     val updatedTable = dataTable.removeColumn("ColumnToRemove")

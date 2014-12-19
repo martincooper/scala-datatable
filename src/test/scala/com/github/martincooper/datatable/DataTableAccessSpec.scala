@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 /** Tests relating to accessing a table.  */
 class DataTableAccessSpec extends FlatSpec with Matchers {

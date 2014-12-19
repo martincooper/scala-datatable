@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.examples
 
-import com.github.martincooper.datatable.{DataTable, DataColumn}
+import com.github.martincooper.datatable.{ DataTable, DataColumn }
 
 import scala.util.Random
 

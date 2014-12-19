@@ -1,22 +1,25 @@
 #scala-datatable
 
-Scala DataTable is an immutable table implementation allowing the access of data in a row / column format where the column data types may not be known at design time. 
+Scala DataTable is an in memory table written in Scala. The implementation is entirely immutable.
+Adding and removing table columns, adding and removing rows, and modifying row data will create a new table, leaving the old one untouched.
+This is quite efficient due to structural sharing.
 
-The underlying data is stored as a collection of strongly typed lists (one per column). Any modifications to the table or its data will always return a new structure, leaving the existing one without change.
+It allows the access of data in a row / column format where the column data types may, or may not be known at design time.
+Internally the data is stored as a collection of immutable IndexSeq[T] ensuring type information is preserved.
+The data can be accessed and filtered through a RowData object.
 
+#Getting Scala DataTable
 
-#build.sbt
-
-Add the following line into the build.sbt file.
+If you use SBT, you can include the following line into the build.sbt file.
 ```scala
-libraryDependencies += "com.github.martincooper" %% "scala-datatable" % "0.1"
+libraryDependencies += "com.github.martincooper" %% "scala-datatable" % "0.2"
 ```
 
-# Examples
+# Example Usage
 
 ## Creating DataTables
-To create a new DataTable, create the DataColumns required (just specifying a unique column name and
-the data for the column) as shown below.
+To create a new DataTable, create the DataColumns required (just specify a unique column name and
+the data for each column) as shown below.
 
 ```scala
 def createDataTable() : Try[DataTable] = {
@@ -106,6 +109,22 @@ def filterData() = {
   filteredData.foreach(row => println(row.as[String]("StringColumn") + " : " + row.as[Int]("IntegerColumn").toString))
 }
 ```
+
+### Contributing
+
+Building this project requires SBT 0.13.0.
+
+After you launch SBT, you can run the following commands:
+
+ * `compile` compile the project
+ * `test` run the tests
+ * `console` load a scala REPL with Scala DataTable on the classpath.
+
+Tests are written with [ScalaTest](http://www.scalatest.org/)
+
+### Credits
+
+Scala DataTable is maintained by Martin Cooper : Copyright (c) 2014
 
 ## License
 

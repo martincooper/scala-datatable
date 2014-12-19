@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable
 
-import scala.util.{Success, Failure, Try}
+import scala.util.{ Success, Failure, Try }
 
 /** DataSet stores a collection of DataTables */
 case class DataSet private (name: String, tables: Vector[DataTable]) {
