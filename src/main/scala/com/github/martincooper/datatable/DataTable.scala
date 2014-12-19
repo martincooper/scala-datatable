@@ -19,7 +19,7 @@ package com.github.martincooper.datatable
 import scala.util.{ Failure, Try, Success }
 
 /** DataTable class. Handles the immutable storage of data in a Row / Column format. */
-class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]) {
+class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]) extends IndexedSeq[DataRow] {
 
   def name = tableName
   def columns = dataColumns.toVector
@@ -29,12 +29,12 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   private val columnIndexMapper = columns.zipWithIndex.map { case (col, idx) => idx -> col }.toMap
 
   /** Gets column by index / name. */
-  def col(columnIndex: Int) = columnIndexMapper(columnIndex)
-  def col(columnName: String) = columnNameMapper(columnName)
+  def col(columnIndex: Int): GenericColumn = columnIndexMapper(columnIndex)
+  def col(columnName: String): GenericColumn = columnNameMapper(columnName)
 
   /** Gets column by index / name as Option in case it doesn't exist. */
-  def getCol(columnIndex: Int) = columnIndexMapper.get(columnIndex)
-  def getCol(columnName: String) = columnNameMapper.get(columnName)
+  def getCol(columnIndex: Int): Option[GenericColumn] = columnIndexMapper.get(columnIndex)
+  def getCol(columnName: String): Option[GenericColumn] = columnNameMapper.get(columnName)
 
   /** Gets typed column by index / name. */
   def colAs[T](columnIndex: Int): DataColumn[T] = columnIndexMapper(columnIndex).asInstanceOf[DataColumn[T]]
@@ -51,15 +51,19 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
     }
   }
 
-  def rowCount() = {
+  def rowCount(): Int = {
     columns.length match {
       case 0 => 0
       case _ => columns.head.data.length
     }
   }
 
+  override def length: Int = rowCount()
+
+  override def apply(idx: Int): DataRow = new DataRow(this, idx)
+
   /** Outputs a more detailed toString implementation. */
-  override def toString = {
+  override def toString() = {
     val tableDetails = "DataTable:" + name + "[Rows:" + columns.head.data.length + "]"
     val colDetails = columns.map(col => "[" + col.toString + "]").mkString(" ")
 
