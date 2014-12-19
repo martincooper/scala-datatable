@@ -9,7 +9,7 @@ The underlying data is stored as a collection of strongly typed lists (one per c
 
 Add the following line into the build.sbt file.
 ```scala
-libraryDependencies += "com.github.martincooper" %% "scala-datatable" % "0.1"
+libraryDependencies += "com.github.martincooper" %% "scala-datatable" % "0.2"
 ```
 
 # Examples
