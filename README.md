@@ -1,4 +1,6 @@
-#scala-datatable
+#Scala DataTable
+
+### Overview
 
 Scala DataTable is an in memory table written in Scala. The implementation is entirely immutable.
 Adding and removing table columns, adding and removing rows, and modifying row data will create a new table, leaving the old one untouched.
