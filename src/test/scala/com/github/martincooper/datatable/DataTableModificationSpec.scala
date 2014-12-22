@@ -30,7 +30,7 @@ class DataTableModificationSpec extends FlatSpec with Matchers {
 
     val dataColThree = new DataColumn[Boolean]("ColThree", (0 to 10) map (i => if (i > 5) true else false))
 
-    val newTable = originalTable.addColumn(dataColThree)
+    val newTable = originalTable.add(dataColThree)
 
     newTable.isSuccess should be(true)
     newTable.get.columns.length should be(3)
@@ -46,7 +46,7 @@ class DataTableModificationSpec extends FlatSpec with Matchers {
 
     val dataColThree = new DataColumn[Boolean]("ColOne", (0 to 10) map (i => true))
 
-    val newTable = originalTable.addColumn(dataColThree)
+    val newTable = originalTable.add(dataColThree)
 
     newTable.isSuccess should be(false)
     newTable.failed.get should be(DataTableException("Columns contain duplicate names."))

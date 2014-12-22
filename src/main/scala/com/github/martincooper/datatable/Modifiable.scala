@@ -18,10 +18,10 @@ package com.github.martincooper.datatable
 
 /** Trait defining add / update / insert / delete. */
 trait Modifiable[I, V, R] {
-  def added(value: V): R
-  def updated(index: I, values: V): R
-  def inserted(index: I, value: V): R
-  def deleted(index: I): R
+  def add(value: V): R
+  def replace(index: I, values: V): R
+  def insert(index: I, value: V): R
+  def remove(index: I): R
 }
 
 /** Modifiable, with an integer indexer. */
@@ -29,7 +29,7 @@ trait ModifiableByIndex[V, R] extends Modifiable[Int, V, R] { }
 
 /** Modifiable, with additional string (name) indexer. */
 trait ModifiableByName[V, R] extends ModifiableByIndex[V, R] {
-  def updated(index: String, values: V): R
-  def inserted(index: String, value: V): R
-  def deleted(index: String): R
+  def replace(index: String, values: V): R
+  def insert(index: String, value: V): R
+  def remove(index: String): R
 }

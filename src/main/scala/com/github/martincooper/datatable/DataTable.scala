@@ -19,7 +19,8 @@ package com.github.martincooper.datatable
 import scala.util.{ Failure, Try, Success }
 
 /** DataTable class. Handles the immutable storage of data in a Row / Column format. */
-class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]) extends IndexedSeq[DataRow] {
+class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn])
+  extends IndexedSeq[DataRow] with ModifiableByName[GenericColumn, Try[DataTable]] {
 
   def name = tableName
   def columns = dataColumns.toVector
@@ -62,6 +63,44 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   override def apply(idx: Int): DataRow = new DataRow(this, idx)
 
+  override def replace(index: String, values: GenericColumn): Try[DataTable] = {
+    new Success[DataTable](new DataTable("TODO", Seq()))
+  }
+
+  override def replace(index: Int, values: GenericColumn): Try[DataTable] = {
+    new Success[DataTable](new DataTable("TODO", Seq()))
+  }
+
+  override def insert(index: String, value: GenericColumn): Try[DataTable] = {
+    new Success[DataTable](new DataTable("TODO", Seq()))
+  }
+
+  override def insert(index: Int, value: GenericColumn): Try[DataTable] = {
+    new Success[DataTable](new DataTable("TODO", Seq()))
+  }
+
+  /** Creates a new table with the column removed. */
+  override def remove(columnName: String): Try[DataTable] = {
+    columns.exists(_.name == columnName) match {
+      case true => Success(new DataTable(name, columns.filterNot(_.name == columnName)))
+      case _ => Failure(DataTableException("Column " + columnName + " not found."))
+    }
+  }
+
+  override def remove(columnIndex: Int): Try[DataTable]  = {
+    new Success[DataTable](new DataTable("TODO", Seq()))
+  }
+
+  /** Returns a new table with the additional column. */
+  override def add(newColumn: GenericColumn): Try[DataTable] = {
+    val newColSet = columns :+ newColumn
+
+    DataTable.validateDataColumns(newColSet) match {
+      case Failure(ex) => new Failure(ex)
+      case Success(_) => Success(new DataTable(name, newColSet))
+    }
+  }
+
   /** Outputs a more detailed toString implementation. */
   override def toString() = {
     val tableDetails = "DataTable:" + name + "[Rows:" + columns.head.data.length + "]"
@@ -102,16 +141,6 @@ object DataTable {
   }
 
   implicit class DataTableExt(val table: DataTable) extends AnyVal {
-
-    /** Creates a new table with the additional column. */
-    def addColumn(newColumn: GenericColumn): Try[DataTable] = {
-      val newColSet = table.columns :+ newColumn
-
-      validateDataColumns(newColSet) match {
-        case Failure(ex) => new Failure(ex)
-        case Success(_) => Success(new DataTable(table.name, newColSet))
-      }
-    }
 
     /** Creates a new table with the column removed. */
     def removeColumn(columnName: String): Try[DataTable] = {

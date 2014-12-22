@@ -43,7 +43,7 @@ class DataTableExamples {
     val stringCol = new DataColumn[String]("New Column", (1 to 100).map(i => "Another " + i))
 
     // Call addColumn to return a new DataTable structure with the additional column.
-    val updatedTable = dataTable.addColumn(stringCol)
+    val updatedTable = dataTable.add(stringCol)
 
     // If adding the additional column fails validation (duplicate column names, or columns
     // contain data of different lengths), then it'll return a Failure. Else Success[DataTable]
