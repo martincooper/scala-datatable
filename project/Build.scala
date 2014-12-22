@@ -18,7 +18,9 @@ object ScalaCSVProject extends Build {
       ),
       scalacOptions ++= Seq(
         "-deprecation",
-        "-language:_"
+        "-language:_",
+        "-Xfatal-warnings",
+        "-Xlint"
       ),
       scalacOptions ++= {
         if(scalaVersion.value.startsWith("2.11")) Seq("-Ywarn-unused")
