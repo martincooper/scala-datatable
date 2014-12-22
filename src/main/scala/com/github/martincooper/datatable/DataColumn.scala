@@ -18,17 +18,6 @@ package com.github.martincooper.datatable
 
 import scala.reflect.runtime.universe._
 
-/** Trait defining add / update / insert / delete. */
-trait Modifiable[I, V, R] {
-  def added(value: V): R
-  def updated(index: I, values: V): R
-  def inserted(index: I, value: V): R
-  def deleted(index: I): R
-}
-
-trait ModifiableByIndex[V, R] extends Modifiable[Int, V, R] { }
-trait ModifiableByName[V, R] extends Modifiable[String, V, R] { }
-
 /**
  * Generic Column Trait.
  * Allows a collection of columns storing data of distinct types to be stored in a generic collection.
