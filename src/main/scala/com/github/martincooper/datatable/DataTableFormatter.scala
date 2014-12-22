@@ -53,7 +53,7 @@ object DataTableFormatter {
   private def printHeader(builder: StringBuilder, colDetails: Seq[ColumnDetails]) = {
     /** Calculate total length required for the header row. */
     val totalLength = colDetails.map(_.Width).sum + (colDetails.length * 2)
-    val headerFooter = "".padTo(totalLength, "-")
+    val headerFooter = padString("", totalLength, '-')
 
     writeln(builder)
     writelnExt(builder, headerFooter)
@@ -66,7 +66,7 @@ object DataTableFormatter {
 
   /** Returns the value correctly formatted according to the width. */
   private def colDataString(data: String, width: Int): String = {
-    data.padTo(width, " ").mkString
+    padString(data, width, ' ')
   }
 
   /** Calculates the column width to use for a column. */
@@ -86,5 +86,9 @@ object DataTableFormatter {
   private def writelnExt(builder: StringBuilder, value: Traversable[Any]) = {
     builder ++= value.mkString
     builder ++= lineSeparator
+  }
+
+  private def padString(value: String, width: Int, padString: Char): String = {
+    value.padTo(width, padString).mkString
   }
 }
