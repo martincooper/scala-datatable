@@ -18,19 +18,63 @@ package com.github.martincooper.datatable
 
 import scala.reflect.runtime.universe._
 
+/** Trait defining add / update / insert / delete. */
+trait Modifiable[I, V, R] {
+  def added(value: V): R
+  def updated(index: I, values: V): R
+  def inserted(index: I, value: V): R
+  def deleted(index: I): R
+}
+
+trait ModifiableByIndex[V, R] extends Modifiable[Int, V, R] { }
+trait ModifiableByName[V, R] extends Modifiable[String, V, R] { }
+
 /**
  * Generic Column Trait.
  * Allows a collection of columns storing data of distinct types to be stored in a generic collection.
  */
-trait GenericColumn {
+trait GenericColumn extends ModifiableByIndex[Any, GenericColumn] {
   def name: String
   def data: IndexedSeq[Any]
+  def columnType: Type
 }
 
 /** Strongly typed data column. */
 class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extends GenericColumn {
   def name = columnName
-  def data = Vector.empty ++ columnData
+  def data = columnData.toVector
+  def columnType = typeOf[T]
+
+  /** Returns a new DataColumn[T] with the value inserted at the specified index. */
+  override def inserted(index: Int, value: Any): DataColumn[T] = {
+    val typedValue = value.asInstanceOf[T]
+    val (dataStart, dataEnd) = data.splitAt(index)
+
+    /** Combine the three sections into one vector. */
+    val combinedData = dataStart ++ (typedValue +: dataEnd)
+    new DataColumn[T](name, combinedData)
+  }
+
+  /** Returns a new DataColumn[T] with the new value at the specified index. */
+  override def updated(index: Int, value: Any): DataColumn[T] = {
+    new DataColumn[T](name, data.updated(index, value.asInstanceOf[T]))
+  }
+
+  /** Returns a new DataColumn[T] with the value at the specified removed. */
+  override def deleted(index: Int): DataColumn[T] = {
+    val (dataStart, dataEnd) = data.splitAt(index)
+
+    /** Combine the split sections, ignoring the head of the second set. */
+    val combinedData = dataStart ++ dataEnd.tail
+    new DataColumn[T](name, combinedData)
+  }
+
+  /** Returns a new DataColumn[T] with the new value appended to the end. */
+  override def added(value: Any): DataColumn[T] = {
+    val typedValue = value.asInstanceOf[T]
+    new DataColumn[T](name, data :+ typedValue)
+  }
+
   override def toString = "Col : " + name
 }
 
