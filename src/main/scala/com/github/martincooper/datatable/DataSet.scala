@@ -38,10 +38,10 @@ object DataSet {
     val tableSeq = tables.toSeq
 
     /** Check all tables have distinct table names. */
-    if (tableSeq.groupBy(_.name).toSeq.length != tableSeq.length)
-      return Failure(DataTableException("Tables contain duplicate names."))
-
-    Success(Unit)
+    tableSeq.groupBy(_.name).toSeq.length != tableSeq.length match {
+      case true => Failure(DataTableException("Tables contain duplicate names."))
+      case false => Success(Unit)
+    }
   }
 
   implicit class DataSetExt(val dataSet: DataSet) extends AnyVal {
