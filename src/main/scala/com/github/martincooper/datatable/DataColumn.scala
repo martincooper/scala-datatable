@@ -17,7 +17,7 @@
 package com.github.martincooper.datatable
 
 import scala.reflect.runtime.universe._
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 /**
  * Generic Column Trait.

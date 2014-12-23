@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable
 
-import scala.util.{Success, Failure, Try}
+import scala.util.{ Success, Failure, Try }
 
 object VectorExtensions {
 

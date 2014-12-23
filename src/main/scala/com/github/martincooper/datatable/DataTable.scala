@@ -20,7 +20,7 @@ import scala.util.{ Failure, Try, Success }
 
 /** DataTable class. Handles the immutable storage of data in a Row / Column format. */
 class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn])
-  extends IndexedSeq[DataRow] with ModifiableByName[GenericColumn, DataTable] {
+    extends IndexedSeq[DataRow] with ModifiableByName[GenericColumn, DataTable] {
 
   def name = tableName
   def columns = dataColumns.toVector
@@ -89,7 +89,7 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   }
 
   /** Returns a new table with the column removed. */
-  override def remove(index: Int): Try[DataTable]  = {
+  override def remove(index: Int): Try[DataTable] = {
     checkColsAndBuild("removing", () => VectorExtensions.removeItem(columns, index))
   }
 

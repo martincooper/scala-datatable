@@ -27,7 +27,7 @@ trait Modifiable[I, V, R] {
 }
 
 /** Modifiable, with an integer indexer. */
-trait ModifiableByIndex[V, R] extends Modifiable[Int, V, R] { }
+trait ModifiableByIndex[V, R] extends Modifiable[Int, V, R] {}
 
 /** Modifiable, with additional string (name) indexer. */
 trait ModifiableByName[V, R] extends ModifiableByIndex[V, R] {
