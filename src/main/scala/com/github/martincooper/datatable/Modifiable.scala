@@ -16,12 +16,14 @@
 
 package com.github.martincooper.datatable
 
+import scala.util.Try
+
 /** Trait defining add / update / insert / delete. */
 trait Modifiable[I, V, R] {
-  def add(value: V): R
-  def replace(index: I, values: V): R
-  def insert(index: I, value: V): R
-  def remove(index: I): R
+  def add(value: V): Try[R]
+  def replace(index: I, values: V): Try[R]
+  def insert(index: I, value: V): Try[R]
+  def remove(index: I): Try[R]
 }
 
 /** Modifiable, with an integer indexer. */
@@ -29,7 +31,7 @@ trait ModifiableByIndex[V, R] extends Modifiable[Int, V, R] { }
 
 /** Modifiable, with additional string (name) indexer. */
 trait ModifiableByName[V, R] extends ModifiableByIndex[V, R] {
-  def replace(index: String, values: V): R
-  def insert(index: String, value: V): R
-  def remove(index: String): R
+  def replace(index: String, values: V): Try[R]
+  def insert(index: String, value: V): Try[R]
+  def remove(index: String): Try[R]
 }

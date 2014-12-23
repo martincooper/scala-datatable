@@ -17,6 +17,7 @@
 package com.github.martincooper.datatable
 
 import scala.reflect.runtime.universe._
+import scala.util.{Failure, Success, Try}
 
 /**
  * Generic Column Trait.
@@ -35,25 +36,32 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   def columnType = typeOf[T]
 
   /** Returns a new DataColumn[T] with the new value appended to the end. */
-  override def add(value: Any): DataColumn[T] = {
+  override def add(value: Any): Try[DataColumn[T]] = {
     val typedValue = value.asInstanceOf[T]
-    new DataColumn[T](name, data :+ typedValue)
+    Success(new DataColumn[T](name, data :+ typedValue))
   }
 
   /** Returns a new DataColumn[T] with the new value at the specified index. */
-  override def replace(index: Int, value: Any): DataColumn[T] = {
-    new DataColumn[T](name, VectorExtensions.replaceItem(data, index, value.asInstanceOf[T]))
+  override def replace(index: Int, value: Any): Try[DataColumn[T]] = {
+    checkAndCreateNewColumn(() => VectorExtensions.replaceItem(data, index, value.asInstanceOf[T]))
   }
 
   /** Returns a new DataColumn[T] with the value inserted at the specified index. */
-  override def insert(index: Int, value: Any): DataColumn[T] = {
+  override def insert(index: Int, value: Any): Try[DataColumn[T]] = {
     val typedValue = value.asInstanceOf[T]
-    new DataColumn[T](name, VectorExtensions.insertItem(data, index, typedValue))
+    checkAndCreateNewColumn(() => VectorExtensions.insertItem(data, index, typedValue))
   }
 
   /** Returns a new DataColumn[T] with the value at the specified removed. */
-  override def remove(index: Int): DataColumn[T] = {
-    new DataColumn[T](name, VectorExtensions.removeItem(data, index))
+  override def remove(index: Int): Try[DataColumn[T]] = {
+    checkAndCreateNewColumn(() => VectorExtensions.removeItem(data, index))
+  }
+
+  private def checkAndCreateNewColumn(transformData: () => Try[Vector[T]]): Try[DataColumn[T]] = {
+    transformData() match {
+      case Success(modifiedData) => Success(new DataColumn[T](name, modifiedData))
+      case Failure(ex) => Failure(ex)
+    }
   }
 
   override def toString = "Col : " + name

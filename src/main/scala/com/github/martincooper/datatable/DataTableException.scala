@@ -16,4 +16,4 @@
 
 package com.github.martincooper.datatable
 
-case class DataTableException(message: String) extends Exception(message)
+case class DataTableException(message: String, cause: Throwable = null) extends Exception(message, cause)

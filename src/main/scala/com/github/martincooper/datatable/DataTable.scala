@@ -20,7 +20,7 @@ import scala.util.{ Failure, Try, Success }
 
 /** DataTable class. Handles the immutable storage of data in a Row / Column format. */
 class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn])
-  extends IndexedSeq[DataRow] with ModifiableByName[GenericColumn, Try[DataTable]] {
+  extends IndexedSeq[DataRow] with ModifiableByName[GenericColumn, DataTable] {
 
   def name = tableName
   def columns = dataColumns.toVector
@@ -81,14 +81,18 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   /** Creates a new table with the column removed. */
   override def remove(columnName: String): Try[DataTable] = {
-    columns.exists(_.name == columnName) match {
-      case true => Success(new DataTable(name, columns.filterNot(_.name == columnName)))
-      case _ => Failure(DataTableException("Column " + columnName + " not found."))
+    columns.indexWhere(_.name == columnName) match {
+      case -1 => Failure(DataTableException("Column " + columnName + " not found."))
+      case colIdx: Int => remove(colIdx)
     }
   }
 
+  /** Returns a new table with the column removed. */
   override def remove(columnIndex: Int): Try[DataTable]  = {
-    new Success[DataTable](new DataTable("TODO", Seq()))
+    VectorExtensions.removeItem(columns, columnIndex) match {
+      case Success(modifiedCols) => new Success[DataTable](new DataTable(name, modifiedCols))
+      case Failure(ex) => Failure(DataTableException("Error removing column at specified index.", ex))
+    }
   }
 
   /** Returns a new table with the additional column. */

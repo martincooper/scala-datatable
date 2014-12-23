@@ -16,28 +16,50 @@
 
 package com.github.martincooper.datatable
 
+import scala.util.{Success, Failure, Try}
+
 object VectorExtensions {
 
   /** Returns a new Vector[T] with the new value appended to the end. */
-  def addItem[T](vector: Vector[T], index: Int): Vector[T] = {
-    val (dataStart, dataEnd) = vector.splitAt(index)
-    dataStart ++ dataEnd.tail
+  def addItem[T](vector: Vector[T], index: Int): Try[Vector[T]] = {
+    checkBounds[T](vector, index) match {
+      case false => Failure(new DataTableException("Add item index out of bounds."))
+      case true =>
+        val (dataStart, dataEnd) = vector.splitAt(index)
+        Success(dataStart ++ dataEnd.tail)
+    }
   }
 
   /** Returns a new Vector[T] with the value at the specified index removed. */
-  def removeItem[T](vector: Vector[T], index: Int): Vector[T] = {
-    val (dataStart, dataEnd) = vector.splitAt(index)
-    dataStart ++ dataEnd.tail
+  def removeItem[T](vector: Vector[T], index: Int): Try[Vector[T]] = {
+    checkBounds[T](vector, index) match {
+      case false => Failure(DataTableException("Add item index out of bounds."))
+      case true =>
+        val (dataStart, dataEnd) = vector.splitAt(index)
+        Success(dataStart ++ dataEnd.tail)
+    }
   }
 
   /** Returns a new Vector[T] with the value replaced at the specified index. */
-  def replaceItem[T](vector: Vector[T], index: Int, value: T): Vector[T] = {
-    vector.updated(index, value)
+  def replaceItem[T](vector: Vector[T], index: Int, value: T): Try[Vector[T]] = {
+    checkBounds[T](vector, index) match {
+      case false => Failure(DataTableException("Add item index out of bounds."))
+      case true =>
+        Success(vector.updated(index, value))
+    }
   }
 
   /** Returns a new Vector[T] with the value inserted at the specified index. */
-  def insertItem[T](vector: Vector[T], index: Int, value: T): Vector[T] = {
-    val (dataStart, dataEnd) = vector.splitAt(index)
-    dataStart ++ (value +: dataEnd)
+  def insertItem[T](vector: Vector[T], index: Int, value: T): Try[Vector[T]] = {
+    checkBounds[T](vector, index) match {
+      case false => Failure(DataTableException("Add item index out of bounds."))
+      case true =>
+        val (dataStart, dataEnd) = vector.splitAt(index)
+        Success(dataStart ++ (value +: dataEnd))
+    }
+  }
+
+  def checkBounds[T](vector: Vector[T], index: Int): Boolean = {
+    index >= 0 && index <= (vector.length - 1)
   }
 }
