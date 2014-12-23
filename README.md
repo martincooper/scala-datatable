@@ -7,7 +7,7 @@ Adding and removing table columns, adding and removing rows, and modifying row d
 This is quite efficient due to structural sharing.
 
 It allows the access of data in a row / column format where the column data types may, or may not be known at design time.
-Internally the data is stored as a collection of immutable IndexSeq[T] ensuring type information is preserved.
+Internally the data is stored as a collection of immutable Vector[T] ensuring type information is preserved.
 The data can be accessed and filtered through a RowData object.
 
 #Getting Scala DataTable
@@ -41,17 +41,17 @@ def createDataTable() : Try[DataTable] = {
 ```
 
 ## Adding Columns
-To add a new Column, create the new DataColumn required and call the .addColumn method on the
+To add a new Column, create the new DataColumn required and call the .add method on the
 table which will return a new DataTable structure with the additional column in.
 
 ```scala
-def addColumn(dataTable: DataTable) : Try[DataTable] = {
+def addColumn(dataTable: DataTable): Try[DataTable] = {
 
-  // Create new column.
+  // Create a new column.
   val stringCol = new DataColumn[String]("New Column", (1 to 100).map(i => "Another " + i))
 
-  // Call addColumn to return a new DataTable structure with the additional column.
-  val updatedTable = dataTable.addColumn(stringCol)
+  // Call add to return a new DataTable structure with the additional column.
+  val updatedTable = dataTable.add(stringCol)
 
   // If adding the additional column fails validation (duplicate column names, or columns
   // contain data of different lengths), then it'll return a Failure. Else Success[DataTable]
@@ -60,14 +60,14 @@ def addColumn(dataTable: DataTable) : Try[DataTable] = {
 ```
 
 ## Removing Columns
-To remove a Column, call the .removeColumn method on the
+To remove a Column, call the .remove method on the
 table which will return a new DataTable structure with the column removed.
 
 ```scala
-def removeColumn(dataTable: DataTable) : Try[DataTable] = {
+def removeColumn(dataTable: DataTable): Try[DataTable] = {
 
-  // Call addColumn to return a new DataTable structure with the additional column.
-  val updatedTable = dataTable.removeColumn("ColumnToRemove")
+  // Call remove to return a new DataTable structure with the additional column.
+  val updatedTable = dataTable.remove("ColumnToRemove")
 
   // If removing the column fails validation (column name not found),
   // then it'll return a Failure. Else Success[DataTable]
@@ -104,7 +104,7 @@ def filterData() = {
   // Access the filtered results...
   println(filteredData.length)
 
-  // Row data can be accessed using indexers and with no type information...
+  // Row data can be accessed using indexers with no type information...
   filteredData.foreach(row => println(row(0).toString + " : " + row(1).toString))
 
   // Or by specifying the columns by name and with full type info.

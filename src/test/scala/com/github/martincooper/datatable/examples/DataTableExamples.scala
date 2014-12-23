@@ -39,7 +39,7 @@ class DataTableExamples {
 
   def addColumn(dataTable: DataTable): Try[DataTable] = {
 
-    // New column.
+    // Create a new column.
     val stringCol = new DataColumn[String]("New Column", (1 to 100).map(i => "Another " + i))
 
     // Call addColumn to return a new DataTable structure with the additional column.
