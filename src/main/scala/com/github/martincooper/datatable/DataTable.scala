@@ -63,10 +63,12 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   override def apply(idx: Int): DataRow = new DataRow(this, idx)
 
+  /** Creates a new table with the column specified replaced with the new column. */
   override def replace(columnName: String, value: GenericColumn): Try[DataTable] = {
     actionByColumnName(columnName, colIdx => replace(colIdx, value))
   }
 
+  /** Creates a new table with the column at index replaced with the new column. */
   override def replace(index: Int, value: GenericColumn): Try[DataTable] = {
     checkColsAndBuild("inserting", () => VectorExtensions.replaceItem(columns, index, value))
   }
