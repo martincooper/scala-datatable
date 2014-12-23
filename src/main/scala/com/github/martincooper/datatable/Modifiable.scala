@@ -21,7 +21,7 @@ import scala.util.Try
 /** Trait defining add / update / insert / delete. */
 trait Modifiable[I, V, R] {
   def add(value: V): Try[R]
-  def replace(index: I, values: V): Try[R]
+  def replace(index: I, value: V): Try[R]
   def insert(index: I, value: V): Try[R]
   def remove(index: I): Try[R]
 }
@@ -31,7 +31,7 @@ trait ModifiableByIndex[V, R] extends Modifiable[Int, V, R] { }
 
 /** Modifiable, with additional string (name) indexer. */
 trait ModifiableByName[V, R] extends ModifiableByIndex[V, R] {
-  def replace(index: String, values: V): Try[R]
+  def replace(index: String, value: V): Try[R]
   def insert(index: String, value: V): Try[R]
   def remove(index: String): Try[R]
 }

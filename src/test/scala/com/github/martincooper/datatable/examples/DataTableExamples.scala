@@ -53,7 +53,7 @@ class DataTableExamples {
   def removeColumn(dataTable: DataTable): Try[DataTable] = {
 
     // Call addColumn to return a new DataTable structure with the additional column.
-    val updatedTable = dataTable.removeColumn("ColumnToRemove")
+    val updatedTable = dataTable.remove("ColumnToRemove")
 
     // If removing the column fails validation (column name not found),
     // then it'll return a Failure. Else Success[DataTable]
