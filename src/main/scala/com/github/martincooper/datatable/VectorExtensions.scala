@@ -21,13 +21,8 @@ import scala.util.{Success, Failure, Try}
 object VectorExtensions {
 
   /** Returns a new Vector[T] with the new value appended to the end. */
-  def addItem[T](vector: Vector[T], index: Int): Try[Vector[T]] = {
-    checkBounds[T](vector, index) match {
-      case false => Failure(new DataTableException("Add item index out of bounds."))
-      case true =>
-        val (dataStart, dataEnd) = vector.splitAt(index)
-        Success(dataStart ++ dataEnd.tail)
-    }
+  def addItem[T](vector: Vector[T], value: T): Try[Vector[T]] = {
+    Success(vector :+ value)
   }
 
   /** Returns a new Vector[T] with the value at the specified index removed. */
