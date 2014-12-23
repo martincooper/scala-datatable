@@ -28,7 +28,7 @@ object VectorExtensions {
   /** Returns a new Vector[T] with the value at the specified index removed. */
   def removeItem[T](vector: Vector[T], index: Int): Try[Vector[T]] = {
     checkBounds[T](vector, index) match {
-      case false => Failure(DataTableException("Add item index out of bounds."))
+      case false => Failure(DataTableException("Item index out of bounds for remove."))
       case true =>
         val (dataStart, dataEnd) = vector.splitAt(index)
         Success(dataStart ++ dataEnd.tail)
@@ -38,7 +38,7 @@ object VectorExtensions {
   /** Returns a new Vector[T] with the value replaced at the specified index. */
   def replaceItem[T](vector: Vector[T], index: Int, value: T): Try[Vector[T]] = {
     checkBounds[T](vector, index) match {
-      case false => Failure(DataTableException("Add item index out of bounds."))
+      case false => Failure(DataTableException("Item index out of bounds for replace."))
       case true =>
         Success(vector.updated(index, value))
     }
@@ -47,7 +47,7 @@ object VectorExtensions {
   /** Returns a new Vector[T] with the value inserted at the specified index. */
   def insertItem[T](vector: Vector[T], index: Int, value: T): Try[Vector[T]] = {
     checkBounds[T](vector, index) match {
-      case false => Failure(DataTableException("Add item index out of bounds."))
+      case false => Failure(DataTableException("Item index out of bounds for insert."))
       case true =>
         val (dataStart, dataEnd) = vector.splitAt(index)
         Success(dataStart ++ (value +: dataEnd))
