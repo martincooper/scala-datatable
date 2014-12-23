@@ -64,68 +64,56 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   override def apply(idx: Int): DataRow = new DataRow(this, idx)
 
   override def replace(columnName: String, value: GenericColumn): Try[DataTable] = {
-    columns.indexWhere(_.name == columnName) match {
-      case -1 => Failure(DataTableException("Column " + columnName + " not found."))
-      case colIdx: Int => replace(colIdx, value)
-    }
+    actionByColumnName(columnName, colIdx => replace(colIdx, value))
   }
 
   override def replace(index: Int, value: GenericColumn): Try[DataTable] = {
-    val newCols = for {
-      newColSet <- VectorExtensions.replaceItem(columns, index, value)
-      result <- DataTable.validateDataColumns(newColSet)
-    } yield newColSet
-
-    newCols match {
-      case Success(modifiedCols) => new Success[DataTable](new DataTable(name, modifiedCols))
-      case Failure(ex) => Failure(DataTableException("Error replacing column at specified index.", ex))
-    }
+    checkColsAndBuild("inserting", () => VectorExtensions.replaceItem(columns, index, value))
   }
 
   /** Creates a new table with the column inserted before the specified column. */
   override def insert(columnName: String, value: GenericColumn): Try[DataTable] = {
-    columns.indexWhere(_.name == columnName) match {
-      case -1 => Failure(DataTableException("Column " + columnName + " not found."))
-      case colIdx: Int => insert(colIdx, value)
-    }
+    actionByColumnName(columnName, colIdx => insert(colIdx, value))
   }
 
   /** Creates a new table with the column inserted at the specified index. */
   override def insert(index: Int, value: GenericColumn): Try[DataTable] = {
+    checkColsAndBuild("inserting", () => VectorExtensions.insertItem(columns, index, value))
+  }
+
+  /** Creates a new table with the column removed. */
+  override def remove(columnName: String): Try[DataTable] = {
+    actionByColumnName(columnName, colIdx => remove(colIdx))
+  }
+
+  /** Returns a new table with the column removed. */
+  override def remove(index: Int): Try[DataTable]  = {
+    checkColsAndBuild("removing", () => VectorExtensions.removeItem(columns, index))
+  }
+
+  /** Returns a new table with the additional column. */
+  override def add(newColumn: GenericColumn): Try[DataTable] = {
+    checkColsAndBuild("adding", () => VectorExtensions.addItem(columns, newColumn))
+  }
+
+  private def actionByColumnName(columnName: String, action: Int => Try[DataTable]): Try[DataTable] = {
+    columns.indexWhere(_.name == columnName) match {
+      case -1 => Failure(DataTableException("Column " + columnName + " not found."))
+      case colIdx: Int => action(colIdx)
+    }
+  }
+
+  /** Checks that the new column set is valid, and builds a new DataTable. */
+  private def checkColsAndBuild(modification: String, checkCols: () => Try[Vector[GenericColumn]]): Try[DataTable] = {
+
     val newCols = for {
-      newColSet <- VectorExtensions.insertItem(columns, index, value)
+      newColSet <- checkCols()
       result <- DataTable.validateDataColumns(newColSet)
     } yield newColSet
 
     newCols match {
       case Success(modifiedCols) => new Success[DataTable](new DataTable(name, modifiedCols))
-      case Failure(ex) => Failure(DataTableException("Error inserting column at specified index.", ex))
-    }
-  }
-
-  /** Creates a new table with the column removed. */
-  override def remove(columnName: String): Try[DataTable] = {
-    columns.indexWhere(_.name == columnName) match {
-      case -1 => Failure(DataTableException("Column " + columnName + " not found."))
-      case colIdx: Int => remove(colIdx)
-    }
-  }
-
-  /** Returns a new table with the column removed. */
-  override def remove(columnIndex: Int): Try[DataTable]  = {
-    VectorExtensions.removeItem(columns, columnIndex) match {
-      case Success(modifiedCols) => new Success[DataTable](new DataTable(name, modifiedCols))
-      case Failure(ex) => Failure(DataTableException("Error removing column at specified index.", ex))
-    }
-  }
-
-  /** Returns a new table with the additional column. */
-  override def add(newColumn: GenericColumn): Try[DataTable] = {
-    val newColSet = columns :+ newColumn
-
-    DataTable.validateDataColumns(newColSet) match {
-      case Failure(ex) => new Failure(ex)
-      case Success(_) => Success(new DataTable(name, newColSet))
+      case Failure(ex) => Failure(DataTableException("Error " + modification + " column at specified index.", ex))
     }
   }
 

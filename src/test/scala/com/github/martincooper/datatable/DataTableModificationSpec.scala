@@ -49,7 +49,7 @@ class DataTableModificationSpec extends FlatSpec with Matchers {
     val newTable = originalTable.add(dataColThree)
 
     newTable.isSuccess should be(false)
-    newTable.failed.get should be(DataTableException("Columns contain duplicate names."))
+    newTable.failed.get.getMessage should be("Error adding column at specified index.")
   }
 
   "A DataTable" should "allow a column to be removed by name" in {
