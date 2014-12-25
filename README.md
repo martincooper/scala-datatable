@@ -8,6 +8,7 @@ This is quite efficient due to structural sharing.
 
 It allows the access of data in a row / column format where the column data types may, or may not be known at design time.
 Internally the data is stored as a collection of immutable Vector[T] ensuring type information is preserved.
+Any modifications performed on the table or its data is validated to maintain it's integrity.
 The data can be accessed and filtered through a RowData object.
 
 #Getting Scala DataTable

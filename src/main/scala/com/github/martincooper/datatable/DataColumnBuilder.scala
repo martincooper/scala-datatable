@@ -19,6 +19,7 @@ package com.github.martincooper.datatable
 import scala.reflect.runtime._
 import scala.reflect.runtime.universe._
 
+// TODO Code not yet integrated.
 object DataColumnBuilder {
 
   def createColumnOfType[T: TypeTag](args: AnyRef*)(ctor: Int = 0): DataColumn[T] = {
