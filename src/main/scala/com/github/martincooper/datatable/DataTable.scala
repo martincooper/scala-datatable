@@ -18,9 +18,16 @@ package com.github.martincooper.datatable
 
 import scala.util.{ Failure, Try, Success }
 
+/** ModifiableByName, with additional item (GenericColumn) indexer. */
+trait ModifiableByColumn[V, R] extends ModifiableByName[V, R] {
+  def replace(oldItem: GenericColumn, newItem: V): Try[R]
+  def insert(itemToInsertAt: GenericColumn, newItem: V): Try[R]
+  def remove(itemToRemove: GenericColumn): Try[R]
+}
+
 /** DataTable class. Handles the immutable storage of data in a Row / Column format. */
 class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn])
-    extends IndexedSeq[DataRow] with ModifiableByName[GenericColumn, DataTable] {
+    extends IndexedSeq[DataRow] with ModifiableByColumn[GenericColumn, DataTable] {
 
   def name = tableName
   def columns = dataColumns.toVector
@@ -64,6 +71,11 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   override def apply(idx: Int): DataRow = new DataRow(this, idx)
 
   /** Creates a new table with the column specified replaced with the new column. */
+  override def replace(oldColumn: GenericColumn, newColumn: GenericColumn): Try[DataTable] = {
+    replace(columns.indexOf(oldColumn), newColumn)
+  }
+
+  /** Creates a new table with the column specified replaced with the new column. */
   override def replace(columnName: String, value: GenericColumn): Try[DataTable] = {
     actionByColumnName(columnName, colIdx => replace(colIdx, value))
   }
@@ -74,6 +86,11 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   }
 
   /** Creates a new table with the column inserted before the specified column. */
+  override def insert(columnToInsertAt: GenericColumn, newColumn: GenericColumn): Try[DataTable] = {
+    insert(columns.indexOf(columnToInsertAt), newColumn)
+  }
+
+  /** Creates a new table with the column inserted before the specified column. */
   override def insert(columnName: String, value: GenericColumn): Try[DataTable] = {
     actionByColumnName(columnName, colIdx => insert(colIdx, value))
   }
@@ -81,6 +98,11 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   /** Creates a new table with the column inserted at the specified index. */
   override def insert(index: Int, value: GenericColumn): Try[DataTable] = {
     checkColsAndBuild("inserting", () => VectorExtensions.insertItem(columns, index, value))
+  }
+
+  /** Creates a new table with the column removed. */
+  override def remove(columnToRemove: GenericColumn): Try[DataTable] = {
+    remove(columns.indexOf(columnToRemove))
   }
 
   /** Creates a new table with the column removed. */
@@ -132,7 +154,7 @@ object DataTable {
 
   /** Builds an empty DataTable. */
   def apply(tableName: String): Try[DataTable] = {
-    Success(new DataTable(tableName, Array().toIndexedSeq))
+    Success(new DataTable(tableName, Seq()))
   }
 
   /** Validates columns and builds a new DataTable. */

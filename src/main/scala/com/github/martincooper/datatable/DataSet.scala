@@ -18,12 +18,24 @@ package com.github.martincooper.datatable
 
 import scala.util.{ Success, Failure, Try }
 
+/** ModifiableByName, with additional item (DataTable) indexer. */
+trait ModifiableByTable[V, R] extends ModifiableByName[V, R] {
+  def replace(oldItem: DataTable, newItem: V): Try[R]
+  def insert(itemToInsertAt: DataTable, newItem: V): Try[R]
+  def remove(itemToRemove: DataTable): Try[R]
+}
+
 /** DataSet class. Stores a collection of DataTables */
 class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
-  extends IndexedSeq[DataTable] with ModifiableByName[DataTable, DataSet] {
+  extends IndexedSeq[DataTable] with ModifiableByTable[DataTable, DataSet] {
 
   def name = dataSetName
   def tables = dataTables.toVector
+
+  /** Creates a new DataSet with the table specified replaced with the new table. */
+  override def replace(oldTable: DataTable, newTable: DataTable): Try[DataSet] = {
+    replace(tables.indexOf(oldTable), newTable)
+  }
 
   /** Creates a new DataSet with the table specified replaced with the new table. */
   override def replace(tableName: String, table: DataTable): Try[DataSet] = {
@@ -36,6 +48,11 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
   }
 
   /** Creates a new DataSet with the table inserted at the specified location. */
+  override def insert(tableToInsertAt: DataTable, newTable: DataTable): Try[DataSet] = {
+    insert(tables.indexOf(tableToInsertAt), newTable)
+  }
+
+  /** Creates a new DataSet with the table inserted at the specified location. */
   override def insert(tableName: String, table: DataTable): Try[DataSet] = {
     actionByTableName(tableName, colIdx => insert(colIdx, table))
   }
@@ -43,6 +60,11 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
   /** Creates a new DataSet with the table inserted at the specified location. */
   override def insert(index: Int, table: DataTable): Try[DataSet] = {
     checkTablesAndBuild("inserting", () => VectorExtensions.insertItem(tables, index, table))
+  }
+
+  /** Creates a new DataSet with the table at the specified location removed. */
+  override def remove(tableToRemove: DataTable): Try[DataSet] = {
+    remove(tables.indexOf(tableToRemove))
   }
 
   /** Creates a new DataSet with the table at the specified location removed. */

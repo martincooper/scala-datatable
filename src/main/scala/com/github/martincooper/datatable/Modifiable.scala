@@ -35,3 +35,4 @@ trait ModifiableByName[V, R] extends ModifiableByIndex[V, R] {
   def insert(index: String, value: V): Try[R]
   def remove(index: String): Try[R]
 }
+
