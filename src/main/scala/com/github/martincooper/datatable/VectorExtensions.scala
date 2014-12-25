@@ -27,9 +27,9 @@ object VectorExtensions {
 
   /** Returns a new Vector[T] with the value at the specified index removed. */
   def removeItem[T](vector: Vector[T], index: Int): Try[Vector[T]] = {
-    checkBounds[T](vector, index) match {
-      case false => Failure(DataTableException("Item index out of bounds for remove."))
-      case true =>
+    outOfBounds[T](vector, index) match {
+      case true => Failure(DataTableException("Item index out of bounds for remove."))
+      case false =>
         val (dataStart, dataEnd) = vector.splitAt(index)
         Success(dataStart ++ dataEnd.tail)
     }
@@ -37,24 +37,24 @@ object VectorExtensions {
 
   /** Returns a new Vector[T] with the value replaced at the specified index. */
   def replaceItem[T](vector: Vector[T], index: Int, value: T): Try[Vector[T]] = {
-    checkBounds[T](vector, index) match {
-      case false => Failure(DataTableException("Item index out of bounds for replace."))
-      case true =>
+    outOfBounds[T](vector, index) match {
+      case true => Failure(DataTableException("Item index out of bounds for replace."))
+      case false =>
         Success(vector.updated(index, value))
     }
   }
 
   /** Returns a new Vector[T] with the value inserted at the specified index. */
   def insertItem[T](vector: Vector[T], index: Int, value: T): Try[Vector[T]] = {
-    checkBounds[T](vector, index) match {
-      case false => Failure(DataTableException("Item index out of bounds for insert."))
-      case true =>
+    outOfBounds[T](vector, index) match {
+      case true => Failure(DataTableException("Item index out of bounds for insert."))
+      case false =>
         val (dataStart, dataEnd) = vector.splitAt(index)
         Success(dataStart ++ (value +: dataEnd))
     }
   }
 
-  def checkBounds[T](vector: Vector[T], index: Int): Boolean = {
-    index >= 0 && index <= (vector.length - 1)
+  def outOfBounds[T](vector: Vector[T], index: Int): Boolean = {
+    vector.length == 0 || (index < 0 || index >= vector.length)
   }
 }

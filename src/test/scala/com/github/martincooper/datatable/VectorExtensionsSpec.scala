@@ -97,4 +97,33 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
     modified.failed.get.getMessage should be("Item index out of bounds for insert.")
   }
 
+  "Check Bounds" should "correctly pass if index in bounds." in {
+
+    val validSeq = Seq(1, 2, 3, 4, 5).toVector
+
+    VectorExtensions.outOfBounds(validSeq, 0) should be(false)
+    VectorExtensions.outOfBounds(validSeq, 2) should be(false)
+    VectorExtensions.outOfBounds(validSeq, 4) should be(false)
+  }
+
+  "Check Bounds" should "correctly fail if index is out of bounds." in {
+
+    val validSeq = Seq(1, 2, 3, 4, 5).toVector
+
+    VectorExtensions.outOfBounds(validSeq, -5) should be(true)
+    VectorExtensions.outOfBounds(validSeq, -1) should be(true)
+    VectorExtensions.outOfBounds(validSeq, 5) should be(true)
+  }
+
+  "Check Bounds" should "correctly fail if collection is empty" in {
+
+    val emptySeq = Seq().toVector
+
+    VectorExtensions.outOfBounds(emptySeq, -10) should be(true)
+    VectorExtensions.outOfBounds(emptySeq, -1) should be(true)
+    VectorExtensions.outOfBounds(emptySeq, -0) should be(true)
+    VectorExtensions.outOfBounds(emptySeq, 1) should be(true)
+    VectorExtensions.outOfBounds(emptySeq, 10) should be(true)
+  }
+
 }
