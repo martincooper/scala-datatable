@@ -45,7 +45,7 @@ class DataSetSpec extends FlatSpec with Matchers {
 
     val tableThree = DataTable("TableThree").get
 
-    val newDataSet = dataSet.addTable(tableThree)
+    val newDataSet = dataSet.add(tableThree)
 
     newDataSet.isSuccess should be(true)
     newDataSet.get.tables.length should be(3)
@@ -59,10 +59,10 @@ class DataSetSpec extends FlatSpec with Matchers {
 
     val tableThree = DataTable("TableOne").get
 
-    val newDataSet = dataSet.addTable(tableThree)
+    val newDataSet = dataSet.add(tableThree)
 
     newDataSet.isSuccess should be(false)
-    newDataSet.failed.get should be(DataTableException("Tables contain duplicate names."))
+    newDataSet.failed.get.getMessage should be("Error adding table at specified index.")
   }
 
   "A DataSet" should "allow a table to be removed by name" in {
@@ -72,7 +72,7 @@ class DataSetSpec extends FlatSpec with Matchers {
 
     val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo, tableThree)).get
 
-    val newDataSet = dataSet.removeTable("TableTwo")
+    val newDataSet = dataSet.remove("TableTwo")
 
     newDataSet.isSuccess should be(true)
     newDataSet.get.tables.length should be(2)
@@ -85,37 +85,9 @@ class DataSetSpec extends FlatSpec with Matchers {
 
     val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo)).get
 
-    val newDataSet = dataSet.removeTable("TableOneHundred")
+    val newDataSet = dataSet.remove("TableOneHundred")
 
     newDataSet.isSuccess should be(false)
-    newDataSet.failed.get should be(DataTableException("Table TableOneHundred not found."))
-  }
-
-  "A DataSet" should "allow a table to be removed by reference" in {
-    val tableOne = DataTable("TableOne").get
-    val tableTwo = DataTable("TableTwo").get
-    val tableThree = DataTable("TableThree").get
-
-    val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo, tableThree)).get
-
-    val newDataSet = dataSet.removeTable(tableTwo)
-
-    newDataSet.isSuccess should be(true)
-    newDataSet.get.tables.length should be(2)
-    newDataSet.get.tables should be(Seq(tableOne, tableThree))
-  }
-
-  "A DataSet" should "disallow a table to be removed by reference when its is not found" in {
-    val tableOne = DataTable("TableOne").get
-    val tableTwo = DataTable("TableTwo").get
-
-    val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo)).get
-
-    val newTable = DataTable("TableThree").get
-
-    val newDataSet = dataSet.removeTable(newTable)
-
-    newDataSet.isSuccess should be(false)
-    newDataSet.failed.get should be(DataTableException("Table not found."))
+    newDataSet.failed.get.getMessage should be("Table TableOneHundred not found.")
   }
 }
