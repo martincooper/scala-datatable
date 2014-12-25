@@ -95,6 +95,13 @@ class DataColumnSpec extends FlatSpec with Matchers {
     result.isSuccess should be(false)
   }
 
+  "A Data Column" should "not allow insert data of invalid type" in {
+    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
+
+    val result = originalColumn.insert(2, "String Value")
+    result.isSuccess should be(false)
+  }
+
   "A Data Column" should "be able to remove an existing data value" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 

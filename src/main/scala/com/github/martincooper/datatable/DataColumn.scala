@@ -23,7 +23,7 @@ import scala.util.{ Failure, Success, Try }
  * Generic Column Trait.
  * Allows a collection of columns storing data of distinct types to be stored in a generic collection.
  */
-trait GenericColumn extends ModifiableByIndex[Any, GenericColumn] {
+trait GenericColumn {
   def name: String
   def data: Vector[Any]
   def columnType: Type
@@ -35,25 +35,38 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   def data = columnData.toVector
   def columnType = typeOf[T]
 
-  /** Returns a new DataColumn[T] with the new value appended to the end. */
-  override def add(value: Any): Try[DataColumn[T]] = {
-    val typedValue = value.asInstanceOf[T]
-    Success(new DataColumn[T](name, data :+ typedValue))
-  }
-
-  /** Returns a new DataColumn[T] with the new value at the specified index. */
-  override def replace(index: Int, value: Any): Try[DataColumn[T]] = {
-    checkAndCreateNewColumn(() => VectorExtensions.replaceItem(data, index, value.asInstanceOf[T]))
+  /** Returns a new DataColumn[T] with the value added at the end. */
+  def add[V: TypeTag](value: V): Try[GenericColumn] = {
+    validateType[V](value) match {
+      case false => Failure(DataTableException("Invalid value type on add."))
+      case true =>
+        val typedValue = value.asInstanceOf[T]
+        Success(new DataColumn[T](name, data :+ typedValue))
+    }
   }
 
   /** Returns a new DataColumn[T] with the value inserted at the specified index. */
-  override def insert(index: Int, value: Any): Try[DataColumn[T]] = {
-    val typedValue = value.asInstanceOf[T]
-    checkAndCreateNewColumn(() => VectorExtensions.insertItem(data, index, typedValue))
+  def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
+    validateType[V](value) match {
+      case false => Failure(DataTableException("Invalid value type on insert."))
+      case true =>
+        val typedValue = value.asInstanceOf[T]
+        checkAndCreateNewColumn(() => VectorExtensions.insertItem(data, index, typedValue))
+    }
+  }
+
+  /** Returns a new DataColumn[T] with the new value at the specified index. */
+  def replace[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
+    validateType[V](value) match {
+      case false => Failure(DataTableException("Invalid value type on replace."))
+      case true =>
+        val typedValue = value.asInstanceOf[T]
+        checkAndCreateNewColumn(() => VectorExtensions.replaceItem(data, index, typedValue))
+    }
   }
 
   /** Returns a new DataColumn[T] with the value at the specified removed. */
-  override def remove(index: Int): Try[DataColumn[T]] = {
+  def remove(index: Int): Try[DataColumn[T]] = {
     checkAndCreateNewColumn(() => VectorExtensions.removeItem(data, index))
   }
 
@@ -62,6 +75,10 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
       case Success(modifiedData) => Success(new DataColumn[T](name, modifiedData))
       case Failure(ex) => Failure(ex)
     }
+  }
+
+  private def validateType[V: TypeTag](value: V): Boolean = {
+    if (typeOf[V] == columnType) true else false
   }
 
   override def toString = "Col : " + name
