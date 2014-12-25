@@ -34,7 +34,7 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
 
   /** Creates a new DataSet with the table specified replaced with the new table. */
   override def replace(oldTable: DataTable, newTable: DataTable): Try[DataSet] = {
-    replace(tables.indexOf(oldTable), newTable)
+    replace(tables.indexWhere(table => table eq oldTable), newTable)
   }
 
   /** Creates a new DataSet with the table specified replaced with the new table. */
@@ -49,7 +49,7 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
 
   /** Creates a new DataSet with the table inserted at the specified location. */
   override def insert(tableToInsertAt: DataTable, newTable: DataTable): Try[DataSet] = {
-    insert(tables.indexOf(tableToInsertAt), newTable)
+    insert(tables.indexWhere(table => table eq tableToInsertAt), newTable)
   }
 
   /** Creates a new DataSet with the table inserted at the specified location. */
@@ -64,7 +64,7 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
 
   /** Creates a new DataSet with the table at the specified location removed. */
   override def remove(tableToRemove: DataTable): Try[DataSet] = {
-    remove(tables.indexOf(tableToRemove))
+    remove(tables.indexWhere(table => table eq tableToRemove))
   }
 
   /** Creates a new DataSet with the table at the specified location removed. */
@@ -103,7 +103,7 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
 
     newTables match {
       case Success(modifiedTableSet) => new Success[DataSet](new DataSet(name, modifiedTableSet))
-      case Failure(ex) => Failure(DataTableException("Error " + modification + " table at specified index.", ex))
+      case Failure(ex) => Failure(ex)
     }
   }
 }
