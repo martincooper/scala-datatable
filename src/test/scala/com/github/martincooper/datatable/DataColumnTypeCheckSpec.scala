@@ -25,7 +25,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
 
     val result = originalColumn.add(99l)
     result.isSuccess should be(true)
-    result.get.data should be (Seq(0l, 1l, 2l, 3l, 4l, 99l))
+    result.get.data should be(Seq(0l, 1l, 2l, 3l, 4l, 99l))
   }
 
   "A Data Column" should "not allow add data of invalid type" in {
@@ -33,7 +33,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
 
     val result = originalColumn.add("String Value")
     result.isSuccess should be(false)
-    result.failed.get.getMessage should be ("Invalid value type on add.")
+    result.failed.get.getMessage should be("Invalid value type on add.")
   }
 
   "A Data Column" should "allow insert data of correct type" in {
@@ -41,7 +41,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
 
     val result = originalColumn.insert(2, 99l)
     result.isSuccess should be(true)
-    result.get.data should be (Seq(0l, 1l, 99l, 2l, 3l, 4l))
+    result.get.data should be(Seq(0l, 1l, 99l, 2l, 3l, 4l))
   }
 
   "A Data Column" should "not allow insert data of invalid type" in {
@@ -49,7 +49,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
 
     val result = originalColumn.insert(2, "String Value")
     result.isSuccess should be(false)
-    result.failed.get.getMessage should be ("Invalid value type on insert.")
+    result.failed.get.getMessage should be("Invalid value type on insert.")
   }
 
   "A Data Column" should "allow replace data of correct type" in {
@@ -57,7 +57,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
 
     val result = originalColumn.replace(2, 99l)
     result.isSuccess should be(true)
-    result.get.data should be (Seq(0l, 1l, 99l, 3l, 4l))
+    result.get.data should be(Seq(0l, 1l, 99l, 3l, 4l))
   }
 
   "A Data Column" should "not allow replace data of invalid type" in {
@@ -65,6 +65,6 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
 
     val result = originalColumn.replace(2, "String Value")
     result.isSuccess should be(false)
-    result.failed.get.getMessage should be ("Invalid value type on replace.")
+    result.failed.get.getMessage should be("Invalid value type on replace.")
   }
 }

@@ -27,7 +27,7 @@ trait ModifiableByTable[V, R] extends ModifiableByName[V, R] {
 
 /** DataSet class. Stores a collection of DataTables */
 class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
-  extends IndexedSeq[DataTable] with ModifiableByTable[DataTable, DataSet] {
+    extends IndexedSeq[DataTable] with ModifiableByTable[DataTable, DataSet] {
 
   def name = dataSetName
   def tables = dataTables.toVector

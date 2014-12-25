@@ -16,8 +16,8 @@
 
 package com.github.martincooper.datatable.DataSetSpecs
 
-import com.github.martincooper.datatable.{DataSet, DataTable}
-import org.scalatest.{FlatSpec, Matchers}
+import com.github.martincooper.datatable.{ DataSet, DataTable }
+import org.scalatest.{ FlatSpec, Matchers }
 
 class DataSetInsertTableSpec extends FlatSpec with Matchers {
 
