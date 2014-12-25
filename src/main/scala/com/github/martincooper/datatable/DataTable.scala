@@ -143,7 +143,7 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   /** Outputs a more detailed toString implementation. */
   override def toString() = {
-    val tableDetails = "DataTable:" + name + "[Rows:" + columns.head.data.length + "]"
+    val tableDetails = "DataTable:" + name + "[Rows:" + rowCount() + "]"
     val colDetails = columns.map(col => "[" + col.toString + "]").mkString(" ")
 
     tableDetails + colDetails
