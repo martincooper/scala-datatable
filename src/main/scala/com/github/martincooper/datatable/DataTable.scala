@@ -70,7 +70,7 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   /** Creates a new table with the column at index replaced with the new column. */
   override def replace(index: Int, value: GenericColumn): Try[DataTable] = {
-    checkColsAndBuild("inserting", () => VectorExtensions.replaceItem(columns, index, value))
+    checkColsAndBuild("replacing", () => VectorExtensions.replaceItem(columns, index, value))
   }
 
   /** Creates a new table with the column inserted before the specified column. */
