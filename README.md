@@ -23,7 +23,7 @@ untyped methods depending on how much type info is known at design time.
 
 Most methods have both checked and unchecked versions. The checked ones perform additional bounds checking and return
 results as a Try[T] with detailed error information. The unchecked ones will just return a [T] and throw an exception
-on any out of bounds errors but with slightly faster access on a significantly large amount of updates.
+on any out of bounds errors but with potentially faster access on a significantly large amount of updates.
 
 #Getting Scala DataTable
 
@@ -128,7 +128,7 @@ def filterData() = {
 ```
 
 ### Additional Examples :
-  [Data Access with the DataRow](https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowExamples.md)
+ * [Data Access with the DataRow](https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowExamples.md)
 
 ### Contributing
 

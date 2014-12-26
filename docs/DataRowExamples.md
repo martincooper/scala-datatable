@@ -9,7 +9,7 @@ requirements and what details are known at design time.
 ## Data Access Untyped and Unchecked.
 The following example shows how the data can be accessed using the DataRow when no type information is known
 at design time, or not specified. Also no checking is done, so any out of bounds errors or invalid columns names
-specified will throw an exception.
+will throw an exception.
 
 ```scala
 def accessRowDataAsUntypedAndUnchecked(table: DataTable): Unit = {
@@ -27,7 +27,7 @@ def accessRowDataAsUntypedAndUnchecked(table: DataTable): Unit = {
 ## Data Access Typed and Unchecked.
 The following example shows how the data can be accessed using the DataRow when type information is known
 and provided at design time. Using the 'as[T]' method, no checking is done, so any out of bounds errors or invalid
-columns names specified will throw an exception.
+columns names will throw an exception.
 
 ```scala
 def accessRowDataAsTypedAndUnchecked(table: DataTable): Unit = {
@@ -44,7 +44,7 @@ def accessRowDataAsTypedAndUnchecked(table: DataTable): Unit = {
 
 ## Data Access Untyped and Checked.
 The following example shows how the data can be accessed using the DataRow when no type information is known
-at design time, or not specified, but checking is required. Using the 'get' method, any out of bounds errors or invalid
+at design time, or not specified, but bounds checking is required. Using the 'get' method, any out of bounds errors or invalid
 column names will be safely handled and returned as a Try[T].
 
 ```scala
@@ -66,8 +66,8 @@ def accessRowDataAsUntypedAndChecked(table: DataTable): Unit = {
 
 ## Data Access Typed and Checked.
 The following example shows how the data can be accessed using the DataRow when type information is known
-and provided at design time and full checking is required. Using the 'as[T]' method, any out of bounds errors or
-invalid column names will be safely handled and returned as a Try[T].
+and provided at design time and full bounds and type checking is required. Using the 'getAs[T]' method, any out of
+bounds errors or invalid column names will be safely handled and returned as a Try[T].
 
 ```scala
 def accessRowDataAsTypedAndChecked(table: DataTable): Unit = {
