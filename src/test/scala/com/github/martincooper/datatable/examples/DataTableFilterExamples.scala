@@ -42,14 +42,13 @@ class DataTableFilterExamples {
       row.as[String]("StringColumn").startsWith("A") && row.as[Int]("IntegerColumn") > 10
     })
 
-    // Filtered Results...
+    // Access the filtered results...
     println(filteredData.length)
 
-    // Row data can be accessed using indexers and with no type information...
+    // Row data can be accessed using indexers with no type information...
     filteredData.foreach(row => println(row(0).toString + " : " + row(1).toString))
 
-    // Or by specifying named columns with type info.
+    // Or by specifying the columns by name and with full type info.
     filteredData.foreach(row => println(row.as[String]("StringColumn") + " : " + row.as[Int]("IntegerColumn").toString))
   }
-
 }

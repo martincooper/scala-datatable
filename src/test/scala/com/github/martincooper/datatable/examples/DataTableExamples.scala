@@ -22,9 +22,9 @@ import scala.util.Try
 
 class DataTableExamples {
 
-  def createDataTable(): Try[DataTable] = {
+  def createDataTable() : Try[DataTable] = {
 
-    // Data columns created using a column name and a collection of values.
+    // Data columns created using a unique column name and a collection of values.
     val stringCol = new DataColumn[String]("StringColumn", (1 to 100).map(i => "Cell Value " + i))
     val integerCol = new DataColumn[Int]("IntegerColumn", (1 to 100).map(i => i * 20))
     val booleanCol = new DataColumn[Boolean]("BooleanColumn", (1 to 100).map(i => true))
@@ -32,7 +32,7 @@ class DataTableExamples {
     // DataTable created with using a table name and a collection of Data Columns.
     val dataTableOption = DataTable("NewTable", Seq(stringCol, integerCol, booleanCol))
 
-    // If any of the columns fail validation (duplicate column names, or columns containing
+    // If any of the columns fail validation (duplicate column names, or columns contain
     // data of different lengths), then it'll return a Failure. Else Success[DataTable]
     dataTableOption
   }
@@ -42,7 +42,7 @@ class DataTableExamples {
     // Create a new column.
     val stringCol = new DataColumn[String]("New Column", (1 to 100).map(i => "Another " + i))
 
-    // Call addColumn to return a new DataTable structure with the additional column.
+    // Call add to return a new Try[DataTable] structure with the additional column.
     val updatedTable = dataTable.add(stringCol)
 
     // If adding the additional column fails validation (duplicate column names, or columns
@@ -52,12 +52,11 @@ class DataTableExamples {
 
   def removeColumn(dataTable: DataTable): Try[DataTable] = {
 
-    // Call addColumn to return a new DataTable structure with the additional column.
+    // Call remove to return a new DataTable structure with the additional column.
     val updatedTable = dataTable.remove("ColumnToRemove")
 
     // If removing the column fails validation (column name not found),
     // then it'll return a Failure. Else Success[DataTable]
     updatedTable
   }
-
 }

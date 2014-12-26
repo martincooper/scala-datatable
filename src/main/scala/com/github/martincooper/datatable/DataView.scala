@@ -16,14 +16,13 @@
 
 package com.github.martincooper.datatable
 
+import scala.util.{Failure, Success, Try}
+
 /** Provides a view over a DataTable to store filtered data sets. */
-class DataView private (dataTable: DataTable, dataRows: IndexedSeq[DataRow]) extends IndexedSeq[DataRow] {
+class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow]) extends IndexedSeq[DataRow] {
 
-  /** Property getter for the underlying table. */
   def table = dataTable
-
-  /** Property getter for the row data. */
-  def rows = dataRows
+  def rows = dataRows.toVector
 
   override def length: Int = rows.length
 
@@ -32,15 +31,15 @@ class DataView private (dataTable: DataTable, dataRows: IndexedSeq[DataRow]) ext
 
 object DataView {
 
-  def apply(sourceDataTable: DataTable, dataRows: Iterable[DataRow]): Option[DataView] = {
+  def apply(sourceDataTable: DataTable, dataRows: Iterable[DataRow]): Try[DataView] = {
     val indexedData = dataRows.toIndexedSeq
 
     /** Validate all data rows belong to the same DataTable to ensure data integrity. */
     val tableValid = indexedData.forall(row => row.table eq sourceDataTable)
 
     tableValid match {
-      case true => Some(new DataView(sourceDataTable, indexedData))
-      case _ => None
+      case true => Success(new DataView(sourceDataTable, indexedData))
+      case _ => Failure(DataTableException("DataRows do not all belong to the specified table."))
     }
   }
 }
