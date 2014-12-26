@@ -127,6 +127,9 @@ def filterData() = {
 }
 ```
 
+### Additional Examples :
+  [Data Access with the DataRow](https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowExamples.md)
+
 ### Contributing
 
 Building this project requires SBT 0.13.0.
