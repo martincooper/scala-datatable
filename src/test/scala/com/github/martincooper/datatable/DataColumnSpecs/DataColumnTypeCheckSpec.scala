@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.martincooper.datatable
+package com.github.martincooper.datatable.DataColumnSpecs
 
+import com.github.martincooper.datatable.DataColumn
 import org.scalatest._
 
 class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
