@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.martincooper.datatable
+package com.github.martincooper.datatable.DataColumnSpecs
 
+import com.github.martincooper.datatable.{DataColumn, GenericColumn}
 import org.scalatest._
 
 class DataColumnSpec extends FlatSpec with Matchers {
@@ -120,5 +121,4 @@ class DataColumnSpec extends FlatSpec with Matchers {
     val result = originalColumn.remove(99)
     result.isSuccess should be(false)
   }
-
 }
