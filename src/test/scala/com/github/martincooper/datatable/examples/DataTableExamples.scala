@@ -22,7 +22,7 @@ import scala.util.Try
 
 class DataTableExamples {
 
-  def createDataTable() : Try[DataTable] = {
+  def createDataTable(): Try[DataTable] = {
 
     // Data columns created using a unique column name and a collection of values.
     val stringCol = new DataColumn[String]("StringColumn", (1 to 100).map(i => "Cell Value " + i))

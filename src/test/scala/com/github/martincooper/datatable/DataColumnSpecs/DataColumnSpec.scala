@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataColumnSpecs
 
-import com.github.martincooper.datatable.{DataColumn, GenericColumn}
+import com.github.martincooper.datatable.{ DataColumn, GenericColumn }
 import org.scalatest._
 
 class DataColumnSpec extends FlatSpec with Matchers {

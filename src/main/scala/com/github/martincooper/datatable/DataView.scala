@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 /** Provides a view over a DataTable to store filtered data sets. */
 class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow]) extends IndexedSeq[DataRow] {
