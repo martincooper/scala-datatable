@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.martincooper.datatable
+package com.github.martincooper.datatable.DataTableSpecs
 
-import org.scalatest.{ Matchers, FlatSpec }
+import com.github.martincooper.datatable.{ DataColumn, DataTable, DataTableException }
+import org.scalatest.{ FlatSpec, Matchers }
 
 /** Tests relating to returning a modified version of a table.  */
 class DataTableModificationSpec extends FlatSpec with Matchers {

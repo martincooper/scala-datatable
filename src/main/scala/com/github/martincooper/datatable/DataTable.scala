@@ -16,6 +16,7 @@
 
 package com.github.martincooper.datatable
 
+import scala.reflect.runtime.universe._
 import scala.util.{ Failure, Try, Success }
 
 /** ModifiableByName, with additional item (GenericColumn) indexer. */
@@ -25,7 +26,7 @@ trait ModifiableByColumn[V, R] extends ModifiableByName[V, R] {
   def remove(itemToRemove: GenericColumn): Try[R]
 }
 
-/** DataTable class. Handles the immutable storage of data in a Row / Column format. */
+/** DataTable class. Handles the immutable storage and access of data in a Row / Column format. */
 class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn])
     extends IndexedSeq[DataRow] with ModifiableByColumn[GenericColumn, DataTable] {
 
@@ -36,26 +37,68 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   private val columnNameMapper = columns.map(col => col.name -> col).toMap
   private val columnIndexMapper = columns.zipWithIndex.map { case (col, idx) => idx -> col }.toMap
 
+  private def checkedColumnIndexMapper(columnIndex: Int): Try[GenericColumn] = {
+    columnIndexMapper.get(columnIndex) match {
+      case Some(column) => Success(column)
+      case _ => Failure(DataTableException("Specified column index not found."))
+    }
+  }
+
+  private def checkedColumnNameMapper(columnName: String): Try[GenericColumn] = {
+    columnNameMapper.get(columnName) match {
+      case Some(column) => Success(column)
+      case _ => Failure(DataTableException("Specified column name not found."))
+    }
+  }
+
   /** Gets column by index / name. */
   def col(columnIndex: Int): GenericColumn = columnIndexMapper(columnIndex)
   def col(columnName: String): GenericColumn = columnNameMapper(columnName)
 
-  /** Gets column by index / name as Option in case it doesn't exist. */
-  def getCol(columnIndex: Int): Option[GenericColumn] = columnIndexMapper.get(columnIndex)
-  def getCol(columnName: String): Option[GenericColumn] = columnNameMapper.get(columnName)
+  /** Gets column by index as Try[GenericColumn] in case it doesn't exist. */
+  def getCol(columnIndex: Int): Try[GenericColumn] = {
+    checkedColumnIndexMapper(columnIndex)
+  }
 
-  /** Gets typed column by index / name. */
-  def colAs[T](columnIndex: Int): DataColumn[T] = columnIndexMapper(columnIndex).asInstanceOf[DataColumn[T]]
-  def colAs[T](columnName: String): DataColumn[T] = columnNameMapper(columnName).asInstanceOf[DataColumn[T]]
+  /** Gets column by name as Try[GenericColumn] in case it doesn't exist. */
+  def getCol(columnName: String): Try[GenericColumn] = {
+    checkedColumnNameMapper(columnName)
+  }
 
-  /** Gets typed column by index / name as Option in case it doesn't exist or invalid type. */
-  def getColAs[T](columnIndex: Int): Option[DataColumn[T]] = toTypedCol(getCol(columnIndex))
-  def getColAs[T](columnName: String): Option[DataColumn[T]] = toTypedCol(getCol(columnName))
+  /** Gets typed column by index. */
+  def colAs[T: TypeTag](columnIndex: Int): DataColumn[T] = {
+    getColAs[T](columnIndex) match {
+      case Success(typedCol) => typedCol
+      case Failure(ex) => throw ex
+    }
+  }
 
-  private def toTypedCol[T](column: Option[GenericColumn]): Option[DataColumn[T]] = {
-    column match {
-      case Some(col) => Try(col.asInstanceOf[DataColumn[T]]).toOption
-      case _ => None
+  /** Gets typed column by name. */
+  def colAs[T: TypeTag](columnName: String): DataColumn[T] = {
+    getColAs[T](columnName) match {
+      case Success(typedCol) => typedCol
+      case Failure(ex) => throw ex
+    }
+  }
+
+  /** Gets typed column by index as Try[DataColumn[T]] in case it doesn't exist or invalid type. */
+  def getColAs[T: TypeTag](columnIndex: Int): Try[DataColumn[T]] = {
+    checkedColumnIndexMapper(columnIndex).flatMap { column =>
+      validateColumnType[T](column)
+    }
+  }
+
+  /** Gets typed column by name as Try[DataColumn[T]] in case it doesn't exist or invalid type. */
+  def getColAs[T: TypeTag](columnName: String): Try[DataColumn[T]] = {
+    checkedColumnNameMapper(columnName).flatMap { column =>
+      validateColumnType[T](column)
+    }
+  }
+
+  private def validateColumnType[T: TypeTag](column: GenericColumn): Try[DataColumn[T]] = {
+    typeOf[T] =:= column.columnType match {
+      case true => Success(column.asInstanceOf[DataColumn[T]])
+      case _ => Failure(DataTableException("Column type doesn't match type requested."))
     }
   }
 

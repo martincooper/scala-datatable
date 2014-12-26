@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package com.github.martincooper.datatable
+package com.github.martincooper.datatable.DataTableSpecs
 
-import org.scalatest.{ Matchers, FlatSpec }
+import com.github.martincooper.datatable.{ DataColumn, DataTable, DataTableException, GenericColumn }
+import org.scalatest.{ FlatSpec, Matchers }
 
 class DataTableSpec extends FlatSpec with Matchers {
 
-  "A new DataTable" should "be creatable with a name and no columns" in {
-    val dataTable = DataTable("TestTable", Array().toIndexedSeq)
+  "A new DataTable" can "be created with a name and no columns" in {
+    val dataTable = DataTable("TestTable")
 
     dataTable.isSuccess should be(true)
     dataTable.get.name should be("TestTable")
     dataTable.get.columns.length should be(0)
   }
 
-  "A new DataTable" should "be created with a name and default columns" in {
-
+  "A new DataTable" can "be created with a name and default columns" in {
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 19) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 19) map { i => "Value : " + i })
 
@@ -48,7 +48,7 @@ class DataTableSpec extends FlatSpec with Matchers {
     dataTable.columns(1).data(4) should be("Value : 4")
   }
 
-  "A new DataTable" should " return correct row count when valid data." in {
+  "A DataTable" should "return correct row count" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 19) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 19) map { i => "Value : " + i })
@@ -59,7 +59,7 @@ class DataTableSpec extends FlatSpec with Matchers {
     result.get.rowCount() should be(20)
   }
 
-  "A new DataTable" should " return correct row count when no columns." in {
+  "A DataTable" should "return correct row count when it has no columns" in {
 
     val result = DataTable("TestTable", Seq[GenericColumn]())
 
@@ -67,7 +67,7 @@ class DataTableSpec extends FlatSpec with Matchers {
     result.get.rowCount() should be(0)
   }
 
-  "A new DataTable" should "validate different column lengths" in {
+  "A new DataTable" should "prevent different column lengths" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 20) map { i => "Value : " + i })
@@ -78,7 +78,7 @@ class DataTableSpec extends FlatSpec with Matchers {
     result.failed.get should be(DataTableException("Columns have uneven row count."))
   }
 
-  "A new DataTable" should "validate duplicate column names" in {
+  "A new DataTable" should "prevent duplicate column names" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColOne", (0 to 10) map { i => "Value : " + i })

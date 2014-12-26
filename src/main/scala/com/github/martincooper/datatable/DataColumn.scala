@@ -69,7 +69,7 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
     if (typeOf[V] =:= columnType) {
       Success(value.asInstanceOf[T])
     } else {
-      Failure(DataTableException(s"Invalid value type on ${reason}."))
+      Failure(DataTableException(s"Invalid value type on $reason."))
     }
   }
 

@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable
 
-import scala.util.Try
+import scala.util.{ Failure, Success, Try }
 
 /** Allows access to the underlying data in a row format. */
 class DataRow(dataTable: DataTable, index: Int) {
@@ -31,10 +31,10 @@ class DataRow(dataTable: DataTable, index: Int) {
   def apply(columnName: String): Any = table.col(columnName).data(rowIndex)
 
   /** Gets the column by index, as Option in case it doesn't exist. */
-  def get(columnIndex: Int): Option[Any] = colToValue(table.getCol(columnIndex))
+  def get(columnIndex: Int): Try[Any] = colToValue(table.getCol(columnIndex))
 
   /** Gets the column by name, as Option in case it doesn't exist. */
-  def get(columnName: String): Option[Any] = colToValue(table.getCol(columnName))
+  def get(columnName: String): Try[Any] = colToValue(table.getCol(columnName))
 
   /** Gets the typed column by index. */
   def as[T](columnIndex: Int): T = table.col(columnIndex).data(rowIndex).asInstanceOf[T]
@@ -43,22 +43,22 @@ class DataRow(dataTable: DataTable, index: Int) {
   def as[T](columnName: String): T = table.col(columnName).data(rowIndex).asInstanceOf[T]
 
   /** Gets the typed column by index, as Option in case it doesn't exist or invalid type. */
-  def getAs[T](columnIndex: Int): Option[T] = colToTypedValue(table.getCol(columnIndex))
+  def getAs[T](columnIndex: Int): Try[T] = colToTypedValue(table.getCol(columnIndex))
 
   /** Gets the typed column by name, as Option in case it doesn't exist or invalid type. */
-  def getAs[T](columnName: String): Option[T] = colToTypedValue(table.getCol(columnName))
+  def getAs[T](columnName: String): Try[T] = colToTypedValue(table.getCol(columnName))
 
-  private def colToValue(column: Option[GenericColumn]): Option[Any] = {
+  private def colToValue(column: Try[GenericColumn]): Try[Any] = {
     column match {
-      case Some(col) => Try(col.data(rowIndex)).toOption
-      case _ => None
+      case Success(col) => Try(col.data(rowIndex))
+      case Failure(ex) => Failure(ex)
     }
   }
 
-  private def colToTypedValue[T](column: Option[GenericColumn]): Option[T] = {
+  private def colToTypedValue[T](column: Try[GenericColumn]): Try[T] = {
     column match {
-      case Some(col) => Try(col.data(rowIndex).asInstanceOf[T]).toOption
-      case _ => None
+      case Success(col) => Try(col.data(rowIndex).asInstanceOf[T])
+      case Failure(ex) => Failure(ex)
     }
   }
 }
