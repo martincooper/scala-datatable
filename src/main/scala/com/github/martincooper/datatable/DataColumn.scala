@@ -78,7 +78,7 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   }
 
   private def validateType[V: TypeTag](value: V): Boolean = {
-    if (typeOf[V] == columnType) true else false
+    if (typeOf[V] =:= columnType) true else false
   }
 
   override def toString = "Col : " + name
