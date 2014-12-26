@@ -159,11 +159,7 @@ object DataTable {
 
   /** Validates columns and builds a new DataTable. */
   def apply(tableName: String, columns: Iterable[GenericColumn]): Try[DataTable] = {
-
-    validateDataColumns(columns) match {
-      case Failure(ex) => new Failure(ex)
-      case Success(_) => Success(new DataTable(tableName, columns))
-    }
+    validateDataColumns(columns) map { _ => new DataTable(tableName, columns) }
   }
 
   def validateDataColumns(columns: Iterable[GenericColumn]): Try[Unit] = {
