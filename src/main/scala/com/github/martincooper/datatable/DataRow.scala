@@ -31,10 +31,10 @@ class DataRow private (dataTable: DataTable, index: Int) {
   /** Indexer using the column index. */
   def apply(columnName: String): Any = table.col(columnName).data(rowIndex)
 
-  /** Gets the column by index, as Option in case it doesn't exist. */
+  /** Gets the column by index, as Try[Any] in case it doesn't exist. */
   def get(columnIndex: Int): Try[Any] = colToValue(table.getCol(columnIndex))
 
-  /** Gets the column by name, as Option in case it doesn't exist. */
+  /** Gets the column by name, as Try[Any] in case it doesn't exist. */
   def get(columnName: String): Try[Any] = colToValue(table.getCol(columnName))
 
   /** Gets the typed column by index. */
@@ -43,10 +43,10 @@ class DataRow private (dataTable: DataTable, index: Int) {
   /** Gets the typed column by name. */
   def as[T: TypeTag](columnName: String): T = table.col(columnName).data(rowIndex).asInstanceOf[T]
 
-  /** Gets the typed column by index, as Option in case it doesn't exist or invalid type. */
+  /** Gets the typed column by index, as Try[T] in case it doesn't exist or invalid type. */
   def getAs[T: TypeTag](columnIndex: Int): Try[T] = colToTypedValue(table.getCol(columnIndex))
 
-  /** Gets the typed column by name, as Option in case it doesn't exist or invalid type. */
+  /** Gets the typed column by name, as Try[T] in case it doesn't exist or invalid type. */
   def getAs[T: TypeTag](columnName: String): Try[T] = colToTypedValue(table.getCol(columnName))
 
   private def colToValue(column: Try[GenericColumn]): Try[Any] = {
