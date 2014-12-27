@@ -125,5 +125,4 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
     VectorExtensions.outOfBounds(emptySeq, 1) should be(true)
     VectorExtensions.outOfBounds(emptySeq, 10) should be(true)
   }
-
 }

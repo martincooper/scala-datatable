@@ -19,7 +19,7 @@ package com.github.martincooper.datatable
 import scala.util.{ Failure, Success, Try }
 
 /** Allows access to the underlying data in a row format. */
-class DataRow(dataTable: DataTable, index: Int) {
+class DataRow private (dataTable: DataTable, index: Int) {
 
   val table = dataTable
   val rowIndex = index
@@ -59,6 +59,17 @@ class DataRow(dataTable: DataTable, index: Int) {
     column match {
       case Success(col) => Try(col.data(rowIndex).asInstanceOf[T])
       case Failure(ex) => Failure(ex)
+    }
+  }
+}
+
+object DataRow {
+
+  /** Builds a DataRow validating the index. */
+  def apply(dataTable: DataTable, rowIndex: Int): Try[DataRow] = {
+    VectorExtensions.outOfBounds(dataTable.rowCount(), rowIndex) match {
+      case false => Success(new DataRow(dataTable, rowIndex))
+      case _ => Failure(DataTableException("Invalid row index for DataRow."))
     }
   }
 }

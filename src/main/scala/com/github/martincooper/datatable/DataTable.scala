@@ -111,7 +111,7 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   override def length: Int = rowCount()
 
-  override def apply(idx: Int): DataRow = new DataRow(this, idx)
+  override def apply(idx: Int): DataRow = DataRow(this, idx).get
 
   /** Creates a new table with the column specified replaced with the new column. */
   override def replace(oldColumn: GenericColumn, newColumn: GenericColumn): Try[DataTable] = {

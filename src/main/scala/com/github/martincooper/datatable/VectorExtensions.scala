@@ -54,7 +54,13 @@ object VectorExtensions {
     }
   }
 
+  /** Returns true if the specified index is out of bounds, assuming zero based. */
   def outOfBounds[T](vector: Vector[T], index: Int): Boolean = {
-    vector.length == 0 || (index < 0 || index >= vector.length)
+    outOfBounds(vector.length, index)
+  }
+
+  /** Returns true if the specified index is out of bounds. */
+  def outOfBounds(itemCount: Int, index: Int): Boolean = {
+    itemCount == 0 || (index < 0 || index >= itemCount)
   }
 }
