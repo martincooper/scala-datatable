@@ -84,21 +84,14 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   /** Gets typed column by index as Try[DataColumn[T]] in case it doesn't exist or invalid type. */
   def getColAs[T: TypeTag](columnIndex: Int): Try[DataColumn[T]] = {
     checkedColumnIndexMapper(columnIndex).flatMap { column =>
-      validateColumnType[T](column)
+      column.toDataColumn[T]
     }
   }
 
   /** Gets typed column by name as Try[DataColumn[T]] in case it doesn't exist or invalid type. */
   def getColAs[T: TypeTag](columnName: String): Try[DataColumn[T]] = {
     checkedColumnNameMapper(columnName).flatMap { column =>
-      validateColumnType[T](column)
-    }
-  }
-
-  private def validateColumnType[T: TypeTag](column: GenericColumn): Try[DataColumn[T]] = {
-    typeOf[T] =:= column.columnType match {
-      case true => Success(column.asInstanceOf[DataColumn[T]])
-      case _ => Failure(DataTableException("Column type doesn't match type requested."))
+      column.toDataColumn[T]
     }
   }
 

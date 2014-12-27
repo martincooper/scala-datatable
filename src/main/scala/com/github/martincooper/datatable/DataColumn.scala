@@ -81,7 +81,14 @@ object GenericColumn {
   implicit class GenericColExt(val col: GenericColumn) extends AnyVal {
 
     /** Casts the generic column back to the specified type. */
-    def as[T]: DataColumn[T] =
-      col.asInstanceOf[DataColumn[T]]
+    def as[T: TypeTag]: DataColumn[T] = toDataColumn[T].get
+
+    /** Casts the generic column into the specified type after performing type checks. */
+    def toDataColumn[T: TypeTag]: Try[DataColumn[T]] = {
+      typeOf[T] =:= col.columnType match {
+        case true => Success(col.asInstanceOf[DataColumn[T]])
+        case _ => Failure(DataTableException("Column type doesn't match type requested."))
+      }
+    }
   }
 }

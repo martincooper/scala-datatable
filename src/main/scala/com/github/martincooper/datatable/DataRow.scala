@@ -16,6 +16,7 @@
 
 package com.github.martincooper.datatable
 
+import scala.reflect.runtime.universe._
 import scala.util.{ Failure, Success, Try }
 
 /** Allows access to the underlying data in a row format. */
@@ -37,16 +38,16 @@ class DataRow private (dataTable: DataTable, index: Int) {
   def get(columnName: String): Try[Any] = colToValue(table.getCol(columnName))
 
   /** Gets the typed column by index. */
-  def as[T](columnIndex: Int): T = table.col(columnIndex).data(rowIndex).asInstanceOf[T]
+  def as[T: TypeTag](columnIndex: Int): T = table.col(columnIndex).data(rowIndex).asInstanceOf[T]
 
   /** Gets the typed column by name. */
-  def as[T](columnName: String): T = table.col(columnName).data(rowIndex).asInstanceOf[T]
+  def as[T: TypeTag](columnName: String): T = table.col(columnName).data(rowIndex).asInstanceOf[T]
 
   /** Gets the typed column by index, as Option in case it doesn't exist or invalid type. */
-  def getAs[T](columnIndex: Int): Try[T] = colToTypedValue(table.getCol(columnIndex))
+  def getAs[T: TypeTag](columnIndex: Int): Try[T] = colToTypedValue(table.getCol(columnIndex))
 
   /** Gets the typed column by name, as Option in case it doesn't exist or invalid type. */
-  def getAs[T](columnName: String): Try[T] = colToTypedValue(table.getCol(columnName))
+  def getAs[T: TypeTag](columnName: String): Try[T] = colToTypedValue(table.getCol(columnName))
 
   private def colToValue(column: Try[GenericColumn]): Try[Any] = {
     column match {
@@ -55,11 +56,11 @@ class DataRow private (dataTable: DataTable, index: Int) {
     }
   }
 
-  private def colToTypedValue[T](column: Try[GenericColumn]): Try[T] = {
-    column match {
-      case Success(col) => Try(col.data(rowIndex).asInstanceOf[T])
-      case Failure(ex) => Failure(ex)
-    }
+  private def colToTypedValue[T: TypeTag](tryColumn: Try[GenericColumn]): Try[T] = {
+    for {
+      column <- tryColumn
+      typeCol <- column.toDataColumn[T]
+    } yield typeCol.data(rowIndex)
   }
 }
 
