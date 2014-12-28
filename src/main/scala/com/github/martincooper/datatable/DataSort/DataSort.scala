@@ -26,4 +26,9 @@ object DataSort {
   def quickSort(table: DataTable, sortItems: Iterable[SortItem]): Try[DataView] = {
     DataView(DataTable("Not Yet Implemented").get)
   }
+
+  /** Performs a quick sort of a DataView, returning a sorted DataView. */
+  def quickSort(dataView: DataView, sortItems: Iterable[SortItem]): Try[DataView] = {
+    DataView(DataTable("Not Yet Implemented").get)
+  }
 }

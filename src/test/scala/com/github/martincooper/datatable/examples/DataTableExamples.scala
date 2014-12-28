@@ -36,27 +36,4 @@ class DataTableExamples {
     // data of different lengths), then it'll return a Failure. Else Success[DataTable]
     dataTableOption
   }
-
-  def addColumn(dataTable: DataTable): Try[DataTable] = {
-
-    // Create a new column.
-    val stringCol = new DataColumn[String]("New Column", (1 to 100).map(i => "Another " + i))
-
-    // Call columns.add to return a new Try[DataTable] structure with the additional column.
-    val updatedTable = dataTable.columns.add(stringCol)
-
-    // If adding the additional column fails validation (duplicate column names, or columns
-    // contain data of different lengths), then it'll return a Failure. Else Success[DataTable]
-    updatedTable
-  }
-
-  def removeColumn(dataTable: DataTable): Try[DataTable] = {
-
-    // Call columns.remove to return a new DataTable structure with the additional column.
-    val updatedTable = dataTable.columns.remove("ColumnToRemove")
-
-    // If removing the column fails validation (column name not found),
-    // then it'll return a Failure. Else Success[DataTable]
-    updatedTable
-  }
 }

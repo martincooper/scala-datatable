@@ -6,7 +6,7 @@ The DataRow is used the access the underlying table data in a standard row forma
 searching, mapping and other common functionality. There are a number of methods to access the data depending on
 requirements and what details are known at design time.
 
-## Data Access Untyped and Unchecked.
+## Data Access : Untyped and unchecked.
 The following example shows how the data can be accessed using the DataRow when no type information is known
 at design time, or not specified. Also no checking is done, so any out of bounds errors or invalid columns names
 will throw an exception.
@@ -24,7 +24,7 @@ def accessRowDataAsUntypedAndUnchecked(table: DataTable): Unit = {
 }
 ```
 
-## Data Access Typed and Unchecked.
+## Data Access : Typed and unchecked.
 The following example shows how the data can be accessed using the DataRow when type information is known
 and provided at design time. Using the 'as[T]' method, no checking is done, so any out of bounds errors or invalid
 columns names will throw an exception.
@@ -42,7 +42,7 @@ def accessRowDataAsTypedAndUnchecked(table: DataTable): Unit = {
 }
 ```
 
-## Data Access Untyped and Checked.
+## Data Access : Untyped and checked.
 The following example shows how the data can be accessed using the DataRow when no type information is known
 at design time, or not specified, but bounds checking is required. Using the 'get' method, any out of bounds errors or invalid
 column names will be safely handled and returned as a Try[T].
@@ -64,7 +64,7 @@ def accessRowDataAsUntypedAndChecked(table: DataTable): Unit = {
 }
 ```
 
-## Data Access Typed and Checked.
+## Data Access : Typed and cChecked.
 The following example shows how the data can be accessed using the DataRow when type information is known
 and provided at design time and full bounds and type checking is required. Using the 'getAs[T]' method, any out of
 bounds errors or invalid column names will be safely handled and returned as a Try[T].

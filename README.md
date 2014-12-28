@@ -129,6 +129,7 @@ def filterData() = {
 
 ### Additional Examples :
  * [Data Access with the DataRow](https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowExamples.md)
+ * [Modifying Data Columns](https://github.com/martincooper/scala-datatable/blob/master/docs/DataColumnModificationExamples.md)
 
 ### Contributing
 
