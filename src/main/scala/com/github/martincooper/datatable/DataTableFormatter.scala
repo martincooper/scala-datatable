@@ -24,11 +24,8 @@ object DataTableFormatter {
   private val lineSeparator = System.getProperty("line.separator")
 
   def prettyPrint(table: DataTable): String = {
-
-    val builder = new StringBuilder
-
-    /** Calculate column details, default widths for each. */
     val colDetails = table.columns.map(column => ColumnDetails(column, colWidth(column)))
+    val builder = new StringBuilder
 
     printHeader(builder, colDetails)
     printRows(builder, table, colDetails)
@@ -51,7 +48,6 @@ object DataTableFormatter {
   }
 
   private def printHeader(builder: StringBuilder, colDetails: Seq[ColumnDetails]) = {
-    /** Calculate total length required for the header row. */
     val totalLength = colDetails.map(_.Width).sum + (colDetails.length * 2)
     val headerFooter = padString("", totalLength, '-')
 

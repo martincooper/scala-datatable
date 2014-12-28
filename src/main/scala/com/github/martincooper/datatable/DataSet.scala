@@ -120,10 +120,10 @@ object DataSet {
     }
   }
 
+  /** Check all tables have distinct table names. */
   def validateDataTables(tables: Iterable[DataTable]): Try[Unit] = {
-    val tableSeq = tables.toSeq
+    val tableSeq = tables.toIndexedSeq
 
-    /** Check all tables have distinct table names. */
     tableSeq.groupBy(_.name).toSeq.length != tableSeq.length match {
       case true => Failure(DataTableException("Tables contain duplicate names."))
       case false => Success(Unit)

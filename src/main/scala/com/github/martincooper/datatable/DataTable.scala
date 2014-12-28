@@ -70,7 +70,7 @@ object DataTable {
   private def validateColumnDataLength(columns: Seq[GenericColumn]): Try[Unit] = {
     columns.groupBy(_.data.length).toSeq.length > 1 match {
       case true => Failure(DataTableException("Columns have uneven row count."))
-      case _  => Success(Unit)
+      case _ => Success(Unit)
     }
   }
 
@@ -78,7 +78,7 @@ object DataTable {
   private def validateDistinctColumnNames(columns: Seq[GenericColumn]): Try[Unit] = {
     columns.groupBy(_.name).toSeq.length != columns.length match {
       case true => Failure(DataTableException("Columns contain duplicate names."))
-      case _  => Success(Unit)
+      case _ => Success(Unit)
     }
   }
 }

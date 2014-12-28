@@ -34,12 +34,19 @@ object DataView {
   def apply(sourceDataTable: DataTable, dataRows: Iterable[DataRow]): Try[DataView] = {
     val indexedData = dataRows.toIndexedSeq
 
-    /** Validate all data rows belong to the same DataTable to ensure data integrity. */
-    val tableValid = indexedData.forall(row => row.table eq sourceDataTable)
+    validateDataRows(sourceDataTable, indexedData) match {
+      case Success(_) => Success(new DataView(sourceDataTable, indexedData))
+      case Failure(ex) => Failure(ex)
+    }
+  }
 
-    tableValid match {
-      case true => Success(new DataView(sourceDataTable, indexedData))
-      case _ => Failure(DataTableException("DataRows do not all belong to the specified table."))
+  /** Validate all data rows belong to the same DataTable to ensure data integrity. */
+  def validateDataRows(sourceDataTable: DataTable, dataRows: Iterable[DataRow]): Try[Unit] = {
+    val indexedData = dataRows.toIndexedSeq
+
+    indexedData.forall(row => row.table eq sourceDataTable) match {
+      case false => Failure(DataTableException("DataRows do not all belong to the specified table."))
+      case true => Success(Unit)
     }
   }
 }
