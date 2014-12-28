@@ -9,7 +9,7 @@ occur in a composable way. This could be if specifying a column name which doesn
 out of bounds error, or duplicate column names.
 
 ## Adding Columns
-To add a new Column, call the add method on the table.columns collection.
+To add a new column, call the add method on the table.columns collection.
 This will return a new DataTable structure including the additional column.
 
 ```scala
@@ -20,7 +20,7 @@ def addColumn(dataTable: DataTable): Try[DataTable] = {
 ```
 
 ## Removing Columns
-To remove a Column, call the remove method on the table.columns collection.
+To remove a column, call the remove method on the table.columns collection.
 This will return a new DataTable structure with the column removed. The column to remove
 can be specified by name, by index, or the column itself.
 
@@ -39,7 +39,7 @@ def removeColumn(dataTable: DataTable, columnToRemove: GenericColumn): Try[DataT
 ```
 
 ## Inserting Columns
-To insert a Column, call the insert method on the table.columns collection.
+To insert a column, call the insert method on the table.columns collection.
 This will return a new DataTable structure with the column inserted. The column
 to insert can be specified by name, by index, or the column itself.
 
@@ -61,7 +61,7 @@ def insertColumn(dataTable: DataTable, insertBeforeColumn: GenericColumn): Try[D
 ```
 
 ## Replacing Columns
-To replace a Column, call the replace method on the table.columns collection.
+To replace a column, call the replace method on the table.columns collection.
 This will return a new DataTable structure with the column replaced. The column
 to replace can be specified by name, by index, or the column itself.
 
