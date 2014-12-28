@@ -14,15 +14,26 @@
  * limitations under the License.
  */
 
-package com.github.martincooper.datatable.DataTableSpecs
+package com.github.martincooper.datatable
 
-import com.github.martincooper.datatable.{ DataColumn, DataTable, DataTableException }
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{ Matchers, FlatSpec }
 
-/** Tests relating to returning a modified version of a table.  */
-class DataTableModificationSpec extends FlatSpec with Matchers {
+class DataColumnCollectionSpec extends FlatSpec with Matchers {
 
-  "A DataTable" should "allow a new column to be added" in {
+  "A new DataColumnCollection" can "be correctly created" in {
+    val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
+    val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })
+    val dataTable = DataTable("TestTable").get
+
+    val dataColumnCollection = DataColumnCollection(dataTable, Seq(dataColOne, dataColTwo))
+
+    dataColumnCollection.length should be(2)
+    dataColumnCollection.columns(0) should be(dataColOne)
+    dataColumnCollection.columns(1) should be(dataColTwo)
+    dataColumnCollection.table should be(dataTable)
+  }
+
+  "A DataColumnCollection" should "allow a new column to be added" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })
@@ -31,7 +42,7 @@ class DataTableModificationSpec extends FlatSpec with Matchers {
 
     val dataColThree = new DataColumn[Boolean]("ColThree", (0 to 10) map (i => if (i > 5) true else false))
 
-    val newTable = originalTable.add(dataColThree)
+    val newTable = originalTable.columns.add(dataColThree)
 
     newTable.isSuccess should be(true)
     newTable.get.columns.length should be(3)
@@ -39,7 +50,7 @@ class DataTableModificationSpec extends FlatSpec with Matchers {
     originalTable.columns.length should be(2)
   }
 
-  "A DataTable" should "disallow a column with a duplicate name to be added" in {
+  "A DataColumnCollection" should "disallow a column with a duplicate name to be added" in {
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })
 
@@ -47,13 +58,13 @@ class DataTableModificationSpec extends FlatSpec with Matchers {
 
     val dataColThree = new DataColumn[Boolean]("ColOne", (0 to 10) map (i => true))
 
-    val newTable = originalTable.add(dataColThree)
+    val newTable = originalTable.columns.add(dataColThree)
 
     newTable.isSuccess should be(false)
     newTable.failed.get.getMessage should be("Error adding column at specified index.")
   }
 
-  "A DataTable" should "allow a column to be removed by name" in {
+  "A DataColumnCollection" should "allow a column to be removed by name" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })
@@ -61,7 +72,7 @@ class DataTableModificationSpec extends FlatSpec with Matchers {
 
     val originalTable = DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
 
-    val newTable = originalTable.remove("ColTwo")
+    val newTable = originalTable.columns.remove("ColTwo")
 
     newTable.isSuccess should be(true)
     newTable.get.columns.length should be(2)
@@ -70,14 +81,14 @@ class DataTableModificationSpec extends FlatSpec with Matchers {
     originalTable.columns.length should be(3)
   }
 
-  "A DataTable" should "disallow an unknown column to be removed by name" in {
+  "A DataColumnCollection" should "disallow an unknown column to be removed by name" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })
 
     val originalTable = DataTable("TestTable", Seq(dataColOne, dataColTwo)).get
 
-    val newTable = originalTable.remove("ColOneHundred")
+    val newTable = originalTable.columns.remove("ColOneHundred")
 
     newTable.isSuccess should be(false)
     newTable.failed.get should be(DataTableException("Column ColOneHundred not found."))
