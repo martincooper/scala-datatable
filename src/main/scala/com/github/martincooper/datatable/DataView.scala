@@ -31,6 +31,10 @@ class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow]) exten
 
 object DataView {
 
+  def apply(sourceDataTable: DataTable): Try[DataView] = {
+    Success(new DataView(sourceDataTable, Seq()))
+  }
+
   def apply(sourceDataTable: DataTable, dataRows: Iterable[DataRow]): Try[DataView] = {
     val indexedData = dataRows.toIndexedSeq
 

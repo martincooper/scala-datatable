@@ -40,7 +40,7 @@ class DataViewSpec extends FlatSpec with Matchers {
   "A new DataView" can "be created with no data rows" in {
     val dataTable = buildTestTable()
 
-    val dataView = DataView(dataTable, Seq())
+    val dataView = DataView(dataTable)
 
     dataView.isSuccess should be(true)
     dataView.get.length should be(0)
