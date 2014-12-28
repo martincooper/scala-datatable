@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataSort
 
-import com.github.martincooper.datatable.{DataView, DataTable}
+import com.github.martincooper.datatable.{ DataView, DataTable }
 
 import scala.util.Try
 
