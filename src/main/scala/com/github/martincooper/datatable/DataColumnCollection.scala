@@ -18,7 +18,7 @@ package com.github.martincooper.datatable
 
 import scala.reflect.runtime.universe._
 import scala.collection.{ mutable, IndexedSeqLike }
-import scala.util.{Success, Failure, Try}
+import scala.util.{ Success, Failure, Try }
 
 /** ModifiableByColumn : ModifiableByName, with additional item (GenericColumn) indexer. */
 trait ModifiableByColumn[V, R] extends ModifiableByName[V, R] {
@@ -29,9 +29,9 @@ trait ModifiableByColumn[V, R] extends ModifiableByName[V, R] {
 
 /** Implements a collection of GenericColumns with additional immutable modification methods implemented. */
 class DataColumnCollection(dataTable: DataTable, dataColumns: Iterable[GenericColumn])
-  extends IndexedSeq[GenericColumn]
-  with IndexedSeqLike[GenericColumn, DataColumnCollection]
-  with ModifiableByColumn[GenericColumn, DataTable] {
+    extends IndexedSeq[GenericColumn]
+    with IndexedSeqLike[GenericColumn, DataColumnCollection]
+    with ModifiableByColumn[GenericColumn, DataTable] {
 
   def table = dataTable
   def columns = dataColumns.toVector
@@ -179,7 +179,7 @@ object DataColumnCollection {
 
   /** Builder for a new DataColumnCollection. */
   def newBuilder(dataTable: DataTable): mutable.Builder[GenericColumn, DataColumnCollection] =
-    Vector.newBuilder[GenericColumn] mapResult(vector => new DataColumnCollection(dataTable, vector))
+    Vector.newBuilder[GenericColumn] mapResult (vector => new DataColumnCollection(dataTable, vector))
 
   /** Builds a DataColumnCollection. */
   def apply(dataTable: DataTable, dataColumns: Iterable[GenericColumn]): DataColumnCollection = {

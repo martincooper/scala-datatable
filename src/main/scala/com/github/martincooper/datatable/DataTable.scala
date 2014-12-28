@@ -60,14 +60,25 @@ object DataTable {
   def validateDataColumns(columns: Iterable[GenericColumn]): Try[Unit] = {
     val colSeq = columns.toSeq
 
-    /** Check all columns have the same number of rows. */
-    if (colSeq.groupBy(_.data.length).toSeq.length > 1)
-      return Failure(DataTableException("Columns have uneven row count."))
+    for {
+      validLength <- validateColumnDataLength(colSeq)
+      validNames <- validateDistinctColumnNames(colSeq)
+    } yield validNames
+  }
 
-    /** Check all columns have distinct column names. */
-    if (colSeq.groupBy(_.name).toSeq.length != colSeq.length)
-      return Failure(DataTableException("Columns contain duplicate names."))
+  /** Check all columns have the same number of rows. */
+  private def validateColumnDataLength(columns: Seq[GenericColumn]): Try[Unit] = {
+    columns.groupBy(_.data.length).toSeq.length > 1 match {
+      case true => Failure(DataTableException("Columns have uneven row count."))
+      case _  => Success(Unit)
+    }
+  }
 
-    Success(Unit)
+  /** Check all columns have distinct names. */
+  private def validateDistinctColumnNames(columns: Seq[GenericColumn]): Try[Unit] = {
+    columns.groupBy(_.name).toSeq.length != columns.length match {
+      case true => Failure(DataTableException("Columns contain duplicate names."))
+      case _  => Success(Unit)
+    }
   }
 }

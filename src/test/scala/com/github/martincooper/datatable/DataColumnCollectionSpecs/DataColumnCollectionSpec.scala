@@ -17,7 +17,7 @@
 package com.github.martincooper.datatable.DataColumnCollectionSpecs
 
 import com.github.martincooper.datatable.{ DataColumn, DataColumnCollection, DataTable }
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 class DataColumnCollectionSpec extends FlatSpec with Matchers {
 
