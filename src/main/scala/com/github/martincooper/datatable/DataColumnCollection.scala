@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import com.github.martincooper.datatable.GenericColumn
+package com.github.martincooper.datatable
 
 import scala.collection.{ mutable, IndexedSeqLike }
 

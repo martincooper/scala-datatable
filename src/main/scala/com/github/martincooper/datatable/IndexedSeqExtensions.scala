@@ -18,15 +18,15 @@ package com.github.martincooper.datatable
 
 import scala.util.{ Success, Failure, Try }
 
-object VectorExtensions {
+object IndexedSeqExtensions {
 
-  /** Returns a new Vector[T] with the new value appended to the end. */
-  def addItem[T](vector: Vector[T], value: T): Try[Vector[T]] = {
+  /** Returns a new IndexedSeq[T] with the new value appended to the end. */
+  def addItem[T](vector: IndexedSeq[T], value: T): Try[IndexedSeq[T]] = {
     Success(vector :+ value)
   }
 
-  /** Returns a new Vector[T] with the value at the specified index removed. */
-  def removeItem[T](vector: Vector[T], index: Int): Try[Vector[T]] = {
+  /** Returns a new IndexedSeq[T] with the value at the specified index removed. */
+  def removeItem[T](vector: IndexedSeq[T], index: Int): Try[IndexedSeq[T]] = {
     outOfBounds[T](vector, index) match {
       case true => Failure(DataTableException("Item index out of bounds for remove."))
       case false =>
@@ -35,8 +35,8 @@ object VectorExtensions {
     }
   }
 
-  /** Returns a new Vector[T] with the value replaced at the specified index. */
-  def replaceItem[T](vector: Vector[T], index: Int, value: T): Try[Vector[T]] = {
+  /** Returns a new IndexedSeq[T] with the value replaced at the specified index. */
+  def replaceItem[T](vector: IndexedSeq[T], index: Int, value: T): Try[IndexedSeq[T]] = {
     outOfBounds[T](vector, index) match {
       case true => Failure(DataTableException("Item index out of bounds for replace."))
       case false =>
@@ -44,8 +44,8 @@ object VectorExtensions {
     }
   }
 
-  /** Returns a new Vector[T] with the value inserted at the specified index. */
-  def insertItem[T](vector: Vector[T], index: Int, value: T): Try[Vector[T]] = {
+  /** Returns a new IndexedSeq[T] with the value inserted at the specified index. */
+  def insertItem[T](vector: IndexedSeq[T], index: Int, value: T): Try[IndexedSeq[T]] = {
     outOfBounds[T](vector, index) match {
       case true => Failure(DataTableException("Item index out of bounds for insert."))
       case false =>
@@ -55,7 +55,7 @@ object VectorExtensions {
   }
 
   /** Returns true if the specified index is out of bounds, assuming zero based. */
-  def outOfBounds[T](vector: Vector[T], index: Int): Boolean = {
+  def outOfBounds[T](vector: IndexedSeq[T], index: Int): Boolean = {
     outOfBounds(vector.length, index)
   }
 

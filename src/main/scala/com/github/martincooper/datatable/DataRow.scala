@@ -68,7 +68,7 @@ object DataRow {
 
   /** Builds a DataRow validating the index. */
   def apply(dataTable: DataTable, rowIndex: Int): Try[DataRow] = {
-    VectorExtensions.outOfBounds(dataTable.rowCount(), rowIndex) match {
+    IndexedSeqExtensions.outOfBounds(dataTable.rowCount(), rowIndex) match {
       case false => Success(new DataRow(dataTable, rowIndex))
       case _ => Failure(DataTableException("Invalid row index for DataRow."))
     }

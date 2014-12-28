@@ -31,7 +31,7 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
     extends IndexedSeq[DataRow] with ModifiableByColumn[GenericColumn, DataTable] {
 
   def name = tableName
-  def columns = dataColumns.toVector
+  def columns = new DataColumnCollection(dataColumns)
 
   /** Mappers, name to col and index to col. */
   private val columnNameMapper = columns.map(col => col.name -> col).toMap
@@ -118,7 +118,7 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   /** Creates a new table with the column at index replaced with the new column. */
   override def replace(index: Int, value: GenericColumn): Try[DataTable] = {
-    checkColsAndBuild("replacing", () => VectorExtensions.replaceItem(columns, index, value))
+    checkColsAndBuild("replacing", () => IndexedSeqExtensions.replaceItem(columns, index, value))
   }
 
   /** Creates a new table with the column inserted before the specified column. */
@@ -133,7 +133,7 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   /** Creates a new table with the column inserted at the specified index. */
   override def insert(index: Int, value: GenericColumn): Try[DataTable] = {
-    checkColsAndBuild("inserting", () => VectorExtensions.insertItem(columns, index, value))
+    checkColsAndBuild("inserting", () => IndexedSeqExtensions.insertItem(columns, index, value))
   }
 
   /** Creates a new table with the column removed. */
@@ -148,12 +148,12 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   /** Returns a new table with the column removed. */
   override def remove(index: Int): Try[DataTable] = {
-    checkColsAndBuild("removing", () => VectorExtensions.removeItem(columns, index))
+    checkColsAndBuild("removing", () => IndexedSeqExtensions.removeItem(columns, index))
   }
 
   /** Returns a new table with the additional column. */
   override def add(newColumn: GenericColumn): Try[DataTable] = {
-    checkColsAndBuild("adding", () => VectorExtensions.addItem(columns, newColumn))
+    checkColsAndBuild("adding", () => IndexedSeqExtensions.addItem(columns, newColumn))
   }
 
   private def actionByColumnName(columnName: String, action: Int => Try[DataTable]): Try[DataTable] = {
@@ -164,7 +164,7 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   }
 
   /** Checks that the new column set is valid, and builds a new DataTable. */
-  private def checkColsAndBuild(modification: String, checkCols: () => Try[Vector[GenericColumn]]): Try[DataTable] = {
+  private def checkColsAndBuild(modification: String, checkCols: () => Try[IndexedSeq[GenericColumn]]): Try[DataTable] = {
 
     val newCols = for {
       newColSet <- checkCols()

@@ -45,23 +45,23 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   /** Returns a new DataColumn[T] with the value inserted at the specified index. */
   def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
     validateType[V]("insert", value).flatMap { typedValue =>
-      checkAndCreateNewColumn(() => VectorExtensions.insertItem(data, index, typedValue))
+      checkAndCreateNewColumn(() => IndexedSeqExtensions.insertItem(data, index, typedValue))
     }
   }
 
   /** Returns a new DataColumn[T] with the new value at the specified index. */
   def replace[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
     validateType[V]("replace", value).flatMap { typedValue =>
-      checkAndCreateNewColumn(() => VectorExtensions.replaceItem(data, index, typedValue))
+      checkAndCreateNewColumn(() => IndexedSeqExtensions.replaceItem(data, index, typedValue))
     }
   }
 
   /** Returns a new DataColumn[T] with the value at the specified removed. */
   def remove(index: Int): Try[DataColumn[T]] = {
-    checkAndCreateNewColumn(() => VectorExtensions.removeItem(data, index))
+    checkAndCreateNewColumn(() => IndexedSeqExtensions.removeItem(data, index))
   }
 
-  private def checkAndCreateNewColumn(transformData: () => Try[Vector[T]]): Try[DataColumn[T]] = {
+  private def checkAndCreateNewColumn(transformData: () => Try[IndexedSeq[T]]): Try[DataColumn[T]] = {
     transformData().map { modifiedData => new DataColumn[T](name, modifiedData) }
   }
 

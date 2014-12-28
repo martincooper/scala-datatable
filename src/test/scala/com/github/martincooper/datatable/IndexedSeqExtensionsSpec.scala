@@ -18,12 +18,12 @@ package com.github.martincooper.datatable
 
 import org.scalatest.{ Matchers, FlatSpec }
 
-class VectorExtensionsSpec extends FlatSpec with Matchers {
+class IndexedSeqExtensionsSpec extends FlatSpec with Matchers {
 
   "Add item" should "correctly append an item to the end of a new collection" in {
     val testVector = Seq().toVector
 
-    val modified = VectorExtensions.addItem(testVector, 9)
+    val modified = IndexedSeqExtensions.addItem(testVector, 9)
 
     modified.isSuccess should be(true)
     modified.get.length should be(1)
@@ -33,7 +33,7 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
   "Add item" should "correctly append an item to the end of existing collection" in {
     val testVector = Seq(1, 2, 3, 4).toVector
 
-    val modified = VectorExtensions.addItem(testVector, 9)
+    val modified = IndexedSeqExtensions.addItem(testVector, 9)
 
     modified.isSuccess should be(true)
     modified.get.length should be(5)
@@ -43,7 +43,7 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
   "Remove item" should "correctly remove an item a collection" in {
     val testVector = Seq(1, 2, 3, 4, 5).toVector
 
-    val modified = VectorExtensions.removeItem(testVector, 2)
+    val modified = IndexedSeqExtensions.removeItem(testVector, 2)
 
     modified.isSuccess should be(true)
     modified.get.length should be(4)
@@ -53,7 +53,7 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
   "Remove item" should "correctly fail if invalid index passed" in {
     val testVector = Seq(1, 2, 3, 4, 5).toVector
 
-    val modified = VectorExtensions.removeItem(testVector, 9)
+    val modified = IndexedSeqExtensions.removeItem(testVector, 9)
 
     modified.isSuccess should be(false)
     modified.failed.get.getMessage should be("Item index out of bounds for remove.")
@@ -62,7 +62,7 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
   "Replace item" should "correctly replace an item a collection" in {
     val testVector = Seq(1, 2, 3, 4, 5).toVector
 
-    val modified = VectorExtensions.replaceItem(testVector, 2, 9)
+    val modified = IndexedSeqExtensions.replaceItem(testVector, 2, 9)
 
     modified.isSuccess should be(true)
     modified.get.length should be(5)
@@ -72,7 +72,7 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
   "Replace item" should "correctly fail if invalid index passed" in {
     val testVector = Seq(1, 2, 3, 4, 5).toVector
 
-    val modified = VectorExtensions.replaceItem(testVector, 9, 9)
+    val modified = IndexedSeqExtensions.replaceItem(testVector, 9, 9)
 
     modified.isSuccess should be(false)
     modified.failed.get.getMessage should be("Item index out of bounds for replace.")
@@ -81,7 +81,7 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
   "Insert item" should "correctly insert an item into a collection" in {
     val testVector = Seq(1, 2, 3, 4, 5).toVector
 
-    val modified = VectorExtensions.insertItem(testVector, 2, 9)
+    val modified = IndexedSeqExtensions.insertItem(testVector, 2, 9)
 
     modified.isSuccess should be(true)
     modified.get.length should be(6)
@@ -91,7 +91,7 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
   "Insert item" should "correctly fail if invalid index passed" in {
     val testVector = Seq(1, 2, 3, 4, 5).toVector
 
-    val modified = VectorExtensions.insertItem(testVector, 9, 9)
+    val modified = IndexedSeqExtensions.insertItem(testVector, 9, 9)
 
     modified.isSuccess should be(false)
     modified.failed.get.getMessage should be("Item index out of bounds for insert.")
@@ -101,28 +101,28 @@ class VectorExtensionsSpec extends FlatSpec with Matchers {
 
     val validSeq = Seq(1, 2, 3, 4, 5).toVector
 
-    VectorExtensions.outOfBounds(validSeq, 0) should be(false)
-    VectorExtensions.outOfBounds(validSeq, 2) should be(false)
-    VectorExtensions.outOfBounds(validSeq, 4) should be(false)
+    IndexedSeqExtensions.outOfBounds(validSeq, 0) should be(false)
+    IndexedSeqExtensions.outOfBounds(validSeq, 2) should be(false)
+    IndexedSeqExtensions.outOfBounds(validSeq, 4) should be(false)
   }
 
   "Check Bounds" should "correctly fail if index is out of bounds." in {
 
     val validSeq = Seq(1, 2, 3, 4, 5).toVector
 
-    VectorExtensions.outOfBounds(validSeq, -5) should be(true)
-    VectorExtensions.outOfBounds(validSeq, -1) should be(true)
-    VectorExtensions.outOfBounds(validSeq, 5) should be(true)
+    IndexedSeqExtensions.outOfBounds(validSeq, -5) should be(true)
+    IndexedSeqExtensions.outOfBounds(validSeq, -1) should be(true)
+    IndexedSeqExtensions.outOfBounds(validSeq, 5) should be(true)
   }
 
   "Check Bounds" should "correctly fail if collection is empty" in {
 
     val emptySeq = Seq().toVector
 
-    VectorExtensions.outOfBounds(emptySeq, -10) should be(true)
-    VectorExtensions.outOfBounds(emptySeq, -1) should be(true)
-    VectorExtensions.outOfBounds(emptySeq, -0) should be(true)
-    VectorExtensions.outOfBounds(emptySeq, 1) should be(true)
-    VectorExtensions.outOfBounds(emptySeq, 10) should be(true)
+    IndexedSeqExtensions.outOfBounds(emptySeq, -10) should be(true)
+    IndexedSeqExtensions.outOfBounds(emptySeq, -1) should be(true)
+    IndexedSeqExtensions.outOfBounds(emptySeq, -0) should be(true)
+    IndexedSeqExtensions.outOfBounds(emptySeq, 1) should be(true)
+    IndexedSeqExtensions.outOfBounds(emptySeq, 10) should be(true)
   }
 }

@@ -44,7 +44,7 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
 
   /** Creates a new DataSet with the table specified replaced with the new table. */
   override def replace(index: Int, table: DataTable): Try[DataSet] = {
-    checkTablesAndBuild("replacing", () => VectorExtensions.replaceItem(tables, index, table))
+    checkTablesAndBuild("replacing", () => IndexedSeqExtensions.replaceItem(tables, index, table))
   }
 
   /** Creates a new DataSet with the table inserted at the specified location. */
@@ -59,7 +59,7 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
 
   /** Creates a new DataSet with the table inserted at the specified location. */
   override def insert(index: Int, table: DataTable): Try[DataSet] = {
-    checkTablesAndBuild("inserting", () => VectorExtensions.insertItem(tables, index, table))
+    checkTablesAndBuild("inserting", () => IndexedSeqExtensions.insertItem(tables, index, table))
   }
 
   /** Creates a new DataSet with the table at the specified location removed. */
@@ -74,12 +74,12 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
 
   /** Creates a new DataSet with the table at the specified location removed. */
   override def remove(index: Int): Try[DataSet] = {
-    checkTablesAndBuild("removing", () => VectorExtensions.removeItem(tables, index))
+    checkTablesAndBuild("removing", () => IndexedSeqExtensions.removeItem(tables, index))
   }
 
   /** Creates a new DataSet with the additional table. */
   override def add(table: DataTable): Try[DataSet] = {
-    checkTablesAndBuild("adding", () => VectorExtensions.addItem(tables, table))
+    checkTablesAndBuild("adding", () => IndexedSeqExtensions.addItem(tables, table))
   }
 
   override def length: Int = tables.length
@@ -94,7 +94,7 @@ class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
   }
 
   /** Checks that the new table set is valid, and builds a new DataSet. */
-  private def checkTablesAndBuild(modification: String, checkTables: () => Try[Vector[DataTable]]): Try[DataSet] = {
+  private def checkTablesAndBuild(modification: String, checkTables: () => Try[IndexedSeq[DataTable]]): Try[DataSet] = {
 
     val newTables = for {
       newTableSet <- checkTables()
