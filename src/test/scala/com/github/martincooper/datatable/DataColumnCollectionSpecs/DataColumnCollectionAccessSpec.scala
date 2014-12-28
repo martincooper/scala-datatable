@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.github.martincooper.datatable.DataTableSpecs
+package com.github.martincooper.datatable.DataColumnCollectionSpecs
 
-import com.github.martincooper.datatable.{ DataTableException, DataColumn, DataTable }
-import org.scalatest.{ FlatSpec, Matchers }
+import com.github.martincooper.datatable.{ DataColumn, DataTableException, DataTable }
+import org.scalatest.{FlatSpec, Matchers}
 
-/** Tests relating to column access methods in a DataTable. */
-class DataTableColAccessSpec extends FlatSpec with Matchers {
+class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
 
   private def buildDefaultTestTable(): DataTable = {
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
@@ -30,182 +29,182 @@ class DataTableColAccessSpec extends FlatSpec with Matchers {
     DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
   }
 
-  "On a DataTable, col" should "return a column requested by name" in {
+  "On a DataTable, columns" should "return a column requested by name" in {
     val table = buildDefaultTestTable()
-    val column = table.col("ColTwo")
+    val column = table.columns("ColTwo")
 
     column.name should be("ColTwo")
     column.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, col" should "fail when an column requested by invalid name" in {
+  "On a DataTable, columns" should "fail when an column requested by invalid name" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[NoSuchElementException] {
-      table.col("XXX")
+      table.columns("XXX")
     }
 
     result.getMessage should be("key not found: XXX")
   }
 
-  "On a DataTable, col" should "allow a column returned by index" in {
+  "On a DataTable, columns" should "allow a column returned by index" in {
     val table = buildDefaultTestTable()
 
-    val column = table.col(1)
+    val column = table.columns(1)
 
     column.name should be("ColTwo")
     column.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, col" should "fail when an column requested by invalid index" in {
+  "On a DataTable, columns" should "fail when an column requested by invalid index" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[NoSuchElementException] {
-      table.col(99)
+      table.columns(99)
     }
 
     result.getMessage should be("key not found: 99")
   }
 
-  "On a DataTable, colAs[T]" should "return a column requested by name" in {
+  "On a DataTable, columns.as[T]" should "return a column requested by name" in {
     val table = buildDefaultTestTable()
-    val column = table.colAs[String]("ColTwo")
+    val column = table.columns.as[String]("ColTwo")
 
     column.name should be("ColTwo")
     column.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, colAs[T]" should "fail when an column requested by invalid name" in {
+  "On a DataTable, columns.as[T]" should "fail when an column requested by invalid name" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[DataTableException] {
-      table.colAs[String]("XXX")
+      table.columns.as[String]("XXX")
     }
 
     result.getMessage should be("Specified column name not found.")
   }
 
-  "On a DataTable, colAs[T]" should "fail when an column requested by name with incorrect type" in {
+  "On a DataTable, columns.as[T]" should "fail when an column requested by name with incorrect type" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[DataTableException] {
-      table.colAs[Int]("ColTwo")
+      table.columns.as[Int]("ColTwo")
     }
 
     result.getMessage should be("Column type doesn't match type requested.")
   }
 
-  "On a DataTable, colAs[T]" should "allow a column returned by index" in {
+  "On a DataTable, columns.as[T]" should "allow a column returned by index" in {
     val table = buildDefaultTestTable()
 
-    val column = table.colAs[String](1)
+    val column = table.columns.as[String](1)
 
     column.name should be("ColTwo")
     column.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, colAs[T]" should "fail when an column requested by invalid index" in {
+  "On a DataTable, columns.as[T]" should "fail when an column requested by invalid index" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[DataTableException] {
-      table.colAs[String](99)
+      table.columns.as[String](99)
     }
 
     result.getMessage should be("Specified column index not found.")
   }
 
-  "On a DataTable, colAs[T]" should "fail when an column requested by index with incorrect type" in {
+  "On a DataTable, columns.as[T]" should "fail when an column requested by index with incorrect type" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[DataTableException] {
-      table.colAs[Int](1)
+      table.columns.as[Int](1)
     }
 
     result.getMessage should be("Column type doesn't match type requested.")
   }
 
-  "On a DataTable, getCol" should "return a column requested by name" in {
+  "On a DataTable, columns.get" should "return a column requested by name" in {
     val table = buildDefaultTestTable()
-    val column = table.getCol("ColTwo")
+    val column = table.columns.get("ColTwo")
 
     column.isSuccess should be(true)
     column.get.name should be("ColTwo")
     column.get.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, getCol" should "fail when an column requested by invalid name" in {
+  "On a DataTable, columns.get" should "fail when an column requested by invalid name" in {
     val table = buildDefaultTestTable()
-    val column = table.getCol("XXX")
+    val column = table.columns.get("XXX")
 
     column.isSuccess should be(false)
   }
 
-  "On a DataTable, getCol" should "allow a column returned by index" in {
+  "On a DataTable, columns.get" should "allow a column returned by index" in {
     val table = buildDefaultTestTable()
 
-    val column = table.getCol(1)
+    val column = table.columns.get(1)
 
     column.isSuccess should be(true)
     column.get.name should be("ColTwo")
     column.get.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, getCol" should "fail when an column requested by invalid index" in {
+  "On a DataTable, columns.get" should "fail when an column requested by invalid index" in {
     val table = buildDefaultTestTable()
-    val column = table.getCol(99)
+    val column = table.columns.get(99)
 
     column.isSuccess should be(false)
   }
 
-  "On a DataTable, getColAs[T]" should "return a column requested by name" in {
+  "On a DataTable, columns.getAs[T]" should "return a column requested by name" in {
     val table = buildDefaultTestTable()
-    val column = table.getColAs[String]("ColTwo")
+    val column = table.columns.getAs[String]("ColTwo")
 
     column.isSuccess should be(true)
     column.get.name should be("ColTwo")
     column.get.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, getColAs[T]" should "fail when an column requested by invalid name" in {
+  "On a DataTable, columns.getAs[T]" should "fail when an column requested by invalid name" in {
     val table = buildDefaultTestTable()
 
-    val column = table.getColAs[String]("XXX")
+    val column = table.columns.getAs[String]("XXX")
     column.isSuccess should be(false)
     column.failed.get.getMessage should be("Specified column name not found.")
   }
 
-  "On a DataTable, getColAs[T]" should "fail when an column requested by name with incorrect type" in {
+  "On a DataTable, columns.getAs[T]" should "fail when an column requested by name with incorrect type" in {
     val table = buildDefaultTestTable()
 
-    val column = table.getColAs[Int]("ColTwo")
+    val column = table.columns.getAs[Int]("ColTwo")
 
     column.isSuccess should be(false)
     column.failed.get.getMessage should be("Column type doesn't match type requested.")
   }
 
-  "On a DataTable, getColAs[T]" should "allow a column returned by index" in {
+  "On a DataTable, columns.getAs[T]" should "allow a column returned by index" in {
     val table = buildDefaultTestTable()
 
-    val column = table.getColAs[String](1)
+    val column = table.columns.getAs[String](1)
 
     column.isSuccess should be(true)
     column.get.name should be("ColTwo")
     column.get.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, getColAs[T]" should "fail when an column requested by invalid index" in {
+  "On a DataTable, columns.getAs[T]" should "fail when an column requested by invalid index" in {
     val table = buildDefaultTestTable()
 
-    val column = table.getColAs[String](99)
+    val column = table.columns.getAs[String](99)
 
     column.isSuccess should be(false)
     column.failed.get.getMessage should be("Specified column index not found.")
   }
 
-  "On a DataTable, getColAs[T]" should "fail when an column requested by index with incorrect type" in {
+  "On a DataTable, columns.getAs[T]" should "fail when an column requested by index with incorrect type" in {
     val table = buildDefaultTestTable()
 
-    val column = table.getColAs[Int](1)
+    val column = table.columns.getAs[Int](1)
 
     column.isSuccess should be(false)
     column.failed.get.getMessage should be("Column type doesn't match type requested.")

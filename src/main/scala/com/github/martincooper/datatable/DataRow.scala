@@ -26,28 +26,28 @@ class DataRow private (dataTable: DataTable, index: Int) {
   val rowIndex = index
 
   /** Indexer using the column name. */
-  def apply(columnIndex: Int): Any = table.col(columnIndex).data(rowIndex)
+  def apply(columnIndex: Int): Any = table.columns(columnIndex).data(rowIndex)
 
   /** Indexer using the column index. */
-  def apply(columnName: String): Any = table.col(columnName).data(rowIndex)
+  def apply(columnName: String): Any = table.columns(columnName).data(rowIndex)
 
   /** Gets the column by index, as Try[Any] in case it doesn't exist. */
-  def get(columnIndex: Int): Try[Any] = colToValue(table.getCol(columnIndex))
+  def get(columnIndex: Int): Try[Any] = colToValue(table.columns.get(columnIndex))
 
   /** Gets the column by name, as Try[Any] in case it doesn't exist. */
-  def get(columnName: String): Try[Any] = colToValue(table.getCol(columnName))
+  def get(columnName: String): Try[Any] = colToValue(table.columns.get(columnName))
 
   /** Gets the typed column by index. */
-  def as[T: TypeTag](columnIndex: Int): T = table.col(columnIndex).data(rowIndex).asInstanceOf[T]
+  def as[T: TypeTag](columnIndex: Int): T = table.columns(columnIndex).data(rowIndex).asInstanceOf[T]
 
   /** Gets the typed column by name. */
-  def as[T: TypeTag](columnName: String): T = table.col(columnName).data(rowIndex).asInstanceOf[T]
+  def as[T: TypeTag](columnName: String): T = table.columns(columnName).data(rowIndex).asInstanceOf[T]
 
   /** Gets the typed column by index, as Try[T] in case it doesn't exist or invalid type. */
-  def getAs[T: TypeTag](columnIndex: Int): Try[T] = colToTypedValue(table.getCol(columnIndex))
+  def getAs[T: TypeTag](columnIndex: Int): Try[T] = colToTypedValue(table.columns.get(columnIndex))
 
   /** Gets the typed column by name, as Try[T] in case it doesn't exist or invalid type. */
-  def getAs[T: TypeTag](columnName: String): Try[T] = colToTypedValue(table.getCol(columnName))
+  def getAs[T: TypeTag](columnName: String): Try[T] = colToTypedValue(table.columns.get(columnName))
 
   private def colToValue(column: Try[GenericColumn]): Try[Any] = {
     column match {

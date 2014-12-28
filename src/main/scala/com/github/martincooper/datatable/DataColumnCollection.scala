@@ -16,6 +16,7 @@
 
 package com.github.martincooper.datatable
 
+import scala.reflect.runtime.universe._
 import scala.collection.{ mutable, IndexedSeqLike }
 import scala.util.{Success, Failure, Try}
 
@@ -26,7 +27,7 @@ trait ModifiableByColumn[V, R] extends ModifiableByName[V, R] {
   def remove(itemToRemove: GenericColumn): Try[R]
 }
 
-/** Implements a collection GenericColumns with additional modification methods implemented. */
+/** Implements a collection of GenericColumns with additional immutable modification methods implemented. */
 class DataColumnCollection(dataTable: DataTable, dataColumns: Iterable[GenericColumn])
   extends IndexedSeq[GenericColumn]
   with IndexedSeqLike[GenericColumn, DataColumnCollection]
@@ -37,10 +38,70 @@ class DataColumnCollection(dataTable: DataTable, dataColumns: Iterable[GenericCo
 
   override def length: Int = columns.length
 
-  override def apply(idx: Int): GenericColumn = columns(idx)
-
   override def newBuilder: mutable.Builder[GenericColumn, DataColumnCollection] =
     DataColumnCollection.newBuilder(table)
+
+  /** Mappers, name to col and index to col. */
+  private val columnNameMapper = columns.map(col => col.name -> col).toMap
+  private val columnIndexMapper = columns.zipWithIndex.map { case (col, idx) => idx -> col }.toMap
+
+  private def checkedColumnIndexMapper(columnIndex: Int): Try[GenericColumn] = {
+    columnIndexMapper.get(columnIndex) match {
+      case Some(column) => Success(column)
+      case _ => Failure(DataTableException("Specified column index not found."))
+    }
+  }
+
+  private def checkedColumnNameMapper(columnName: String): Try[GenericColumn] = {
+    columnNameMapper.get(columnName) match {
+      case Some(column) => Success(column)
+      case _ => Failure(DataTableException("Specified column name not found."))
+    }
+  }
+
+  /** Gets column by index / name. */
+  override def apply(columnIndex: Int): GenericColumn = columnIndexMapper(columnIndex)
+  def apply(columnName: String): GenericColumn = columnNameMapper(columnName)
+
+  /** Gets column by index as Try[GenericColumn] in case it doesn't exist. */
+  def get(columnIndex: Int): Try[GenericColumn] = {
+    checkedColumnIndexMapper(columnIndex)
+  }
+
+  /** Gets column by name as Try[GenericColumn] in case it doesn't exist. */
+  def get(columnName: String): Try[GenericColumn] = {
+    checkedColumnNameMapper(columnName)
+  }
+
+  /** Gets typed column by index. */
+  def as[T: TypeTag](columnIndex: Int): DataColumn[T] = {
+    getAs[T](columnIndex) match {
+      case Success(typedCol) => typedCol
+      case Failure(ex) => throw ex
+    }
+  }
+
+  /** Gets typed column by name. */
+  def as[T: TypeTag](columnName: String): DataColumn[T] = {
+    getAs[T](columnName) match {
+      case Success(typedCol) => typedCol
+      case Failure(ex) => throw ex
+    }
+  }
+
+  /** Gets typed column by index as Try[DataColumn[T]] in case it doesn't exist or invalid type. */
+  def getAs[T: TypeTag](columnIndex: Int): Try[DataColumn[T]] = {
+    checkedColumnIndexMapper(columnIndex).flatMap { column =>
+      column.toDataColumn[T]
+    }
+  }
+
+  /** Gets typed column by name as Try[DataColumn[T]] in case it doesn't exist or invalid type. */
+  def getAs[T: TypeTag](columnName: String): Try[DataColumn[T]] = {
+    checkedColumnNameMapper(columnName).flatMap { column =>
+      column.toDataColumn[T]
+    }
+  }
 
   /** Creates a new table with the column specified replaced with the new column. */
   override def replace(oldColumn: GenericColumn, newColumn: GenericColumn): Try[DataTable] = {
