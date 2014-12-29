@@ -64,7 +64,7 @@ def accessRowDataAsUntypedAndChecked(table: DataTable): Unit = {
 }
 ```
 
-## Data Access : Typed and cChecked.
+## Data Access : Typed and checked.
 The following example shows how the data can be accessed using the DataRow when type information is known
 and provided at design time and full bounds and type checking is required. Using the 'getAs[T]' method, any out of
 bounds errors or invalid column names will be safely handled and returned as a Try[T].
