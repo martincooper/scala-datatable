@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.examples
 
-import com.github.martincooper.datatable.{GenericColumn, DataColumn, DataTable}
+import com.github.martincooper.datatable.{ GenericColumn, DataColumn, DataTable }
 import scala.util.Try
 
 class DataColumnModificationExamples {

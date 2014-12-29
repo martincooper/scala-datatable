@@ -184,4 +184,22 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.isFailure should be(true)
     result.failed.get.getMessage should be("Column type doesn't match type requested.")
   }
+
+  "A DataRow" should "return all values for the current row" in {
+    val dataRow = DataRow(buildTestTable(), 5).get
+
+    val values = dataRow.values
+
+    values.length should be(3)
+    values should be(Seq(5, "Value : 5", true))
+  }
+
+  "A DataRow" should "return all values in map for the current row" in {
+    val dataRow = DataRow(buildTestTable(), 5).get
+
+    val values = dataRow.valueMap
+
+    values.size should be(3)
+    values should be(Map("ColOne" -> 5, "ColTwo" -> "Value : 5", "ColThree" -> true))
+  }
 }

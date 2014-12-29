@@ -25,6 +25,19 @@ class DataRow private (dataTable: DataTable, index: Int) {
   val table = dataTable
   val rowIndex = index
 
+  /** Returns all the values in this row for the current row index. */
+  def values: IndexedSeq[Any] = {
+    table.columns.map(col => col.data(rowIndex))
+  }
+
+  /**
+   * Returns all the values in this row for the current row index
+   * in a ColumnName -> Value Map.
+   */
+  def valueMap: Map[String, Any] = {
+    table.columns.map(col => col.name -> col.data(rowIndex)).toMap
+  }
+
   /** Indexer using the column name. */
   def apply(columnIndex: Int): Any = table.columns(columnIndex).data(rowIndex)
 

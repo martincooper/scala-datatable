@@ -90,40 +90,63 @@ def removeColumn(dataTable: DataTable): Try[DataTable] = {
 }
 ```
 
-## Filtering and Data Access
+## Row / Data Filtering
 Access to the underlying data in the table the DataRow object can be used. This allows either typed or
 untyped access depending if type info is known as design time. The DataTable object implements IndexSeq[DataRow] so
-supports the standard filter, map operations etc. This can be used as shown in the example below.
+supports the standard filter, map operations etc. To filter a table this can be done as follows...
 
 ```scala
-def filterData() = {
-
-  // Some random data to fill the table.
-  val randString = () => Random.alphanumeric.take(10).mkString.toUpperCase
-  val randInt = () => Random.nextInt()
-
-  // Data columns created using a column name and a collection of values.
-  val stringCol = new DataColumn[String]("StringColumn", (1 to 1000).map(i => randString()))
-  val integerCol = new DataColumn[Int]("IntegerColumn", (1 to 1000).map(i => randInt()))
-
-  // DataTable created with using a table name and a collection of Data Columns.
-  val dataTableOption = DataTable("NewTable", Seq(stringCol, integerCol))
-
-  val dataTable = dataTableOption.get
+def filterData(dataTable: DataTable) = {
 
   // Filter the data using the RowData object.
-  val filteredData = dataTable.filter(row => {
+  val dataRows = dataTable.filter(row => {
     row.as[String]("StringColumn").startsWith("A") && row.as[Int]("IntegerColumn") > 10
   })
 
   // Access the filtered results...
-  println(filteredData.length)
+  println(dataRows.length)
 
   // Row data can be accessed using indexers with no type information...
-  filteredData.foreach(row => println(row(0).toString + " : " + row(1).toString))
+  dataRows.foreach(row => println(row(0).toString + " : " + row(1).toString))
 
   // Or by specifying the columns by name and with full type info.
-  filteredData.foreach(row => println(row.as[String]("StringColumn") + " : " + row.as[Int]("IntegerColumn").toString))
+  dataRows.foreach(row => println(row.as[String]("StringColumn") + " : " + row.as[Int]("IntegerColumn").toString))
+}
+```
+
+## Row / Data Access
+DataRow has a number of ways to access the underlying data, depending on the amount of information
+known at design time about the data and it's type. The simplest way with no type information is
+calling .value, or .valueMap on the DataRow item.
+
+```scala
+def simpleDataAccess(dataRow: DataRow) = {
+
+  // Calling dataRow.values returns a IndexedSeq[Any] of all values in the row.
+  println(dataRow.values)
+
+  // Calling dataRow.valueMap returns a Map[String, Any] of all values
+  // in the row mapping column name to value.
+  println(dataRow.valueMap)
+}
+```
+
+The DataRow has additional type checked and bounds checked methods allowing safer and
+more composable access to the underlying data.
+ 
+```scala
+def typedAndCheckedDataAccess(dataRow: DataRow) = {
+
+  // Each .getAs[T] is type checked and bounds / column name checked so can be composed safely
+  val checkedValue = for {
+    name <- dataRow.getAs[String]("FirstName")
+    age <- dataRow.getAs[Int]("Age")
+  } yield name + " is " + age + " years old."
+
+  checkedValue match {
+    case Success(value) => println(value)
+    case Failure(ex) => println("Error occurred : " + ex.getMessage)
+  }
 }
 ```
 
