@@ -26,7 +26,7 @@ class DataTableFilterExamples {
 
     // Filter the data using the RowData object.
     val dataRows = dataTable.filter(row => {
-      row.as[String]("StringColumn").startsWith("A") && row.as[Int]("IntegerColumn") > 10
+      row.as[String]("FirstName").startsWith("Ma") && row.as[Int]("Age") > 18
     })
 
     // Access the filtered results...
@@ -36,7 +36,8 @@ class DataTableFilterExamples {
     dataRows.foreach(row => println(row(0).toString + " : " + row(1).toString))
 
     // Or by specifying the columns by name and with full type info.
-    dataRows.foreach(row => println(row.as[String]("StringColumn") + " : " + row.as[Int]("IntegerColumn").toString))
+    dataRows.foreach(row =>
+      println(row.as[String]("AddressOne") + " : " + row.as[Int]("HouseNumber")))
   }
 
   def simpleDataAccess(dataRow: DataRow) = {
@@ -51,7 +52,8 @@ class DataTableFilterExamples {
 
   def typedAndCheckedDataAccess(dataRow: DataRow) = {
 
-    // Each .getAs[T] is type checked and bounds / column name checked so can be composed safely
+    // Each .getAs[T] is type checked and bounds / column name
+    // checked so can be composed safely.
     val checkedValue = for {
       name <- dataRow.getAs[String]("FirstName")
       age <- dataRow.getAs[Int]("Age")

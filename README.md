@@ -92,7 +92,7 @@ def removeColumn(dataTable: DataTable): Try[DataTable] = {
 
 ## Row / Data Filtering
 Access to the underlying data in the table the DataRow object can be used. This allows either typed or
-untyped access depending if type info is known as design time. The DataTable object implements IndexSeq[DataRow] so
+untyped access depending if type info is known at design time. The DataTable object implements IndexSeq[DataRow] so
 supports the standard filter, map operations etc. To filter a table this can be done as follows...
 
 ```scala
@@ -100,7 +100,7 @@ def filterData(dataTable: DataTable) = {
 
   // Filter the data using the RowData object.
   val dataRows = dataTable.filter(row => {
-    row.as[String]("StringColumn").startsWith("A") && row.as[Int]("IntegerColumn") > 10
+    row.as[String]("FirstName").startsWith("Ma") && row.as[Int]("Age") > 18
   })
 
   // Access the filtered results...
@@ -110,7 +110,8 @@ def filterData(dataTable: DataTable) = {
   dataRows.foreach(row => println(row(0).toString + " : " + row(1).toString))
 
   // Or by specifying the columns by name and with full type info.
-  dataRows.foreach(row => println(row.as[String]("StringColumn") + " : " + row.as[Int]("IntegerColumn").toString))
+  dataRows.foreach(row =>
+    println(row.as[String]("AddressOne") + " : " + row.as[Int]("HouseNumber")))
 }
 ```
 
@@ -133,11 +134,12 @@ def simpleDataAccess(dataRow: DataRow) = {
 
 The DataRow has additional type checked and bounds checked methods allowing safer and
 more composable access to the underlying data.
- 
+
 ```scala
 def typedAndCheckedDataAccess(dataRow: DataRow) = {
 
-  // Each .getAs[T] is type checked and bounds / column name checked so can be composed safely
+  // Each .getAs[T] is type checked and bounds / column name
+  // checked so can be composed safely
   val checkedValue = for {
     name <- dataRow.getAs[String]("FirstName")
     age <- dataRow.getAs[Int]("Age")
