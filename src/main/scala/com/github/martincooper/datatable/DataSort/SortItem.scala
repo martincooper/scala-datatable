@@ -31,7 +31,7 @@ object SortEnum {
 }
 
 /** Defines a column and a corresponding sort order. */
-case class SortItem(name: ItemIdentity, order: SortOrder)
+case class SortItem(columnIdentity: ItemIdentity, order: SortOrder)
 
 object SortItem {
 

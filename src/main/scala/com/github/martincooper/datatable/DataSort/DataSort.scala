@@ -16,9 +16,42 @@
 
 package com.github.martincooper.datatable.DataSort
 
-import com.github.martincooper.datatable.{ DataView, DataTable }
-
+import com.github.martincooper.datatable.{ DataRow, DataView, DataTable}
 import scala.util.Try
+
+/** Wraps a DataRow allowing it to be compared to other rows. */
+case class OrderedDataRow(dataRow: DataRow, sortItems: Iterable[SortItem]) extends Ordered[DataRow] {
+
+  def compare(that: DataRow): Int = {
+    compareBySortItem(that, sortItems)
+  }
+
+  /** Recursive sort method, handles multi-sort on columns. */
+  def compareBySortItem(that: DataRow, sortItems: Iterable[SortItem]): Int = {
+    sortItems match {
+      case Nil => 0
+      case firstItem :: tail => compareValues(firstItem, dataRow, that) match {
+        case 0 => compareBySortItem(that, tail)
+        case result => result
+      }
+    }
+  }
+
+  private def compareValues(sortItem: SortItem, thisDataRow: DataRow, thatDataRow: DataRow): Int = {
+    val thisValue = valueFromIdentity(thisDataRow, sortItem.columnIdentity)
+    val thatValue = valueFromIdentity(thatDataRow, sortItem.columnIdentity)
+
+    thisValue.toString.compareTo(thatValue.toString)
+  }
+
+  /** Gets a value from a DataRow by ItemIdentity. */
+  private def valueFromIdentity(dataRow: DataRow, itemIdentity: ItemIdentity): Try[Any] = {
+    itemIdentity match {
+      case ItemByName(name) => dataRow.get(name)
+      case ItemByIndex(index) => dataRow.get(index)
+    }
+  }
+}
 
 object DataSort {
 
