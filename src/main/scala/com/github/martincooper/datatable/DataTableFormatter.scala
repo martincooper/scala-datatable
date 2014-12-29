@@ -19,42 +19,54 @@ package com.github.martincooper.datatable
 /** Handles the output of a DataTable in a displayable format. */
 object DataTableFormatter {
 
-  private case class ColumnDetails(Col: GenericColumn, Width: Int)
+  private case class ColumnDetails(colIdx: Int, colName: String, width: Int)
 
   private val lineSeparator = System.getProperty("line.separator")
 
+  /** Builds a string displaying the data in a DataView. */
+  def prettyPrint(view: DataView): String = {
+    prettyPrint(view.table, view.rows)
+  }
+
+  /** Builds a string displaying the data in a DataTable. */
   def prettyPrint(table: DataTable): String = {
-    val colDetails = table.columns.map(column => ColumnDetails(column, colWidth(column)))
+    prettyPrint(table, table)
+  }
+
+  private def prettyPrint(table: DataTable, dataRows: IndexedSeq[DataRow]): String = {
+    val colDetails = table.columns.zipWithIndex.map {
+      case (column, index) => ColumnDetails(index, column.name, colWidth(index, column.name, dataRows))
+    }
+
     val builder = new StringBuilder
 
     printHeader(builder, colDetails)
-    printRows(builder, table, colDetails)
+    printRows(builder, dataRows, colDetails)
 
     builder.mkString
   }
 
-  private def printRows(builder: StringBuilder, table: DataTable, colDetails: Seq[ColumnDetails]) = {
-    val rowCount = table.columns.head.data.length
-    (0 to rowCount - 1).foreach(rowIdx => printRow(builder, rowIdx, colDetails))
+  private def printRows(builder: StringBuilder, dataRows: IndexedSeq[DataRow], colDetails: Seq[ColumnDetails]) = {
+    dataRows.foreach(dataRow => printRow(builder, dataRow, colDetails))
   }
 
-  private def printRow(builder: StringBuilder, rowIndex: Int, colDetails: Seq[ColumnDetails]) = {
+  private def printRow(builder: StringBuilder, dataRow: DataRow, colDetails: Seq[ColumnDetails]) = {
     val formattedValues = colDetails.map(details => {
-      val textValue = details.Col.data(rowIndex).toString
-      "|" + colDataString(textValue, details.Width)
+      val textValue = dataRow(details.colIdx).toString
+      "|" + colDataString(textValue, details.width)
     })
 
     writelnExt(builder, formattedValues)
   }
 
   private def printHeader(builder: StringBuilder, colDetails: Seq[ColumnDetails]) = {
-    val totalLength = colDetails.map(_.Width).sum + (colDetails.length * 2)
+    val totalLength = colDetails.map(_.width).sum + (colDetails.length * 2)
     val headerFooter = padString("", totalLength, '-')
 
     writeln(builder)
     writelnExt(builder, headerFooter)
 
-    val formattedHeaders = colDetails.map(col => "|" + colDataString(col.Col.name, col.Width))
+    val formattedHeaders = colDetails.map(col => "|" + colDataString(col.colName, col.width))
 
     writelnExt(builder, formattedHeaders)
     writelnExt(builder, headerFooter)
@@ -66,8 +78,9 @@ object DataTableFormatter {
   }
 
   /** Calculates the column width to use for a column. */
-  private def colWidth(column: GenericColumn) = {
-    maxValueLength(column.name +: column.data) + 2
+  private def colWidth(colIdx: Int, colName: String, dataRows: IndexedSeq[DataRow]) = {
+    val columnData = dataRows.map(row => row(colIdx))
+    maxValueLength(colName +: columnData) + 2
   }
 
   /** Returns the max data length of all the data in a collection. */
