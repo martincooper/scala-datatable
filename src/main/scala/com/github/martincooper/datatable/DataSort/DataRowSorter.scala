@@ -23,14 +23,16 @@ import scala.util.Try
 /** Handles the multi column sorting on a DataRow. */
 object DataRowSorter {
 
-  /** Method to support 'Ordering.fromLessThan' for DataRows. */
-  def fromLessThan(rowOne: DataRow, rowTwo: DataRow, sortItem: SortItem): Boolean = {
-    fromLessThan(rowOne, rowTwo, Seq(sortItem))
+  /** Implements a Ordering[DataRow] for QuickSort. */
+  def dataRowOrdering(sortItem: SortItem): Ordering[DataRow] = {
+    dataRowOrdering(Seq(sortItem))
   }
 
-  /** Method to support 'Ordering.fromLessThan' for DataRows. */
-  def fromLessThan(rowOne: DataRow, rowTwo: DataRow, sortItems: Iterable[SortItem]): Boolean = {
-    compare(rowOne, rowTwo, sortItems) > 0
+  /** Implements a Ordering[DataRow] for QuickSort. */
+  def dataRowOrdering(sortItems: Iterable[SortItem]): Ordering[DataRow] = {
+    Ordering.fromLessThan { (rowOne: DataRow, rowTwo: DataRow) =>
+      compare(rowOne, rowTwo, sortItems) > 0
+    }
   }
 
   /** Method to support 'Ordered[DataRow]' for DataRows. */

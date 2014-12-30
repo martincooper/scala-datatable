@@ -24,27 +24,19 @@ object DataSort {
 
   /** Performs a quick sort of the DataTable, returning a sorted DataView. */
   def quickSort(table: DataTable, sortItems: Iterable[SortItem]): Try[DataView] = {
-
-    val dataRowOrdering = Ordering.fromLessThan { (rowOne: DataRow, rowTwo: DataRow) =>
-      DataRowSorter.fromLessThan(rowOne, rowTwo, sortItems)
-    }
-
     val dataRowArray = table.toArray
-    Sorting.quickSort(dataRowArray)(dataRowOrdering)
+    val dataRowOrdering = DataRowSorter.dataRowOrdering(sortItems)
 
+    Sorting.quickSort(dataRowArray)(dataRowOrdering)
     DataView(table, dataRowArray)
   }
 
   /** Performs a quick sort of a DataView, returning a sorted DataView. */
   def quickSort(dataView: DataView, sortItems: Iterable[SortItem]): Try[DataView] = {
-
-    val dataRowOrdering = Ordering.fromLessThan { (rowOne: DataRow, rowTwo: DataRow) =>
-      DataRowSorter.fromLessThan(rowOne, rowTwo, sortItems)
-    }
-
     val dataRowArray = dataView.rows.toArray
-    Sorting.quickSort(dataRowArray)(dataRowOrdering)
+    val dataRowOrdering = DataRowSorter.dataRowOrdering(sortItems)
 
+    Sorting.quickSort(dataRowArray)(dataRowOrdering)
     DataView(dataView.table, dataRowArray)
   }
 }
