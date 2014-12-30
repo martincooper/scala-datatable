@@ -17,6 +17,7 @@
 package com.github.martincooper.datatable.DataSort
 
 import com.github.martincooper.datatable.DataRow
+import com.github.martincooper.datatable.DataSort.SortEnum.{ Descending, Ascending }
 
 import scala.util.Try
 
@@ -64,7 +65,10 @@ object DataRowSorter {
     val valueOne = valueFromIdentity(rowOne, sortItem.columnIdentity)
     val valueTwo = valueFromIdentity(rowTwo, sortItem.columnIdentity)
 
-    valueOne.toString.compareTo(valueTwo.toString)
+    sortItem.order match {
+      case Ascending => valueOne.toString.compareTo(valueTwo.toString)
+      case Descending => valueTwo.toString.compareTo(valueOne.toString)
+    }
   }
 
   /** Gets a value from a DataRow by ItemIdentity. */

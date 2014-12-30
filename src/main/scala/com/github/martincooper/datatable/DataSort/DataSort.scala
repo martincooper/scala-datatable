@@ -23,12 +23,22 @@ import scala.util.Sorting
 object DataSort {
 
   /** Performs a quick sort of the DataTable, returning a sorted DataView. */
+  def quickSort(table: DataTable, sortItem: SortItem): Try[DataView] = {
+    quickSort(table, Seq(sortItem))
+  }
+
+  /** Performs a quick sort of the DataTable, returning a sorted DataView. */
   def quickSort(table: DataTable, sortItems: Iterable[SortItem]): Try[DataView] = {
     val dataRowArray = table.toArray
     val dataRowOrdering = DataRowSorter.dataRowOrdering(sortItems)
 
     Sorting.quickSort(dataRowArray)(dataRowOrdering)
     DataView(table, dataRowArray)
+  }
+
+  /** Performs a quick sort of a DataView, returning a sorted DataView. */
+  def quickSort(dataView: DataView, sortItem: SortItem): Try[DataView] = {
+    quickSort(dataView, Seq(sortItem))
   }
 
   /** Performs a quick sort of a DataView, returning a sorted DataView. */
