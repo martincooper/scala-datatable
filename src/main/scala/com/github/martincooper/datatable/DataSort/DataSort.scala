@@ -16,52 +16,35 @@
 
 package com.github.martincooper.datatable.DataSort
 
-import com.github.martincooper.datatable.{ DataRow, DataView, DataTable}
+import com.github.martincooper.datatable._
 import scala.util.Try
-
-/** Wraps a DataRow allowing it to be compared to other rows. */
-case class OrderedDataRow(dataRow: DataRow, sortItems: Iterable[SortItem]) extends Ordered[DataRow] {
-
-  def compare(that: DataRow): Int = {
-    compareBySortItem(that, sortItems)
-  }
-
-  /** Recursive sort method, handles multi-sort on columns. */
-  def compareBySortItem(that: DataRow, sortItems: Iterable[SortItem]): Int = {
-    sortItems match {
-      case Nil => 0
-      case firstItem :: tail => compareValues(firstItem, dataRow, that) match {
-        case 0 => compareBySortItem(that, tail)
-        case result => result
-      }
-    }
-  }
-
-  private def compareValues(sortItem: SortItem, thisDataRow: DataRow, thatDataRow: DataRow): Int = {
-    val thisValue = valueFromIdentity(thisDataRow, sortItem.columnIdentity)
-    val thatValue = valueFromIdentity(thatDataRow, sortItem.columnIdentity)
-
-    thisValue.toString.compareTo(thatValue.toString)
-  }
-
-  /** Gets a value from a DataRow by ItemIdentity. */
-  private def valueFromIdentity(dataRow: DataRow, itemIdentity: ItemIdentity): Try[Any] = {
-    itemIdentity match {
-      case ItemByName(name) => dataRow.get(name)
-      case ItemByIndex(index) => dataRow.get(index)
-    }
-  }
-}
+import scala.util.Sorting
 
 object DataSort {
 
   /** Performs a quick sort of the DataTable, returning a sorted DataView. */
   def quickSort(table: DataTable, sortItems: Iterable[SortItem]): Try[DataView] = {
-    DataView(DataTable("Not Yet Implemented").get)
+
+    val dataRowOrdering = Ordering.fromLessThan { (rowOne: DataRow, rowTwo: DataRow) =>
+      DataRowSorter.fromLessThan(rowOne, rowTwo, sortItems)
+    }
+
+    val dataRowArray = table.toArray
+    Sorting.quickSort(dataRowArray)(dataRowOrdering)
+
+    DataView(table, dataRowArray)
   }
 
   /** Performs a quick sort of a DataView, returning a sorted DataView. */
   def quickSort(dataView: DataView, sortItems: Iterable[SortItem]): Try[DataView] = {
-    DataView(DataTable("Not Yet Implemented").get)
+
+    val dataRowOrdering = Ordering.fromLessThan { (rowOne: DataRow, rowTwo: DataRow) =>
+      DataRowSorter.fromLessThan(rowOne, rowTwo, sortItems)
+    }
+
+    val dataRowArray = dataView.rows.toArray
+    Sorting.quickSort(dataRowArray)(dataRowOrdering)
+
+    DataView(dataView.table, dataRowArray)
   }
 }
