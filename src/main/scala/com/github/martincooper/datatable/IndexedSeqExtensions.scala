@@ -21,42 +21,42 @@ import scala.util.{ Success, Failure, Try }
 object IndexedSeqExtensions {
 
   /** Returns a new IndexedSeq[T] with the new value appended to the end. */
-  def addItem[T](vector: IndexedSeq[T], value: T): Try[IndexedSeq[T]] = {
-    Success(vector :+ value)
+  def addItem[T](items: IndexedSeq[T], value: T): Try[IndexedSeq[T]] = {
+    Success(items :+ value)
   }
 
   /** Returns a new IndexedSeq[T] with the value at the specified index removed. */
-  def removeItem[T](vector: IndexedSeq[T], index: Int): Try[IndexedSeq[T]] = {
-    outOfBounds[T](vector, index) match {
+  def removeItem[T](items: IndexedSeq[T], index: Int): Try[IndexedSeq[T]] = {
+    outOfBounds[T](items, index) match {
       case true => Failure(DataTableException("Item index out of bounds for remove."))
       case false =>
-        val (dataStart, dataEnd) = vector.splitAt(index)
+        val (dataStart, dataEnd) = items.splitAt(index)
         Success(dataStart ++ dataEnd.tail)
     }
   }
 
   /** Returns a new IndexedSeq[T] with the value replaced at the specified index. */
-  def replaceItem[T](vector: IndexedSeq[T], index: Int, value: T): Try[IndexedSeq[T]] = {
-    outOfBounds[T](vector, index) match {
+  def replaceItem[T](items: IndexedSeq[T], index: Int, value: T): Try[IndexedSeq[T]] = {
+    outOfBounds[T](items, index) match {
       case true => Failure(DataTableException("Item index out of bounds for replace."))
       case false =>
-        Success(vector.updated(index, value))
+        Success(items.updated(index, value))
     }
   }
 
   /** Returns a new IndexedSeq[T] with the value inserted at the specified index. */
-  def insertItem[T](vector: IndexedSeq[T], index: Int, value: T): Try[IndexedSeq[T]] = {
-    outOfBounds[T](vector, index) match {
+  def insertItem[T](items: IndexedSeq[T], index: Int, value: T): Try[IndexedSeq[T]] = {
+    outOfBounds[T](items, index) match {
       case true => Failure(DataTableException("Item index out of bounds for insert."))
       case false =>
-        val (dataStart, dataEnd) = vector.splitAt(index)
+        val (dataStart, dataEnd) = items.splitAt(index)
         Success(dataStart ++ (value +: dataEnd))
     }
   }
 
   /** Returns true if the specified index is out of bounds, assuming zero based. */
-  def outOfBounds[T](vector: IndexedSeq[T], index: Int): Boolean = {
-    outOfBounds(vector.length, index)
+  def outOfBounds[T](items: IndexedSeq[T], index: Int): Boolean = {
+    outOfBounds(items.length, index)
   }
 
   /** Returns true if the specified index is out of bounds. */
