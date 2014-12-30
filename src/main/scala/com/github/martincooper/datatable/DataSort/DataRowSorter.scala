@@ -19,8 +19,6 @@ package com.github.martincooper.datatable.DataSort
 import com.github.martincooper.datatable.DataRow
 import com.github.martincooper.datatable.DataSort.SortEnum.{ Descending, Ascending }
 
-import scala.util.Try
-
 /** Handles the multi column sorting on a DataRow. */
 object DataRowSorter {
 
@@ -57,25 +55,33 @@ object DataRowSorter {
     }
   }
 
-  /**
-   * Compares the two values in each specified column.
-   * TODO : Currently only supports string comparison.
-   */
+  /** Compares the two values in each specified column. */
   private def compareValues(rowOne: DataRow, rowTwo: DataRow, sortItem: SortItem): Int = {
     val valueOne = valueFromIdentity(rowOne, sortItem.columnIdentity)
     val valueTwo = valueFromIdentity(rowTwo, sortItem.columnIdentity)
 
     sortItem.order match {
-      case Ascending => valueOne.toString.compareTo(valueTwo.toString)
-      case Descending => valueTwo.toString.compareTo(valueOne.toString)
+      case Ascending => compareValues(valueOne, valueTwo)
+      case Descending => compareValues(valueTwo, valueOne)
     }
   }
 
   /** Gets a value from a DataRow by ItemIdentity. */
-  private def valueFromIdentity(dataRow: DataRow, itemIdentity: ItemIdentity): Try[Any] = {
+  private def valueFromIdentity(dataRow: DataRow, itemIdentity: ItemIdentity): Any = {
     itemIdentity match {
-      case ItemByName(name) => dataRow.get(name)
-      case ItemByIndex(index) => dataRow.get(index)
+      case ItemByName(name) => dataRow(name)
+      case ItemByIndex(index) => dataRow(index)
     }
+  }
+
+  /** Checks if the value type supports Comparable. */
+  def canCompareType(value: Any): Boolean = {
+    val compClass = classOf[Comparable[_]]
+    compClass.isAssignableFrom(value.getClass)
+  }
+
+  /** Cast each value to Comparable Type before comparing. */
+  def compareValues(valueOne: Any, valueTwo: Any) = {
+    valueOne.asInstanceOf[Comparable[Any]].compareTo(valueTwo.asInstanceOf[Comparable[Any]])
   }
 }
