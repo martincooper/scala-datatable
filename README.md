@@ -3,8 +3,22 @@
 ## Overview
 
 Scala DataTable is a lightweight, in-memory table structure written in Scala. The implementation is entirely immutable.
-Modifying any part of the table, adding or removing columns, rows, or individual cell values will create and return a
+Modifying any part of the table, adding or removing columns, rows, or individual field values will create and return a
 new structure, leaving the old one completely untouched. This is quite efficient due to structural sharing.
+
+### Features :
+ * Fully immutable implementation.
+ * All changes use structural sharing for performance.
+ * Table columns can be added, inserted, updated and removed.
+ * Rows can be added, inserted, updated and removed.
+ * Individual cell values can be updated.
+ * All modifications keep the original table completely untouched.
+ * Handles typed or untyped data.
+ * Internal type checks and bounds check to ensure data integrity.
+ * RowData object allowing typed or untyped data access.
+ * Filtering and searching on row data.
+ * Single and multi column quick sorting.
+ * DataViews to store sets of filtered / sorted data rows.
 
 ## Implementation
 
