@@ -14,11 +14,11 @@ new structure, leaving the old one completely untouched. This is quite efficient
  * Individual cell values can be updated.
  * All modifications keep the original table completely untouched.
  * Handles typed or untyped data.
- * Internal type checks and bounds check to ensure data integrity.
+ * Internal type checks and bounds checks to ensure data integrity.
  * RowData object allowing typed or untyped data access.
- * Filtering and searching on row data.
+ * Full filtering and searching on row data.
  * Single and multi column quick sorting.
- * DataViews to store sets of filtered / sorted data rows.
+ * DataViews to store sets of filtered / sorted data.
 
 ## Implementation
 
