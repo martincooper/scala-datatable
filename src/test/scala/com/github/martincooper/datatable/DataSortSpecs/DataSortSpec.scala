@@ -24,11 +24,14 @@ import org.scalatest.{ Matchers, FlatSpec }
 
 class DataSortSpec extends FlatSpec with Matchers {
 
+  /** Case Class NOT implementing Ordered[T] */
+  private case class TestNotOrderedInt(i: Int) {}
+
   "A DataTable" can "be sorted by single string column using default sort order" in {
     val dataCol = new DataColumn[String]("ColumnOne", Seq("AA", "ZZ", "BB", "YY", "GG"))
     val table = DataTable("TestTable", Seq(dataCol)).get
 
-    val sortedView = DataSort.quickSort(table, SortItem("ColumnOne"))
+    val sortedView = DataSort.quickSort(table, SortItem(0))
 
     sortedView.isSuccess should be(true)
 
@@ -166,5 +169,49 @@ class DataSortSpec extends FlatSpec with Matchers {
 
     val columnDataTwo = sortedView.get.map(row => row.as[Int]("ColumnTwo"))
     columnDataTwo should be(Seq(1, 2, 3, 4, 5, 6, 7, 8, 9))
+  }
+
+  it should "fail when contains a column name which can't be recognised" in {
+    val dataColOne = DataColumn[Int]("ColumnOne").get
+    val dataColTwo = DataColumn[String]("ColumnTwo").get
+    val dataColThree = DataColumn[String]("ColumnThree").get
+
+    val table = DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
+
+    val sortItems = Seq(SortItem("ColumnOne", Descending), SortItem("ColumnXXXXX", Ascending))
+    val sortedView = DataSort.quickSort(table, sortItems)
+
+    sortedView.isSuccess should be(false)
+    sortedView.failed.get.getMessage should be("Specified column name not found.")
+  }
+
+  it should "fail when contains an invalid column index" in {
+    val dataColOne = DataColumn[Int]("ColumnOne").get
+    val dataColTwo = DataColumn[String]("ColumnTwo").get
+    val dataColThree = DataColumn[String]("ColumnThree").get
+
+    val table = DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
+
+    val sortItems = Seq(SortItem("ColumnOne", Descending), SortItem(99, Ascending))
+    val sortedView = DataSort.quickSort(table, sortItems)
+
+    sortedView.isSuccess should be(false)
+    sortedView.failed.get.getMessage should be("Specified column index not found.")
+  }
+
+  it should "fail when contains a column type which can't be sorted" in {
+    val dataColOne = DataColumn[Int]("ColumnOne").get
+    val dataColTwo = DataColumn[String]("ColumnTwo").get
+    val dataColThree = DataColumn[TestNotOrderedInt]("ColumnThree").get
+
+    dataColThree.isComparable should be(false)
+
+    val table = DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
+
+    val sortItems = Seq(SortItem("ColumnOne", Descending), SortItem("ColumnTwo", Ascending), SortItem("ColumnThree", Ascending))
+    val sortedView = DataSort.quickSort(table, sortItems)
+
+    sortedView.isSuccess should be(false)
+    sortedView.failed.get.getMessage should be("Column 'ColumnThree' doesn't support comparable.")
   }
 }

@@ -74,12 +74,6 @@ object DataRowSorter {
     }
   }
 
-  /** Checks if the value type supports Comparable. */
-  def canCompareType(value: Any): Boolean = {
-    val compClass = classOf[Comparable[_]]
-    compClass.isAssignableFrom(value.getClass)
-  }
-
   /** Cast each value to Comparable Type before comparing. */
   def compareValues(valueOne: Any, valueTwo: Any) = {
     valueOne.asInstanceOf[Comparable[Any]].compareTo(valueTwo.asInstanceOf[Comparable[Any]])

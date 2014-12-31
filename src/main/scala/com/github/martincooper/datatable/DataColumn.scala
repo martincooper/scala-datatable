@@ -19,22 +19,6 @@ package com.github.martincooper.datatable
 import scala.reflect.runtime.universe._
 import scala.util.{ Failure, Success, Try }
 
-/**
- * Generic Column Trait.
- * Allows a collection of columns storing data of distinct types to be stored in a generic collection.
- */
-trait GenericColumn {
-  def name: String
-  def data: Vector[Any]
-  def columnType: Type
-  def isComparable: Boolean
-
-  def add[V: TypeTag](value: V): Try[GenericColumn]
-  def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn]
-  def replace[V: TypeTag](index: Int, value: V): Try[GenericColumn]
-  def remove(index: Int): Try[GenericColumn]
-}
-
 /** Strongly typed data column. */
 class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extends GenericColumn {
   def name = columnName
@@ -91,19 +75,15 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   override def toString = "Col : " + name
 }
 
-object GenericColumn {
+object DataColumn {
 
-  implicit class GenericColExt(val col: GenericColumn) extends AnyVal {
+  /** Builds an new DataColumn. */
+  def apply[T: TypeTag](columnName: String, columnData: Iterable[T]): Try[DataColumn[T]] = {
+    Success(new DataColumn[T](columnName, columnData))
+  }
 
-    /** Casts the generic column back to the specified type. */
-    def as[T: TypeTag]: DataColumn[T] = toDataColumn[T].get
-
-    /** Casts the generic column into the specified type after performing type checks. */
-    def toDataColumn[T: TypeTag]: Try[DataColumn[T]] = {
-      typeOf[T] =:= col.columnType match {
-        case true => Success(col.asInstanceOf[DataColumn[T]])
-        case _ => Failure(DataTableException("Column type doesn't match type requested."))
-      }
-    }
+  /** Builds an new DataColumn. */
+  def apply[T: TypeTag](columnName: String): Try[DataColumn[T]] = {
+    Success(new DataColumn[T](columnName, Seq()))
   }
 }
