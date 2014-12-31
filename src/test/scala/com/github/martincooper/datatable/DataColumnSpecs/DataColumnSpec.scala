@@ -21,6 +21,14 @@ import org.scalatest._
 
 class DataColumnSpec extends FlatSpec with Matchers {
 
+  /** Case Class implementing Ordered[T] */
+  case class TestOrderedInt(i: Int) extends Ordered[TestOrderedInt] {
+    def compare(that: TestOrderedInt) = this.i - that.i
+  }
+
+  /** Case Class NOT implementing Ordered[T] */
+  case class TestNotOrderedInt(i: Int) {}
+
   "A Data Column" should "be able to be created with a name and default data" in {
     val newSeq = (0 to 19) map { i => i }
     val dataColumn = new DataColumn[Int]("TestCol", newSeq)
@@ -41,5 +49,19 @@ class DataColumnSpec extends FlatSpec with Matchers {
 
     val typedCol = genericColumn.as[Int]
     typedCol.data(10) should be(10)
+  }
+
+  it should "be be comparable for standard types" in {
+    new DataColumn[Int]("TestCol", Seq()).isComparable should be(true)
+    new DataColumn[String]("TestCol", Seq()).isComparable should be(true)
+    new DataColumn[Long]("TestCol", Seq()).isComparable should be(true)
+  }
+
+  it should "be be comparable for Comparable[T] types" in {
+    new DataColumn[TestOrderedInt]("TestCol", Seq()).isComparable should be(true)
+  }
+
+  it should "not be be comparable for non Comparable[T] types" in {
+    new DataColumn[TestNotOrderedInt]("TestCol", Seq()).isComparable should be(false)
   }
 }

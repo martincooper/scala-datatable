@@ -27,6 +27,7 @@ trait GenericColumn {
   def name: String
   def data: Vector[Any]
   def columnType: Type
+  def isComparable: Boolean
 
   def add[V: TypeTag](value: V): Try[GenericColumn]
   def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn]
@@ -75,6 +76,15 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
       Success(value.asInstanceOf[T])
     } else {
       Failure(DataTableException(s"Invalid value type on $reason."))
+    }
+  }
+
+  /** Checks if the current type for this column has a default compare method. */
+  def isComparable: Boolean = {
+    typeOf[T] match {
+      case t if t <:< typeOf[Comparable[_]] => true
+      case t if t <:< typeOf[AnyVal] => true
+      case _ => false
     }
   }
 
