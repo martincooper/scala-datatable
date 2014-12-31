@@ -19,9 +19,9 @@ package com.github.martincooper.datatable.DataRowCollectionSpecs
 import com.github.martincooper.datatable.{ DataColumn, DataColumnCollection, DataTable, DataTableException }
 import org.scalatest.{ FlatSpec, Matchers }
 
-class DataRowCollectionModificationSpec extends FlatSpec with Matchers {
+class DataRowCollectionRemoveRowSpec extends FlatSpec with Matchers {
 
-  "A DataRowCollection" should "allow a row to be removed by valid index" in {
+  "DataRowCollection.remove" should "allow a row to be removed by valid index" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 5) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 5) map { i => "Val" + i })
