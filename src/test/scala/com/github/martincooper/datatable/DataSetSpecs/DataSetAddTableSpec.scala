@@ -35,7 +35,7 @@ class DataSetAddTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "TableTwo", "TableThree"))
   }
 
-  "A DataSet" should "disallow a table with a duplicate name to be added" in {
+  it should "disallow a table with a duplicate name to be added" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo)).get

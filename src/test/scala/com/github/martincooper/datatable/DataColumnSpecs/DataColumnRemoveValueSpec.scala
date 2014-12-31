@@ -33,7 +33,7 @@ class DataColumnRemoveValueSpec extends FlatSpec with Matchers {
     originalColumn.data should be(Seq(0, 1, 2, 3, 4))
   }
 
-  "A Data Column" should "not allow remove with invalid index" in {
+  it should "not allow remove with invalid index" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
     val result = originalColumn.remove(99)

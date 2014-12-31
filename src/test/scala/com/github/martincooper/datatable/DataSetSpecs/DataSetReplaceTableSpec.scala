@@ -35,7 +35,7 @@ class DataSetReplaceTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "NewTable", "TableThree"))
   }
 
-  "A DataSet" should "disallow a table to be replaced by name when its name is not found" in {
+  it should "disallow a table to be replaced by name when its name is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get
@@ -48,7 +48,7 @@ class DataSetReplaceTableSpec extends FlatSpec with Matchers {
     newDataSet.failed.get.getMessage should be("Table TableOneHundred not found.")
   }
 
-  "A DataSet" should "allow a table to be replaced by index" in {
+  it should "allow a table to be replaced by index" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get
@@ -62,7 +62,7 @@ class DataSetReplaceTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "NewTable", "TableThree"))
   }
 
-  "A DataSet" should "disallow a table to be replaced by index when it is not found" in {
+  it should "disallow a table to be replaced by index when it is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get
@@ -75,7 +75,7 @@ class DataSetReplaceTableSpec extends FlatSpec with Matchers {
     newDataSet.failed.get.getMessage should be("Item index out of bounds for replace.")
   }
 
-  "A DataSet" should "allow a table to be replaced by reference" in {
+  it should "allow a table to be replaced by reference" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get
@@ -89,7 +89,7 @@ class DataSetReplaceTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "NewTable", "TableThree"))
   }
 
-  "A DataSet" should "disallow a table to be replaced by reference when it is not found" in {
+  it should "disallow a table to be replaced by reference when it is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get

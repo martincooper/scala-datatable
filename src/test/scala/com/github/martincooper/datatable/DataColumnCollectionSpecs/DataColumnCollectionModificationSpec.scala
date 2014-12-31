@@ -38,7 +38,7 @@ class DataColumnCollectionModificationSpec extends FlatSpec with Matchers {
     originalTable.columns.length should be(2)
   }
 
-  "A DataColumnCollection" should "disallow a column with a duplicate name to be added" in {
+  it should "disallow a column with a duplicate name to be added" in {
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })
 
@@ -52,7 +52,7 @@ class DataColumnCollectionModificationSpec extends FlatSpec with Matchers {
     newTable.failed.get.getMessage should be("Error adding column at specified index.")
   }
 
-  "A DataColumnCollection" should "allow a column to be removed by name" in {
+  it should "allow a column to be removed by name" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })
@@ -69,7 +69,7 @@ class DataColumnCollectionModificationSpec extends FlatSpec with Matchers {
     originalTable.columns.length should be(3)
   }
 
-  "A DataColumnCollection" should "disallow an unknown column to be removed by name" in {
+  it should "disallow an unknown column to be removed by name" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 10) map { i => i })
     val dataColTwo = new DataColumn[String]("ColTwo", (0 to 10) map { i => "Value : " + i })

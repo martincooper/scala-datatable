@@ -37,7 +37,7 @@ class DataViewSpec extends FlatSpec with Matchers {
     dataView.get.length should be(5)
   }
 
-  "A new DataView" can "be created with no data rows" in {
+  it can "be created with no data rows" in {
     val dataTable = buildTestTable()
 
     val dataView = DataView(dataTable)
@@ -46,7 +46,7 @@ class DataViewSpec extends FlatSpec with Matchers {
     dataView.get.length should be(0)
   }
 
-  "A new DataView" should "fail if table different to row table reference" in {
+  it should "fail if table different to row table reference" in {
     val dataTable = buildTestTable()
 
     val dataRows = dataTable.take(5)

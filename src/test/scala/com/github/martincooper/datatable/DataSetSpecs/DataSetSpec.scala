@@ -29,7 +29,7 @@ class DataSetSpec extends FlatSpec with Matchers {
     dataSet.get.tables.length should be(0)
   }
 
-  "A new DataSet" should "be creatable with a name and tables" in {
+  it should "be creatable with a name and tables" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val dataSet = DataSet("TestDataSet", Seq(tableOne, tableTwo))

@@ -37,7 +37,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, columns" should "fail when an column requested by invalid name" in {
+  it should "fail when an column requested by invalid name" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[NoSuchElementException] {
@@ -47,7 +47,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("key not found: XXX")
   }
 
-  "On a DataTable, columns" should "allow a column returned by index" in {
+  it should "allow a column returned by index" in {
     val table = buildDefaultTestTable()
 
     val column = table.columns(1)
@@ -56,7 +56,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, columns" should "fail when an column requested by invalid index" in {
+  it should "fail when an column requested by invalid index" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[NoSuchElementException] {
@@ -74,7 +74,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, columns.as[T]" should "fail when an column requested by invalid name" in {
+  it should "fail when an column requested by invalid name" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[DataTableException] {
@@ -84,7 +84,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("Specified column name not found.")
   }
 
-  "On a DataTable, columns.as[T]" should "fail when an column requested by name with incorrect type" in {
+  it should "fail when an column requested by name with incorrect type" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[DataTableException] {
@@ -94,7 +94,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("Column type doesn't match type requested.")
   }
 
-  "On a DataTable, columns.as[T]" should "allow a column returned by index" in {
+  it should "allow a column returned by index" in {
     val table = buildDefaultTestTable()
 
     val column = table.columns.as[String](1)
@@ -103,7 +103,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, columns.as[T]" should "fail when an column requested by invalid index" in {
+  it should "fail when an column requested by invalid index" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[DataTableException] {
@@ -113,7 +113,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("Specified column index not found.")
   }
 
-  "On a DataTable, columns.as[T]" should "fail when an column requested by index with incorrect type" in {
+  it should "fail when an column requested by index with incorrect type" in {
     val table = buildDefaultTestTable()
 
     val result = intercept[DataTableException] {
@@ -132,14 +132,14 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.get.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, columns.get" should "fail when an column requested by invalid name" in {
+  it should "fail when an column requested by invalid name" in {
     val table = buildDefaultTestTable()
     val column = table.columns.get("XXX")
 
     column.isSuccess should be(false)
   }
 
-  "On a DataTable, columns.get" should "allow a column returned by index" in {
+  it should "allow a column returned by index" in {
     val table = buildDefaultTestTable()
 
     val column = table.columns.get(1)
@@ -149,7 +149,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.get.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, columns.get" should "fail when an column requested by invalid index" in {
+  it should "fail when an column requested by invalid index" in {
     val table = buildDefaultTestTable()
     val column = table.columns.get(99)
 
@@ -165,7 +165,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.get.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, columns.getAs[T]" should "fail when an column requested by invalid name" in {
+  it should "fail when an column requested by invalid name" in {
     val table = buildDefaultTestTable()
 
     val column = table.columns.getAs[String]("XXX")
@@ -173,7 +173,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.failed.get.getMessage should be("Specified column name not found.")
   }
 
-  "On a DataTable, columns.getAs[T]" should "fail when an column requested by name with incorrect type" in {
+  it should "fail when an column requested by name with incorrect type" in {
     val table = buildDefaultTestTable()
 
     val column = table.columns.getAs[Int]("ColTwo")
@@ -182,7 +182,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.failed.get.getMessage should be("Column type doesn't match type requested.")
   }
 
-  "On a DataTable, columns.getAs[T]" should "allow a column returned by index" in {
+  it should "allow a column returned by index" in {
     val table = buildDefaultTestTable()
 
     val column = table.columns.getAs[String](1)
@@ -192,7 +192,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.get.data(5) should be("Value : 5")
   }
 
-  "On a DataTable, columns.getAs[T]" should "fail when an column requested by invalid index" in {
+  it should "fail when an column requested by invalid index" in {
     val table = buildDefaultTestTable()
 
     val column = table.columns.getAs[String](99)
@@ -201,7 +201,7 @@ class DataColumnCollectionAccessSpec extends FlatSpec with Matchers {
     column.failed.get.getMessage should be("Specified column index not found.")
   }
 
-  "On a DataTable, columns.getAs[T]" should "fail when an column requested by index with incorrect type" in {
+  it should "fail when an column requested by index with incorrect type" in {
     val table = buildDefaultTestTable()
 
     val column = table.columns.getAs[Int](1)

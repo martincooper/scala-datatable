@@ -33,7 +33,7 @@ class DataColumnInsertValueSpec extends FlatSpec with Matchers {
     originalColumn.data should be(Seq(0, 1, 2, 3, 4))
   }
 
-  "A Data Column" should "not allow insert with invalid index" in {
+  it should "not allow insert with invalid index" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
     val result = originalColumn.insert(99, 99)
@@ -41,7 +41,7 @@ class DataColumnInsertValueSpec extends FlatSpec with Matchers {
     result.failed.get.getMessage should be("Item index out of bounds for insert.")
   }
 
-  "A Data Column" should "not allow insert with value of invalid type" in {
+  it should "not allow insert with value of invalid type" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
     val result = originalColumn.insert(2, "Invalid Value")

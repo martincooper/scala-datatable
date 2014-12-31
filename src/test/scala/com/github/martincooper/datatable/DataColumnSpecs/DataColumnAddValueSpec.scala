@@ -34,7 +34,7 @@ class DataColumnAddValueSpec extends FlatSpec with Matchers {
     originalColumn.data.length should be(5)
   }
 
-  "A Data Column" should "prevent a invalid value type being added" in {
+  it should "prevent a invalid value type being added" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
     val result = originalColumn.add("Invalid Value")

@@ -35,7 +35,7 @@ class DataSetRemoveTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "TableThree"))
   }
 
-  "A DataSet" should "disallow a table to be removed by name when its name is not found" in {
+  it should "disallow a table to be removed by name when its name is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
 
@@ -47,7 +47,7 @@ class DataSetRemoveTableSpec extends FlatSpec with Matchers {
     newDataSet.failed.get.getMessage should be("Table TableOneHundred not found.")
   }
 
-  "A DataSet" should "allow a table to be removed by index" in {
+  it should "allow a table to be removed by index" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get
@@ -61,7 +61,7 @@ class DataSetRemoveTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "TableThree"))
   }
 
-  "A DataSet" should "disallow a table to be removed by index when it is not found" in {
+  it should "disallow a table to be removed by index when it is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
 
@@ -73,7 +73,7 @@ class DataSetRemoveTableSpec extends FlatSpec with Matchers {
     newDataSet.failed.get.getMessage should be("Item index out of bounds for remove.")
   }
 
-  "A DataSet" should "allow a table to be removed by reference" in {
+  it should "allow a table to be removed by reference" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get
@@ -87,7 +87,7 @@ class DataSetRemoveTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables should be(Seq(tableOne, tableThree))
   }
 
-  "A DataSet" should "disallow a table to be removed by reference when it is not found" in {
+  it should "disallow a table to be removed by reference when it is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
     val tableThree = DataTable("TableThree").get

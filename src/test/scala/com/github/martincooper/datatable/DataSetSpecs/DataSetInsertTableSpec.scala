@@ -34,7 +34,7 @@ class DataSetInsertTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "TableTwo", "TableThree"))
   }
 
-  "A DataSet" should "disallow a table to be inserted by name when its name is not found" in {
+  it should "disallow a table to be inserted by name when its name is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
 
@@ -46,7 +46,7 @@ class DataSetInsertTableSpec extends FlatSpec with Matchers {
     newDataSet.failed.get.getMessage should be("Table TableOneHundred not found.")
   }
 
-  "A DataSet" should "allow a table to be inserted by index" in {
+  it should "allow a table to be inserted by index" in {
     val tableOne = DataTable("TableOne").get
     val tableThree = DataTable("TableThree").get
 
@@ -59,7 +59,7 @@ class DataSetInsertTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "TableTwo", "TableThree"))
   }
 
-  "A DataSet" should "disallow a table to be inserted by index when it is not found" in {
+  it should "disallow a table to be inserted by index when it is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableTwo = DataTable("TableTwo").get
 
@@ -71,7 +71,7 @@ class DataSetInsertTableSpec extends FlatSpec with Matchers {
     newDataSet.failed.get.getMessage should be("Item index out of bounds for insert.")
   }
 
-  "A DataSet" should "allow a table to be inserted by reference" in {
+  it should "allow a table to be inserted by reference" in {
     val tableOne = DataTable("TableOne").get
     val tableThree = DataTable("TableThree").get
 
@@ -84,7 +84,7 @@ class DataSetInsertTableSpec extends FlatSpec with Matchers {
     newDataSet.get.tables.map(_.name) should be(Seq("TableOne", "TableTwo", "TableThree"))
   }
 
-  "A DataSet" should "disallow a table to be inserted by reference when it is not found" in {
+  it should "disallow a table to be inserted by reference when it is not found" in {
     val tableOne = DataTable("TableOne").get
     val tableThree = DataTable("TableThree").get
 

@@ -30,7 +30,7 @@ class IndexedSeqExtensionsSpec extends FlatSpec with Matchers {
     modified.get should be(Seq(9).toVector)
   }
 
-  "Add item" should "correctly append an item to the end of existing collection" in {
+  it should "correctly append an item to the end of existing collection" in {
     val testVector = Seq(1, 2, 3, 4).toVector
 
     val modified = IndexedSeqExtensions.addItem(testVector, 9)
@@ -50,7 +50,7 @@ class IndexedSeqExtensionsSpec extends FlatSpec with Matchers {
     modified.get should be(Seq(1, 2, 4, 5).toVector)
   }
 
-  "Remove item" should "correctly fail if invalid index passed" in {
+  it should "correctly fail if invalid index passed" in {
     val testVector = Seq(1, 2, 3, 4, 5).toVector
 
     val modified = IndexedSeqExtensions.removeItem(testVector, 9)
@@ -69,7 +69,7 @@ class IndexedSeqExtensionsSpec extends FlatSpec with Matchers {
     modified.get should be(Seq(1, 2, 9, 4, 5).toVector)
   }
 
-  "Replace item" should "correctly fail if invalid index passed" in {
+  it should "correctly fail if invalid index passed" in {
     val testVector = Seq(1, 2, 3, 4, 5).toVector
 
     val modified = IndexedSeqExtensions.replaceItem(testVector, 9, 9)
@@ -88,7 +88,7 @@ class IndexedSeqExtensionsSpec extends FlatSpec with Matchers {
     modified.get should be(Seq(1, 2, 9, 3, 4, 5).toVector)
   }
 
-  "Insert item" should "correctly fail if invalid index passed" in {
+  it should "correctly fail if invalid index passed" in {
     val testVector = Seq(1, 2, 3, 4, 5).toVector
 
     val modified = IndexedSeqExtensions.insertItem(testVector, 9, 9)
@@ -106,7 +106,7 @@ class IndexedSeqExtensionsSpec extends FlatSpec with Matchers {
     IndexedSeqExtensions.outOfBounds(validSeq, 4) should be(false)
   }
 
-  "Check Bounds" should "correctly fail if index is out of bounds." in {
+  it should "correctly fail if index is out of bounds." in {
 
     val validSeq = Seq(1, 2, 3, 4, 5).toVector
 
@@ -115,7 +115,7 @@ class IndexedSeqExtensionsSpec extends FlatSpec with Matchers {
     IndexedSeqExtensions.outOfBounds(validSeq, 5) should be(true)
   }
 
-  "Check Bounds" should "correctly fail if collection is empty" in {
+  it should "correctly fail if collection is empty" in {
 
     val emptySeq = Seq().toVector
 

@@ -33,7 +33,7 @@ class DataColumnReplaceValueSpec extends FlatSpec with Matchers {
     originalColumn.data should be(Seq(0, 1, 2, 3, 4))
   }
 
-  "A Data Column" should "not allow replace with invalid index" in {
+  it should "not allow replace with invalid index" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
     val result = originalColumn.replace(99, 99)
@@ -41,7 +41,7 @@ class DataColumnReplaceValueSpec extends FlatSpec with Matchers {
     result.failed.get.getMessage should be("Item index out of bounds for replace.")
   }
 
-  "A Data Column" should "not allow replace with value of invalid type" in {
+  it should "not allow replace with value of invalid type" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
     val result = originalColumn.replace(2, "Invalid Value")

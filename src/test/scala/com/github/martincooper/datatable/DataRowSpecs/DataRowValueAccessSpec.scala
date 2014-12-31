@@ -36,7 +36,7 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     dataRow(1) should be("Value : 5")
   }
 
-  "A DataRow" should "fail when accessing an untyped and unchecked cell value by invalid column index" in {
+  it should "fail when accessing an untyped and unchecked cell value by invalid column index" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = intercept[NoSuchElementException] {
@@ -46,12 +46,12 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("key not found: 500")
   }
 
-  "A DataRow" can "access an untyped and unchecked cell value by column name" in {
+  it can "access an untyped and unchecked cell value by column name" in {
     val dataRow = DataRow(buildTestTable(), 5).get
     dataRow("ColTwo") should be("Value : 5")
   }
 
-  "A DataRow" should "fail when accessing an untyped and unchecked cell value by invalid column name" in {
+  it should "fail when accessing an untyped and unchecked cell value by invalid column name" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = intercept[NoSuchElementException] {
@@ -61,12 +61,12 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("key not found: InvalidColumnName")
   }
 
-  "A DataRow" can "access an untyped and checked cell value by column index" in {
+  it can "access an untyped and checked cell value by column index" in {
     val dataRow = DataRow(buildTestTable(), 5).get
     dataRow.get(1) should be(Success("Value : 5"))
   }
 
-  "A DataRow" should "fail when accessing an untyped and checked cell value by invalid column index" in {
+  it should "fail when accessing an untyped and checked cell value by invalid column index" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = dataRow.get(500)
@@ -75,12 +75,12 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.failed.get.getMessage should be("Specified column index not found.")
   }
 
-  "A DataRow" can "access an untyped and checked cell value by column name" in {
+  it can "access an untyped and checked cell value by column name" in {
     val dataRow = DataRow(buildTestTable(), 5).get
     dataRow.get("ColTwo") should be(Success("Value : 5"))
   }
 
-  "A DataRow" should "fail when accessing an untyped and checked cell value by invalid column name" in {
+  it should "fail when accessing an untyped and checked cell value by invalid column name" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = dataRow.get("InvalidColumnName")
@@ -89,12 +89,12 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.failed.get.getMessage should be("Specified column name not found.")
   }
 
-  "A DataRow" can "access a typed and unchecked cell value by column index" in {
+  it can "access a typed and unchecked cell value by column index" in {
     val dataRow = DataRow(buildTestTable(), 5).get
     dataRow.as[String](1) should be("Value : 5")
   }
 
-  "A DataRow" should "fail when accessing a typed and unchecked cell value by invalid column index" in {
+  it should "fail when accessing a typed and unchecked cell value by invalid column index" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = intercept[NoSuchElementException] {
@@ -104,7 +104,7 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("key not found: 500")
   }
 
-  "A DataRow" should "fail when accessing a typed and unchecked cell value by column index and invalid type" in {
+  it should "fail when accessing a typed and unchecked cell value by column index and invalid type" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = intercept[ClassCastException] {
@@ -114,12 +114,12 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("java.lang.String cannot be cast to java.lang.Integer")
   }
 
-  "A DataRow" can "access a typed and unchecked cell value by column name" in {
+  it can "access a typed and unchecked cell value by column name" in {
     val dataRow = DataRow(buildTestTable(), 5).get
     dataRow.as[String]("ColTwo") should be("Value : 5")
   }
 
-  "A DataRow" should "fail when accessing a typed and unchecked cell value by invalid column name" in {
+  it should "fail when accessing a typed and unchecked cell value by invalid column name" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = intercept[NoSuchElementException] {
@@ -129,7 +129,7 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("key not found: InvalidColumnName")
   }
 
-  "A DataRow" should "fail when accessing a typed and unchecked cell value by column name and invalid type" in {
+  it should "fail when accessing a typed and unchecked cell value by column name and invalid type" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = intercept[ClassCastException] {
@@ -139,12 +139,12 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.getMessage should be("java.lang.String cannot be cast to java.lang.Integer")
   }
 
-  "A DataRow" can "access a typed and checked cell value by column index" in {
+  it can "access a typed and checked cell value by column index" in {
     val dataRow = DataRow(buildTestTable(), 5).get
     dataRow.getAs[String](1) should be(Success("Value : 5"))
   }
 
-  "A DataRow" should "fail when accessing a typed and checked cell value by invalid column index" in {
+  it should "fail when accessing a typed and checked cell value by invalid column index" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = dataRow.getAs[String](500)
@@ -153,7 +153,7 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.failed.get.getMessage should be("Specified column index not found.")
   }
 
-  "A DataRow" should "fail when accessing a typed and checked cell value by column index and invalid type" in {
+  it should "fail when accessing a typed and checked cell value by column index and invalid type" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = dataRow.getAs[Int](1)
@@ -162,12 +162,12 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.failed.get.getMessage should be("Column type doesn't match type requested.")
   }
 
-  "A DataRow" can "access a typed and checked cell value by column name" in {
+  it can "access a typed and checked cell value by column name" in {
     val dataRow = DataRow(buildTestTable(), 5).get
     dataRow.getAs[String]("ColTwo") should be(Success("Value : 5"))
   }
 
-  "A DataRow" should "fail when accessing a typed and checked cell value by invalid column name" in {
+  it should "fail when accessing a typed and checked cell value by invalid column name" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = dataRow.getAs[String]("InvalidColumnName")
@@ -176,7 +176,7 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.failed.get.getMessage should be("Specified column name not found.")
   }
 
-  "A DataRow" should "fail when accessing a typed and checked cell value by column name and invalid type" in {
+  it should "fail when accessing a typed and checked cell value by column name and invalid type" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val result = dataRow.getAs[Int]("ColTwo")
@@ -185,7 +185,7 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     result.failed.get.getMessage should be("Column type doesn't match type requested.")
   }
 
-  "A DataRow" should "return all values for the current row" in {
+  it should "return all values for the current row" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val values = dataRow.values
@@ -194,7 +194,7 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
     values should be(Seq(5, "Value : 5", true))
   }
 
-  "A DataRow" should "return all values in map for the current row" in {
+  it should "return all values in map for the current row" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
     val values = dataRow.valueMap
