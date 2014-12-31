@@ -19,18 +19,10 @@ package com.github.martincooper.datatable
 import scala.collection.{ mutable, IndexedSeqLike }
 import scala.util.{ Success, Failure, Try }
 
-/** ModifiableByDataRow : ModifiableByIndex, with additional item (DataRow) indexer. */
-trait ModifiableByDataRow[V, R] extends ModifiableByIndex[V, R] {
-  def replace(oldItem: DataRow, newItem: V): Try[R]
-  def insert(itemToInsertAt: DataRow, newItem: V): Try[R]
-  def remove(itemToRemove: DataRow): Try[R]
-}
-
 /** Implements a collection of DataRows with additional immutable modification methods implemented. */
 class DataRowCollection(dataTable: DataTable)
     extends IndexedSeq[DataRow]
-    with IndexedSeqLike[DataRow, DataRowCollection]
-    with ModifiableByDataRow[DataRow, DataTable] {
+    with IndexedSeqLike[DataRow, DataRowCollection] {
 
   def table = dataTable
 
@@ -42,37 +34,37 @@ class DataRowCollection(dataTable: DataTable)
     DataRowCollection.newBuilder(table)
 
   /** Returns a new table with the additional row. */
-  override def add(newRow: DataRow): Try[DataTable] = {
+  def add(newRow: DataRow): Try[DataTable] = {
     Failure(DataTableException("Not Implemented."))
   }
 
   /** Creates a new table with the column specified replaced with the new column. */
-  override def replace(oldRow: DataRow, newRow: DataRow): Try[DataTable] = {
+  def replace(oldRow: DataRow, newRow: DataRow): Try[DataTable] = {
     Failure(DataTableException("Not Implemented."))
   }
 
   /** Creates a new table with the column at index replaced with the new column. */
-  override def replace(rowIndex: Int, value: DataRow): Try[DataTable] = {
+  def replace(rowIndex: Int, value: DataRow): Try[DataTable] = {
     Failure(DataTableException("Not Implemented."))
   }
 
   /** Creates a new table with the column inserted before the specified column. */
-  override def insert(rowToInsertAt: DataRow, newColumn: DataRow): Try[DataTable] = {
+  def insert(rowToInsertAt: DataRow, newColumn: DataRow): Try[DataTable] = {
     Failure(DataTableException("Not Implemented."))
   }
 
   /** Creates a new table with the row inserted at the specified index. */
-  override def insert(rowIndex: Int, value: DataRow): Try[DataTable] = {
+  def insert(rowIndex: Int, value: DataRow): Try[DataTable] = {
     Failure(DataTableException("Not Implemented."))
   }
 
   /** Creates a new table with the row removed. */
-  override def remove(rowToRemove: DataRow): Try[DataTable] = {
+  def remove(rowToRemove: DataRow): Try[DataTable] = {
     indexFromRow(rowToRemove).map(remove).flatten
   }
 
   /** Returns a new table with the row removed. */
-  override def remove(rowIndex: Int): Try[DataTable] = {
+  def remove(rowIndex: Int): Try[DataTable] = {
     removeRowItems(rowIndex)
   }
 
