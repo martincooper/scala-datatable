@@ -27,6 +27,11 @@ trait GenericColumn {
   def name: String
   def data: Vector[Any]
   def columnType: Type
+
+  def add[V: TypeTag](value: V): Try[GenericColumn]
+  def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn]
+  def replace[V: TypeTag](index: Int, value: V): Try[GenericColumn]
+  def remove(index: Int): Try[GenericColumn]
 }
 
 /** Strongly typed data column. */
