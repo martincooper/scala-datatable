@@ -40,6 +40,19 @@ class DataRowCollectionModificationSpec extends FlatSpec with Matchers {
     newTable.get.columns(1).data should be(Seq("Val0", "Val1", "Val3", "Val4", "Val5"))
   }
 
+  "A DataRowCollection" should "fail when a row is requested to be removed with invalid index" in {
+
+    val dataColOne = new DataColumn[Int]("ColOne", (0 to 5) map { i => i })
+    val dataColTwo = new DataColumn[String]("ColTwo", (0 to 5) map { i => "Val" + i })
+
+    val originalTable = DataTable("TestTable", Seq(dataColOne, dataColTwo)).get
+
+    val newTable = originalTable.rows.remove(99)
+
+    newTable.isSuccess should be(false)
+    newTable.failed.get.getMessage should be("Item index out of bounds for remove.")
+  }
+
   "A DataRowCollection" should "allow a row to be removed by valid DataRow item" in {
 
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 5) map { i => i })
@@ -58,5 +71,19 @@ class DataRowCollectionModificationSpec extends FlatSpec with Matchers {
 
     newTable.get.columns(0).data should be(Seq(0, 1, 3, 4, 5))
     newTable.get.columns(1).data should be(Seq("Val0", "Val1", "Val3", "Val4", "Val5"))
+  }
+
+  "A DataRowCollection" should "fail when a row is requested to be removed from a different table" in {
+
+    val dataColOne = new DataColumn[Int]("ColOne", (0 to 5) map { i => i })
+    val dataColTwo = new DataColumn[String]("ColTwo", (0 to 5) map { i => "Val" + i })
+
+    val tableOne = DataTable("TestTableOne", Seq(dataColOne, dataColTwo)).get
+    val tableTwo = DataTable("TestTableTwo", Seq(dataColOne, dataColTwo)).get
+
+    val newTable = tableOne.rows.remove(tableTwo(0))
+
+    newTable.isSuccess should be(false)
+    newTable.failed.get.getMessage should be("DataRow specified does not belong to this table.")
   }
 }
