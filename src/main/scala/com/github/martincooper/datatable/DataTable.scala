@@ -24,6 +24,7 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
   def name = tableName
   def columns = DataColumnCollection(this, dataColumns)
+  def rows = DataRowCollection(this)
 
   def rowCount(): Int = {
     columns.length match {
