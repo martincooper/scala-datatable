@@ -60,11 +60,11 @@ new structure, leaving the old one completely untouched. This is quite efficient
 <a id="implementation" class="anchor" href="#implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation</h2>
 
 <p>The main focus for this project was to have the flexibility of a standard mutable table with all the common requirements,
-add / remove columns, add / remove rows, update cells and values in individual cells, but with the benefit of immutable and
-persistent data structures.</p>
+add / remove columns, add / remove rows, update cells and values in individual cells, but with the benefit of immutable
+and persistent data structures.</p>
 
-<p>It allows access to the table data in a row / column format where the column data types may, or may not be known at design time,
-for example a table read from a database, a CSV file or other dynamic data source.</p>
+<p>It allows access to the table data in a row / column format where the column data types may, or may not be known at
+design time, for example a table read from a database, a CSV file or other dynamic data source.</p>
 
 <p>Internally the data is stored as a collection of immutable Vector[T] ensuring type information is fully preserved, with
 checks ensuring full type integrity is maintained at runtime.</p>
@@ -146,8 +146,8 @@ This will return a new DataTable structure with the column removed.</p>
 <a id="row--data-filtering" class="anchor" href="#row--data-filtering" aria-hidden="true"><span class="octicon octicon-link"></span></a>Row / Data Filtering</h2>
 
 <p>Access to the underlying data in the table the DataRow object can be used. This allows either typed or
-untyped access depending if type info is known at design time. The DataTable object implements IndexSeq[DataRow] so
-supports the standard filter, map operations etc. To filter a table this can be done as follows...</p>
+untyped access depending if type info is known at design time. The DataTable object implements IndexSeq[DataRow]
+so supports the standard filter, map operations etc. To filter a table this can be done as follows...</p>
 
 <div class="highlight highlight-scala"><pre><span class="pl-k">def</span> <span class="pl-en">filterData</span>(<span class="pl-v">dataTable</span>: <span class="pl-en">DataTable</span>) <span class="pl-k">=</span> {
 
@@ -202,12 +202,30 @@ more composable access to the underlying data.</p>
   }
 }</pre></div>
 
+<h2>
+<a id="sorting--single-and-multi-column" class="anchor" href="#sorting--single-and-multi-column" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sorting / Single and Multi Column</h2>
+
+<p>A DataTable can sort by specified column or columns, returning a sorted DataView.</p>
+
+<div class="highlight highlight-scala"><pre><span class="pl-k">def</span> <span class="pl-en">sortTableByColumnNameDescending</span>(<span class="pl-v">dataTable</span>: <span class="pl-en">DataTable</span>)<span class="pl-k">:</span> <span class="pl-en">Try</span>[<span class="pl-en">DataView</span>] <span class="pl-k">=</span> {
+  dataTable.quickSort(<span class="pl-s1"><span class="pl-pds">"</span>ColumnOne<span class="pl-pds">"</span></span>, <span class="pl-en">Descending</span>)
+}</pre></div>
+
+<p>Also on multiple columns.</p>
+
+<div class="highlight highlight-scala"><pre><span class="pl-k">def</span> <span class="pl-en">sortTableByMultipleColumns</span>(<span class="pl-v">dataTable</span>: <span class="pl-en">DataTable</span>)<span class="pl-k">:</span> <span class="pl-en">Try</span>[<span class="pl-en">DataView</span>] <span class="pl-k">=</span> {
+  <span class="pl-k">val</span> <span class="pl-en">sortItemOne</span> <span class="pl-k">=</span> <span class="pl-en">SortItem</span>(<span class="pl-s1"><span class="pl-pds">"</span>FirstName<span class="pl-pds">"</span></span>)
+  <span class="pl-k">val</span> <span class="pl-en">sortItemTwo</span> <span class="pl-k">=</span> <span class="pl-en">SortItem</span>(<span class="pl-c1">3</span>, <span class="pl-en">Descending</span>)
+  dataTable.quickSort(<span class="pl-en">Seq</span>(sortItemOne, sortItemTwo))
+}</pre></div>
+
 <h3>
 <a id="additional-examples-" class="anchor" href="#additional-examples-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Additional Examples :</h3>
 
 <ul>
 <li><a href="https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowExamples.md">Data Access with the DataRow</a></li>
 <li><a href="https://github.com/martincooper/scala-datatable/blob/master/docs/DataColumnModificationExamples.md">Modifying Data Columns</a></li>
+<li><a href="https://github.com/martincooper/scala-datatable/blob/master/docs/SortingDataExamples.md">Sorting Data</a></li>
 </ul>
 
 <h3>
