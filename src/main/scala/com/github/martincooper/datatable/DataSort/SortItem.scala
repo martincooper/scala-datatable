@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataSort
 
-import com.github.martincooper.datatable.DataSort.SortEnum.{Ascending, SortOrder}
+import com.github.martincooper.datatable.DataSort.SortEnum.{ Ascending, SortOrder }
 
 /** Specifies how an item is identified. */
 sealed trait ItemIdentity

@@ -23,11 +23,11 @@ new structure, leaving the old one completely untouched. This is quite efficient
 ## Implementation
 
 The main focus for this project was to have the flexibility of a standard mutable table with all the common requirements,
-add / remove columns, add / remove rows, update cells and values in individual cells, but with the benefit of immutable and
-persistent data structures.
+add / remove columns, add / remove rows, update cells and values in individual cells, but with the benefit of immutable
+and persistent data structures.
 
-It allows access to the table data in a row / column format where the column data types may, or may not be known at design time,
-for example a table read from a database, a CSV file or other dynamic data source.
+It allows access to the table data in a row / column format where the column data types may, or may not be known at
+design time, for example a table read from a database, a CSV file or other dynamic data source.
 
 Internally the data is stored as a collection of immutable Vector[T] ensuring type information is fully preserved, with
 checks ensuring full type integrity is maintained at runtime.
@@ -106,8 +106,8 @@ def removeColumn(dataTable: DataTable): Try[DataTable] = {
 
 ## Row / Data Filtering
 Access to the underlying data in the table the DataRow object can be used. This allows either typed or
-untyped access depending if type info is known at design time. The DataTable object implements IndexSeq[DataRow] so
-supports the standard filter, map operations etc. To filter a table this can be done as follows...
+untyped access depending if type info is known at design time. The DataTable object implements IndexSeq[DataRow]
+so supports the standard filter, map operations etc. To filter a table this can be done as follows...
 
 ```scala
 def filterData(dataTable: DataTable) = {
@@ -166,9 +166,29 @@ def typedAndCheckedDataAccess(dataRow: DataRow) = {
 }
 ```
 
+## Sorting / Single and Multi Column
+A DataTable can sort by specified column or columns, returning a sorted DataView.
+
+```scala
+def sortTableByColumnNameDescending(dataTable: DataTable): Try[DataView] = {
+  dataTable.quickSort("ColumnOne", Descending)
+}
+```
+
+Also on multiple columns.
+
+```scala
+def sortTableByMultipleColumns(dataTable: DataTable): Try[DataView] = {
+  val sortItemOne = SortItem("FirstName")
+  val sortItemTwo = SortItem(3, Descending)
+  dataTable.quickSort(Seq(sortItemOne, sortItemTwo))
+}
+```
+
 ### Additional Examples :
  * [Data Access with the DataRow](https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowExamples.md)
  * [Modifying Data Columns](https://github.com/martincooper/scala-datatable/blob/master/docs/DataColumnModificationExamples.md)
+ * [Sorting Data](https://github.com/martincooper/scala-datatable/blob/master/docs/SortingDataExamples.md)
 
 ### Contributing
 
