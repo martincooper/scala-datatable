@@ -21,9 +21,18 @@ import scala.util.{ Failure, Success, Try }
 
 /** Strongly typed data column. */
 class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extends GenericColumn {
-  def name = columnName
-  def data = columnData.toVector
-  def columnType = typeOf[T]
+  val name = columnName
+  val data = columnData.toVector
+  val columnType = typeOf[T]
+
+  /** Checks if the current type for this column has a default compare method. */
+  val isComparable: Boolean = {
+    typeOf[T] match {
+      case t if t <:< typeOf[Comparable[_]] => true
+      case t if t <:< typeOf[AnyVal] => true
+      case _ => false
+    }
+  }
 
   /** Returns a new DataColumn[T] with the value added at the end. */
   def add[V: TypeTag](value: V): Try[GenericColumn] = {
@@ -60,15 +69,6 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
       Success(value.asInstanceOf[T])
     } else {
       Failure(DataTableException(s"Invalid value type on $reason."))
-    }
-  }
-
-  /** Checks if the current type for this column has a default compare method. */
-  def isComparable: Boolean = {
-    typeOf[T] match {
-      case t if t <:< typeOf[Comparable[_]] => true
-      case t if t <:< typeOf[AnyVal] => true
-      case _ => false
     }
   }
 

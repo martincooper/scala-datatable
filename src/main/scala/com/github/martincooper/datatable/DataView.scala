@@ -21,8 +21,8 @@ import scala.util.{ Failure, Success, Try }
 /** Provides a view over a DataTable to store filtered data sets. */
 class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow]) extends IndexedSeq[DataRow] {
 
-  def table = dataTable
-  def rows = dataRows.toVector
+  val table = dataTable
+  val rows = dataRows.toVector
 
   override def length: Int = rows.length
 

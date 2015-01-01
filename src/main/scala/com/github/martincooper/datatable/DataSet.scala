@@ -29,8 +29,8 @@ trait ModifiableByTable[V, R] extends ModifiableByName[V, R] {
 class DataSet private (dataSetName: String, dataTables: Iterable[DataTable])
     extends IndexedSeq[DataTable] with ModifiableByTable[DataTable, DataSet] {
 
-  def name = dataSetName
-  def tables = dataTables.toVector
+  val name = dataSetName
+  val tables = dataTables.toVector
 
   /** Creates a new DataSet with the table specified replaced with the new table. */
   override def replace(oldTable: DataTable, newTable: DataTable): Try[DataSet] = {

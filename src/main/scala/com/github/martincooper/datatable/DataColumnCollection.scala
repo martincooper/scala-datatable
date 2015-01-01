@@ -33,8 +33,8 @@ class DataColumnCollection(dataTable: DataTable, dataColumns: Iterable[GenericCo
     with IndexedSeqLike[GenericColumn, DataColumnCollection]
     with ModifiableByColumn[GenericColumn, DataTable] {
 
-  def table = dataTable
-  def columns = dataColumns.toVector
+  val table = dataTable
+  val columns = dataColumns.toVector
 
   override def length: Int = columns.length
 

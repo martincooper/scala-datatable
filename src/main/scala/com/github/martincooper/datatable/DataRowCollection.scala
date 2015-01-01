@@ -24,7 +24,7 @@ class DataRowCollection(dataTable: DataTable)
     extends IndexedSeq[DataRow]
     with IndexedSeqLike[DataRow, DataRowCollection] {
 
-  def table = dataTable
+  val table = dataTable
 
   override def apply(columnIndex: Int): DataRow = table(columnIndex)
 

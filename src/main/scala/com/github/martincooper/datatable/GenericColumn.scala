@@ -24,10 +24,10 @@ import scala.util.{ Failure, Success, Try }
  * Allows a collection of columns storing data of distinct types to be stored in a generic collection.
  */
 trait GenericColumn {
-  def name: String
-  def data: Vector[Any]
-  def columnType: Type
-  def isComparable: Boolean
+  val name: String
+  val data: Vector[Any]
+  val columnType: Type
+  val isComparable: Boolean
 
   def add[V: TypeTag](value: V): Try[GenericColumn]
   def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn]
