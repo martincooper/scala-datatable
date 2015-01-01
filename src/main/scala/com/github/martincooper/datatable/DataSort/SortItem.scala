@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataSort
 
-import com.github.martincooper.datatable.DataSort.SortEnum.SortOrder
+import com.github.martincooper.datatable.DataSort.SortEnum.{Ascending, SortOrder}
 
 /** Specifies how an item is identified. */
 sealed trait ItemIdentity
@@ -35,9 +35,9 @@ case class SortItem(columnIdentity: ItemIdentity, order: SortOrder)
 
 object SortItem {
 
-  /** Builds an new SortOrder item by column name defaulting to Ascending. */
+  /** Builds an new SortOrder item by column name. */
   def apply(columnName: String): SortItem = {
-    apply(columnName, SortEnum.Ascending)
+    apply(columnName, Ascending)
   }
 
   /** Builds an new SortOrder item by column name. */
@@ -45,9 +45,9 @@ object SortItem {
     new SortItem(new ItemByName(columnName), sortOrder)
   }
 
-  /** Builds an new SortOrder item by column index defaulting to Ascending. */
+  /** Builds an new SortOrder item by column index. */
   def apply(columnIndex: Int): SortItem = {
-    apply(columnIndex, SortEnum.Ascending)
+    apply(columnIndex, Ascending)
   }
 
   /** Builds an new SortOrder item by column index. */

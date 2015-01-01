@@ -17,7 +17,7 @@
 package com.github.martincooper.datatable.DataSortSpecs
 
 import com.github.martincooper.datatable.DataSort.SortEnum._
-import com.github.martincooper.datatable.DataSort.{ SortItem, DataSort }
+import com.github.martincooper.datatable.DataSort.SortItem
 import com.github.martincooper.datatable.{ DataColumn, DataTable }
 
 import org.scalatest.{ Matchers, FlatSpec }
@@ -31,7 +31,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val dataCol = new DataColumn[String]("ColumnOne", Seq("AA", "ZZ", "BB", "YY", "GG"))
     val table = DataTable("TestTable", Seq(dataCol)).get
 
-    val sortedView = DataSort.quickSort(table, SortItem(0))
+    val sortedView = table.quickSort(0)
 
     sortedView.isSuccess should be(true)
 
@@ -43,7 +43,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val dataCol = new DataColumn[String]("ColumnOne", Seq("AA", "ZZ", "BB", "YY", "GG"))
     val table = DataTable("TestTable", Seq(dataCol)).get
 
-    val sortedView = DataSort.quickSort(table, SortItem("ColumnOne", Ascending))
+    val sortedView = table.quickSort("ColumnOne", Ascending)
 
     sortedView.isSuccess should be(true)
 
@@ -55,7 +55,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val dataCol = new DataColumn[String]("ColumnOne", Seq("AA", "ZZ", "BB", "YY", "GG"))
     val table = DataTable("TestTable", Seq(dataCol)).get
 
-    val sortedView = DataSort.quickSort(table, SortItem("ColumnOne", Descending))
+    val sortedView = table.quickSort("ColumnOne", Descending)
 
     sortedView.isSuccess should be(true)
 
@@ -70,7 +70,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val table = DataTable("TestTable", Seq(dataColOne, dataColTwo)).get
 
     val sortItems = Seq(SortItem("ColumnOne", Ascending), SortItem("ColumnTwo", Ascending))
-    val sortedView = DataSort.quickSort(table, sortItems)
+    val sortedView = table.quickSort(sortItems)
 
     sortedView.isSuccess should be(true)
 
@@ -88,7 +88,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val table = DataTable("TestTable", Seq(dataColOne, dataColTwo)).get
 
     val sortItems = Seq(SortItem("ColumnOne", Descending), SortItem("ColumnTwo", Ascending))
-    val sortedView = DataSort.quickSort(table, sortItems)
+    val sortedView = table.quickSort(sortItems)
 
     sortedView.isSuccess should be(true)
 
@@ -103,7 +103,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val dataCol = new DataColumn[Int]("ColumnOne", Seq(1, 20, 5, 15, 10, -10, 0))
     val table = DataTable("TestTable", Seq(dataCol)).get
 
-    val sortedView = DataSort.quickSort(table, SortItem("ColumnOne"))
+    val sortedView = table.quickSort("ColumnOne")
 
     sortedView.isSuccess should be(true)
 
@@ -115,7 +115,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val dataCol = new DataColumn[Int]("ColumnOne", Seq(1, 20, 5, 15, 10, -10, 0))
     val table = DataTable("TestTable", Seq(dataCol)).get
 
-    val sortedView = DataSort.quickSort(table, SortItem("ColumnOne", Ascending))
+    val sortedView = table.quickSort("ColumnOne", Ascending)
 
     sortedView.isSuccess should be(true)
 
@@ -127,7 +127,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val dataCol = new DataColumn[Int]("ColumnOne", Seq(1, 20, 5, 15, 10, -10, 0))
     val table = DataTable("TestTable", Seq(dataCol)).get
 
-    val sortedView = DataSort.quickSort(table, SortItem("ColumnOne", Descending))
+    val sortedView = table.quickSort("ColumnOne", Descending)
 
     sortedView.isSuccess should be(true)
 
@@ -142,7 +142,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val table = DataTable("TestTable", Seq(dataColOne, dataColTwo)).get
 
     val sortItems = Seq(SortItem("ColumnOne", Ascending), SortItem("ColumnTwo", Ascending))
-    val sortedView = DataSort.quickSort(table, sortItems)
+    val sortedView = table.quickSort(sortItems)
 
     sortedView.isSuccess should be(true)
 
@@ -160,7 +160,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val table = DataTable("TestTable", Seq(dataColOne, dataColTwo)).get
 
     val sortItems = Seq(SortItem("ColumnOne", Descending), SortItem("ColumnTwo", Ascending))
-    val sortedView = DataSort.quickSort(table, sortItems)
+    val sortedView = table.quickSort(sortItems)
 
     sortedView.isSuccess should be(true)
 
@@ -179,7 +179,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val table = DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
 
     val sortItems = Seq(SortItem("ColumnOne", Descending), SortItem("ColumnXXXXX", Ascending))
-    val sortedView = DataSort.quickSort(table, sortItems)
+    val sortedView = table.quickSort(sortItems)
 
     sortedView.isSuccess should be(false)
     sortedView.failed.get.getMessage should be("Specified column name not found.")
@@ -193,7 +193,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val table = DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
 
     val sortItems = Seq(SortItem("ColumnOne", Descending), SortItem(99, Ascending))
-    val sortedView = DataSort.quickSort(table, sortItems)
+    val sortedView = table.quickSort(sortItems)
 
     sortedView.isSuccess should be(false)
     sortedView.failed.get.getMessage should be("Specified column index not found.")
@@ -209,7 +209,7 @@ class DataSortSpec extends FlatSpec with Matchers {
     val table = DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
 
     val sortItems = Seq(SortItem("ColumnOne", Descending), SortItem("ColumnTwo", Ascending), SortItem("ColumnThree", Ascending))
-    val sortedView = DataSort.quickSort(table, sortItems)
+    val sortedView = table.quickSort(sortItems)
 
     sortedView.isSuccess should be(false)
     sortedView.failed.get.getMessage should be("Column 'ColumnThree' doesn't support comparable.")

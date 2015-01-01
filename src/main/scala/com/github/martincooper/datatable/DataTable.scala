@@ -16,15 +16,19 @@
 
 package com.github.martincooper.datatable
 
+import com.github.martincooper.datatable.DataSort.TableSort
+
 import scala.util.{ Failure, Try, Success }
 
 /** DataTable class. Handles the immutable storage and access of data in a Row / Column format. */
 class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn])
-    extends IndexedSeq[DataRow] {
+    extends IndexedSeq[DataRow]
+    with TableSort {
 
-  def name = tableName
-  def columns = DataColumnCollection(this, dataColumns)
-  def rows = DataRowCollection(this)
+  val name = tableName
+  val columns = DataColumnCollection(this, dataColumns)
+  val rows = DataRowCollection(this)
+  val table: DataTable = this
 
   def rowCount(): Int = {
     columns.length match {
