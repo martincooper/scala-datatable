@@ -36,6 +36,21 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   }
 
   /** Returns a new DataColumn[T] with the value added at the end. */
+  override def add(value: Any): Try[GenericColumn] = {
+    Failure(DataTableException("Untyped add not yet implemented."))
+  }
+
+  /** Returns a new DataColumn[T] with the value inserted at the specified index. */
+  override def insert(index: Int, value: Any): Try[GenericColumn] = {
+    Failure(DataTableException("Untyped insert not yet implemented."))
+  }
+
+  /** Returns a new DataColumn[T] with the new value replacing the one at the specified index. */
+  override def replace(index: Int, value: Any): Try[GenericColumn] = {
+    Failure(DataTableException("Untyped replace not yet implemented."))
+  }
+
+  /** Returns a new DataColumn[T] with the value added at the end. */
   def addAs[V: TypeTag](value: V): Try[GenericColumn] = {
     validateType[V]("add", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.addItem(data, typedValue))
@@ -49,7 +64,7 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
     }
   }
 
-  /** Returns a new DataColumn[T] with the new value at the specified index. */
+  /** Returns a new DataColumn[T] with the new value replacing the one at the specified index. */
   def replaceAs[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
     validateType[V]("replace", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.replaceItem(data, index, typedValue))
