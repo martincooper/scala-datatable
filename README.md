@@ -12,7 +12,7 @@ new structure, leaving the old one completely untouched. This is quite efficient
  * Table columns can be added, inserted, updated and removed.
  * Rows can be added, inserted, updated and removed.
  * Individual cell values can be updated.
- * Any Inserts / Updates / Deletes keep the original completely unchanged.
+ * Any inserts, updates or deletes keep the original structure completely unchanged.
  * Handles typed or untyped data.
  * Internal type checks and bounds checks to ensure data integrity.
  * RowData object allowing typed or untyped data access.
