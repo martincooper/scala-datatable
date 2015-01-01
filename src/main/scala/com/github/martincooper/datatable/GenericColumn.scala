@@ -29,9 +29,16 @@ trait GenericColumn {
   val columnType: Type
   val isComparable: Boolean
 
-  def add[V: TypeTag](value: V): Try[GenericColumn]
-  def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn]
-  def replace[V: TypeTag](index: Int, value: V): Try[GenericColumn]
+  /** Add, Insert, Replace with an untyped (Any) value. */
+/*  def add(value: Any): Try[GenericColumn]
+  def insert(index: Int, value: Any): Try[GenericColumn]
+  def replace(index: Int, value: Any): Try[GenericColumn]*/
+
+  /** Add, Insert, Replace with an typed [V] value. */
+  def addAs[V: TypeTag](value: V): Try[GenericColumn]
+  def insertAs[V: TypeTag](index: Int, value: V): Try[GenericColumn]
+  def replaceAs[V: TypeTag](index: Int, value: V): Try[GenericColumn]
+  
   def remove(index: Int): Try[GenericColumn]
 }
 
