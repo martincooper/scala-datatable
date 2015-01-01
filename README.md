@@ -204,7 +204,7 @@ Tests are written with [ScalaTest](http://www.scalatest.org/)
 
 ### Credits
 
-Scala DataTable is maintained by Martin Cooper : Copyright (c) 2014
+Scala DataTable is maintained by Martin Cooper : Copyright (c) 2014-2015
 
 ## License
 
