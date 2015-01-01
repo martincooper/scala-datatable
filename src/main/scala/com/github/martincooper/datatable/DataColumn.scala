@@ -16,6 +16,7 @@
 
 package com.github.martincooper.datatable
 
+import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
 import scala.util.{ Failure, Success, Try }
 
@@ -35,21 +36,21 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   }
 
   /** Returns a new DataColumn[T] with the value added at the end. */
-  def add[V: TypeTag](value: V): Try[GenericColumn] = {
-    validateType[V]("add", value).map { typedValue =>
-      new DataColumn[T](name, data :+ typedValue)
+  def addAs[V: TypeTag](value: V): Try[GenericColumn] = {
+    validateType[V]("add", value).flatMap { typedValue =>
+      checkAndCreateNewColumn(() => IndexedSeqExtensions.addItem(data, typedValue))
     }
   }
 
   /** Returns a new DataColumn[T] with the value inserted at the specified index. */
-  def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
+  def insertAs[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
     validateType[V]("insert", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.insertItem(data, index, typedValue))
     }
   }
 
   /** Returns a new DataColumn[T] with the new value at the specified index. */
-  def replace[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
+  def replaceAs[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
     validateType[V]("replace", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.replaceItem(data, index, typedValue))
     }
@@ -62,6 +63,13 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
 
   private def checkAndCreateNewColumn(transformData: () => Try[IndexedSeq[T]]): Try[DataColumn[T]] = {
     transformData().map { modifiedData => new DataColumn[T](name, modifiedData) }
+  }
+
+  def validateTypeOfValue(reason: String, value: Any)(implicit classTag: ClassTag[T]): Try[T] = {
+    value match {
+      case t: T => Success(t)
+      case _    => Failure(DataTableException(s"Error on $reason value. Cannot cast value to type: $classTag"))
+    }
   }
 
   private def validateType[V: TypeTag](reason: String, value: V): Try[T] = {

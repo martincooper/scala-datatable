@@ -24,7 +24,7 @@ class DataColumnAddValueSpec extends FlatSpec with Matchers {
   "A Data Column" should "be able to be add a new data value" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
-    val result = originalColumn.add(99)
+    val result = originalColumn.addAs(99)
 
     result.isSuccess should be(true)
     result.get.name should be("TestCol")
@@ -37,9 +37,22 @@ class DataColumnAddValueSpec extends FlatSpec with Matchers {
   it should "prevent a invalid value type being added" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
-    val result = originalColumn.add("Invalid Value")
+    val result = originalColumn.addAs("Invalid Value")
 
     result.isSuccess should be(false)
     result.failed.get.getMessage should be("Invalid value type on add.")
   }
+
+/*  it should "prevent a invalid value type being addedddd" in {
+    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
+
+    val test = 100.asInstanceOf[Any]
+
+    val result = originalColumn.validateTypeOfValue("Reason", test)
+
+    result should be("InvalidValue")
+
+    //result.isSuccess should be(false)
+    //result.failed.get.getMessage should be("Invalid value type on add.")
+  }*/
 }

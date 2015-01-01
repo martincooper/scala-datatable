@@ -24,7 +24,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
   "A Data Column" should "allow add data of correct type" in {
     val originalColumn = new DataColumn[Long]("TestCol", (0l to 4l) map { i => i })
 
-    val result = originalColumn.add(99l)
+    val result = originalColumn.addAs(99l)
     result.isSuccess should be(true)
     result.get.data should be(Seq(0l, 1l, 2l, 3l, 4l, 99l))
   }
@@ -32,7 +32,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
   it should "not allow add data of invalid type" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
-    val result = originalColumn.add("String Value")
+    val result = originalColumn.addAs("String Value")
     result.isSuccess should be(false)
     result.failed.get.getMessage should be("Invalid value type on add.")
   }
@@ -40,7 +40,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
   it should "allow insert data of correct type" in {
     val originalColumn = new DataColumn[Long]("TestCol", (0l to 4l) map { i => i })
 
-    val result = originalColumn.insert(2, 99l)
+    val result = originalColumn.insertAs(2, 99l)
     result.isSuccess should be(true)
     result.get.data should be(Seq(0l, 1l, 99l, 2l, 3l, 4l))
   }
@@ -48,7 +48,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
   it should "not allow insert data of invalid type" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
-    val result = originalColumn.insert(2, "String Value")
+    val result = originalColumn.insertAs(2, "String Value")
     result.isSuccess should be(false)
     result.failed.get.getMessage should be("Invalid value type on insert.")
   }
@@ -56,7 +56,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
   it should "allow replace data of correct type" in {
     val originalColumn = new DataColumn[Long]("TestCol", (0l to 4l) map { i => i })
 
-    val result = originalColumn.replace(2, 99l)
+    val result = originalColumn.replaceAs(2, 99l)
     result.isSuccess should be(true)
     result.get.data should be(Seq(0l, 1l, 99l, 3l, 4l))
   }
@@ -64,7 +64,7 @@ class DataColumnTypeCheckSpec extends FlatSpec with Matchers {
   it should "not allow replace data of invalid type" in {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
-    val result = originalColumn.replace(2, "String Value")
+    val result = originalColumn.replaceAs(2, "String Value")
     result.isSuccess should be(false)
     result.failed.get.getMessage should be("Invalid value type on replace.")
   }
