@@ -65,10 +65,9 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   }
 
   private def validateType[V: TypeTag](reason: String, value: V): Try[T] = {
-    if (typeOf[V] =:= columnType) {
-      Success(value.asInstanceOf[T])
-    } else {
-      Failure(DataTableException(s"Invalid value type on $reason."))
+    typeOf[V] =:= columnType match {
+      case true => Success(value.asInstanceOf[T])
+      case _ => Failure(DataTableException(s"Invalid value type on $reason."))
     }
   }
 
