@@ -16,7 +16,6 @@
 
 package com.github.martincooper.datatable
 
-import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
 import scala.util.{ Failure, Success, Try }
 
@@ -36,22 +35,22 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   }
 
   /** Returns a new DataColumn[T] with the value added at the end. */
-  override def add(value: Any): Try[GenericColumn] = {
-    validateTypeOfValue("add", value).flatMap { typedValue =>
+  override def add(value: DataValue): Try[GenericColumn] = {
+    validateType("add", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.addItem(data, typedValue))
     }
   }
 
   /** Returns a new DataColumn[T] with the value inserted at the specified index. */
-  override def insert(index: Int, value: Any): Try[GenericColumn] = {
-    validateTypeOfValue("insert", value).flatMap { typedValue =>
+  override def insert(index: Int, value: DataValue): Try[GenericColumn] = {
+    validateType("insert", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.insertItem(data, index, typedValue))
     }
   }
 
   /** Returns a new DataColumn[T] with the new value replacing the one at the specified index. */
-  override def replace(index: Int, value: Any): Try[GenericColumn] = {
-    validateTypeOfValue("replace", value).flatMap { typedValue =>
+  override def replace(index: Int, value: DataValue): Try[GenericColumn] = {
+    validateType("replace", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.replaceItem(data, index, typedValue))
     }
   }
@@ -86,17 +85,11 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
     transformData().map { modifiedData => new DataColumn[T](name, modifiedData) }
   }
 
-  def validateTypeOfValueX(reason: String, value: Any)(implicit classTag: ClassTag[T]): Try[T] = {
-    value match {
-      case t: T => Success(t)
-      case _    => Failure(DataTableException(s"Error on $reason value. Cannot cast value to type: $classTag"))
+  private def validateType(reason: String, dataValue: DataValue): Try[T] = {
+    dataValue.valueType =:= columnType match {
+      case true => Success(dataValue.value.asInstanceOf[T])
+      case _ => Failure(DataTableException(s"Invalid value type on $reason."))
     }
-  }
-
-  // TODO. This is known to not work correctly due to type erasure.
-  // TODO. This is a temporary solution and needs to be fixed.
-  private def validateTypeOfValue(reason: String, value: Any): Try[T] = {
-    Try(value.asInstanceOf[T])
   }
 
   private def validateType[V: TypeTag](reason: String, value: V): Try[T] = {

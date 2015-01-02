@@ -4,33 +4,22 @@ import TypedDataValueImplicits._
 
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
-import scala.util.{ Failure, Success, Try }
 
+/** DataValue trait used to handle TypedDataValues of various types. */
 trait DataValue {
   val value: Any
   val valueType : Type
 }
 
+/** TypedDataValue used to capture values along with required type information. */
 case class TypedDataValue[T : TypeTag : ClassTag](itemValue: T) extends DataValue {
   val value = itemValue
   val valueType = typeOf[T]
-
-  def test() = {
-    validateTypeOfValue(value)
-  }
-
-  def validateTypeOfValue(value: Any): Try[T] = {
-    value match {
-      case t: T => Success(t)
-      case _    => Failure(DataTableException(s"Error"))
-    }
-  }
-
 }
 
 object TypedDataValueImplicits {
 
-  /** Implicit conversion from value into a TypedDataValue item. */
+  /** Implicit conversion from value into a DataValue item. */
   implicit def ValueToTypedDataValue[T : TypeTag : ClassTag](value: T): DataValue =
     new TypedDataValue[T](value)
 }
