@@ -17,11 +17,7 @@
 package com.github.martincooper.datatable.DataSort
 
 import com.github.martincooper.datatable.DataSort.SortEnum.{ Ascending, SortOrder }
-
-/** Specifies how an item is identified. */
-sealed trait ItemIdentity
-case class ItemByName(columnName: String) extends ItemIdentity
-case class ItemByIndex(columnIndex: Int) extends ItemIdentity
+import com.github.martincooper.datatable.{ ItemByIndex, ItemByName, ItemIdentity }
 
 object SortEnum {
   sealed trait SortOrder

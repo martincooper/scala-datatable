@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataSort
 
-import com.github.martincooper.datatable.DataRow
+import com.github.martincooper.datatable.{ ItemIdentity, ItemByIndex, ItemByName, DataRow }
 import com.github.martincooper.datatable.DataSort.SortEnum.{ Descending, Ascending }
 
 /** Handles the multi column sorting on a DataRow. */
