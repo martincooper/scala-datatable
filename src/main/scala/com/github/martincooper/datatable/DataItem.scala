@@ -17,11 +17,19 @@ case class TypedDataValue[T : TypeTag : ClassTag](itemValue: T) extends DataValu
   val valueType = typeOf[T]
 }
 
+object DataValue {
+
+  /** Builds an new TypedDataValue. */
+  def apply[T : TypeTag : ClassTag](value: T): DataValue = {
+    new TypedDataValue[T](value)
+  }
+}
+
 object TypedDataValueImplicits {
 
   /** Implicit conversion from value into a DataValue item. */
   implicit def ValueToTypedDataValue[T : TypeTag : ClassTag](value: T): DataValue =
-    new TypedDataValue[T](value)
+    TypedDataValue[T](value)
 }
 
 object DataItem {
@@ -50,6 +58,4 @@ object DataItem {
     val gets = setters(1, 34, "dataValue")
     println(gets)
   }
-
-
 }

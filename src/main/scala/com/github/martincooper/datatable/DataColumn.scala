@@ -56,21 +56,21 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   }
 
   /** Returns a new DataColumn[T] with the value added at the end. */
-  def addAs[V: TypeTag](value: V): Try[GenericColumn] = {
+  def add[V: TypeTag](value: V): Try[GenericColumn] = {
     validateType[V]("add", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.addItem(data, typedValue))
     }
   }
 
   /** Returns a new DataColumn[T] with the value inserted at the specified index. */
-  def insertAs[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
+  def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
     validateType[V]("insert", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.insertItem(data, index, typedValue))
     }
   }
 
   /** Returns a new DataColumn[T] with the new value replacing the one at the specified index. */
-  def replaceAs[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
+  def replace[V: TypeTag](index: Int, value: V): Try[GenericColumn] = {
     validateType[V]("replace", value).flatMap { typedValue =>
       checkAndCreateNewColumn(() => IndexedSeqExtensions.replaceItem(data, index, typedValue))
     }
