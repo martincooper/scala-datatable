@@ -16,6 +16,7 @@
 
 package com.github.martincooper.datatable
 
+import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
 import scala.util.{ Failure, Success, Try }
 
@@ -83,6 +84,13 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
 
   private def checkAndCreateNewColumn(transformData: () => Try[IndexedSeq[T]]): Try[DataColumn[T]] = {
     transformData().map { modifiedData => new DataColumn[T](name, modifiedData) }
+  }
+
+  def validateTypeOfValueX(reason: String, value: Any)(implicit classTag: ClassTag[T]): Try[T] = {
+    value match {
+      case t: T => Success(t)
+      case _    => Failure(DataTableException(s"Error on $reason value. Cannot cast value to type: $classTag"))
+    }
   }
 
   // TODO. This is known to not work correctly due to type erasure.
