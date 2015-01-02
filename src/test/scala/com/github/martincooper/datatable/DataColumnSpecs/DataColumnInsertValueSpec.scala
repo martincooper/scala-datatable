@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataColumnSpecs
 
-import com.github.martincooper.datatable.DataColumn
+import com.github.martincooper.datatable.{DataValue, DataColumn}
 import org.scalatest.{ Matchers, FlatSpec }
 
 class DataColumnInsertValueSpec extends FlatSpec with Matchers {
@@ -45,6 +45,28 @@ class DataColumnInsertValueSpec extends FlatSpec with Matchers {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
     val result = originalColumn.insert(2, "Invalid Value")
+    result.isSuccess should be(false)
+    result.failed.get.getMessage should be("Invalid value type on insert.")
+  }
+
+  it should "be able to be insert a new value using a DataValue item" in {
+    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
+
+    val result = originalColumn.insert(2, DataValue(99))
+
+    result.isSuccess should be(true)
+    result.get.name should be("TestCol")
+    result.get.data.length should be(6)
+    result.get.data(2) should be(99)
+
+    originalColumn.data.length should be(5)
+  }
+
+  it should "prevent a invalid DataValue item type being inserted" in {
+    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
+
+    val result = originalColumn.insert(2, DataValue("Invalid Value"))
+
     result.isSuccess should be(false)
     result.failed.get.getMessage should be("Invalid value type on insert.")
   }

@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataColumnSpecs
 
-import com.github.martincooper.datatable.DataColumn
+import com.github.martincooper.datatable.{DataValue, DataColumn}
 import org.scalatest.{ Matchers, FlatSpec }
 
 class DataColumnAddValueSpec extends FlatSpec with Matchers {
@@ -38,6 +38,28 @@ class DataColumnAddValueSpec extends FlatSpec with Matchers {
     val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
 
     val result = originalColumn.add("Invalid Value")
+
+    result.isSuccess should be(false)
+    result.failed.get.getMessage should be("Invalid value type on add.")
+  }
+
+  it should "be able to be add a new value using a DataValue item" in {
+    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
+
+    val result = originalColumn.add(DataValue(99))
+
+    result.isSuccess should be(true)
+    result.get.name should be("TestCol")
+    result.get.data.length should be(6)
+    result.get.data(5) should be(99)
+
+    originalColumn.data.length should be(5)
+  }
+
+  it should "prevent a invalid DataValue item type being added" in {
+    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
+
+    val result = originalColumn.add(DataValue("Invalid Value"))
 
     result.isSuccess should be(false)
     result.failed.get.getMessage should be("Invalid value type on add.")

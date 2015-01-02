@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataColumnSpecs
 
-import com.github.martincooper.datatable.DataColumn
+import com.github.martincooper.datatable.{DataValue, DataColumn}
 import org.scalatest.{ Matchers, FlatSpec }
 
 class DataColumnReplaceValueSpec extends FlatSpec with Matchers {
@@ -48,4 +48,33 @@ class DataColumnReplaceValueSpec extends FlatSpec with Matchers {
     result.isSuccess should be(false)
     result.failed.get.getMessage should be("Invalid value type on replace.")
   }
+
+  it should "be able to be replace an existing data value from DataValue" in {
+    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
+
+    val result = originalColumn.replace(2, DataValue(99))
+
+    result.isSuccess should be(true)
+    result.get.name should be("TestCol")
+    result.get.data should be(Seq(0, 1, 99, 3, 4))
+
+    originalColumn.data should be(Seq(0, 1, 2, 3, 4))
+  }
+
+  it should "not allow replace with invalid index using DataValue" in {
+    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
+
+    val result = originalColumn.replace(99, DataValue(99))
+    result.isSuccess should be(false)
+    result.failed.get.getMessage should be("Item index out of bounds for replace.")
+  }
+
+  it should "not allow replace with value of invalid type using DataValue" in {
+    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
+
+    val result = originalColumn.replace(2, DataValue("Invalid Value"))
+    result.isSuccess should be(false)
+    result.failed.get.getMessage should be("Invalid value type on replace.")
+  }
+
 }
