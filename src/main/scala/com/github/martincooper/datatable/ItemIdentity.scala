@@ -24,8 +24,8 @@ case class ItemByIndex(columnIndex: Int) extends ItemIdentity
 object ItemIdentityImplicits {
 
   /** Implicit conversion from string (name) into IdentityByName item. */
-  implicit def StringToItemName(itemName : String): ItemIdentity = new ItemByName(itemName)
+  implicit def StringToItemName(itemName: String): ItemIdentity = new ItemByName(itemName)
 
   /** Implicit conversion from integer (index) into IdentityByIndex item. */
-  implicit def IntegerToItemName(itemIndex : Int): ItemIdentity = new ItemByIndex(itemIndex)
+  implicit def IntegerToItemName(itemIndex: Int): ItemIdentity = new ItemByIndex(itemIndex)
 }

@@ -42,17 +42,4 @@ class DataColumnAddValueSpec extends FlatSpec with Matchers {
     result.isSuccess should be(false)
     result.failed.get.getMessage should be("Invalid value type on add.")
   }
-
-/*  it should "prevent a invalid value type being addedddd" in {
-    val originalColumn = new DataColumn[Int]("TestCol", (0 to 4) map { i => i })
-
-    val test = 100.asInstanceOf[Any]
-
-    val result = originalColumn.validateTypeOfValue("Reason", test)
-
-    result should be("InvalidValue")
-
-    //result.isSuccess should be(false)
-    //result.failed.get.getMessage should be("Invalid value type on add.")
-  }*/
 }
