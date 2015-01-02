@@ -35,9 +35,9 @@ trait GenericColumn {
   def replace(index: Int, value: DataValue): Try[GenericColumn]
 
   /** Add, Insert, Replace with an explicitly typed [V] value. */
-  def addAs[V: TypeTag](value: V): Try[GenericColumn]
-  def insertAs[V: TypeTag](index: Int, value: V): Try[GenericColumn]
-  def replaceAs[V: TypeTag](index: Int, value: V): Try[GenericColumn]
+  def add[V: TypeTag](value: V): Try[GenericColumn]
+  def insert[V: TypeTag](index: Int, value: V): Try[GenericColumn]
+  def replace[V: TypeTag](index: Int, value: V): Try[GenericColumn]
 
   def remove(index: Int): Try[GenericColumn]
 }
