@@ -19,6 +19,8 @@ package com.github.martincooper.datatable
 import scala.collection.{ mutable, IndexedSeqLike }
 import scala.util.{ Success, Failure, Try }
 
+case class ColumnValuePair(column: GenericColumn, value: DataValue)
+
 /** Implements a collection of DataRows with additional immutable modification methods implemented. */
 class DataRowCollection(dataTable: DataTable)
     extends IndexedSeq[DataRow]
@@ -28,14 +30,22 @@ class DataRowCollection(dataTable: DataTable)
 
   override def apply(columnIndex: Int): DataRow = table(columnIndex)
 
-  override def length: Int = dataTable.rowCount()
+  override def length: Int = dataTable.rowCount
 
   override def newBuilder: mutable.Builder[DataRow, DataRowCollection] =
     DataRowCollection.newBuilder(table)
 
-  /** Returns a new table with the additional row. */
-  def add(newRow: DataRow): Try[DataTable] = {
-    Failure(DataTableException("Not Implemented."))
+  /** Returns a new table with the additional row data appended. */
+  def add(rowValues: DataValue*): Try[DataTable] = {
+    add(rowValues)
+  }
+
+  /** Returns a new table with the additional row data appended. */
+  def add(rowValues: Iterable[DataValue]): Try[DataTable] = {
+    mapValuesToColumns(rowValues.toIndexedSeq) match {
+      case Success(colMap) => addValues(colMap)
+      case Failure(ex) => Failure(ex)
+    }
   }
 
   /** Creates a new table with the column specified replaced with the new column. */
@@ -66,6 +76,30 @@ class DataRowCollection(dataTable: DataTable)
   /** Returns a new table with the row removed. */
   def remove(rowIndex: Int): Try[DataTable] = {
     removeRowItems(rowIndex)
+  }
+
+  private def addValues(columnValues: IndexedSeq[ColumnValuePair]): Try[DataTable] = {
+    val newCols = allOrFirstFail(columnValues.map(item => item.column.add(item.value)))
+
+    newCols match {
+      case Success(columns) => DataTable(table.name, columns)
+      case Failure(ex) => Failure(ex)
+    }
+  }
+
+  /** Maps each value to the column it should go in. With only values,  */
+  private def mapValuesToColumns(values: IndexedSeq[DataValue]): Try[IndexedSeq[ColumnValuePair]] = {
+    values.length == table.columns.length match {
+      case false => Failure(DataTableException("Number of values does not match number of columns."))
+      case _ => Success(createIndexedColumnValuePair(values))
+    }
+  }
+
+  /** Creates a collection of column to value pairs by column index. */
+  private def createIndexedColumnValuePair(values: IndexedSeq[DataValue]): IndexedSeq[ColumnValuePair] = {
+    values.zipWithIndex.map {
+      case (value, index) => ColumnValuePair(table.columns(index), value)
+    }
   }
 
   /** Removes the item from each column and builds a new DataTable. */

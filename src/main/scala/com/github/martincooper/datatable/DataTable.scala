@@ -30,20 +30,20 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
   val rows = DataRowCollection(this)
   val table: DataTable = this
 
-  def rowCount(): Int = {
+  def rowCount: Int = {
     columns.length match {
       case 0 => 0
       case _ => columns.head.data.length
     }
   }
 
-  override def length: Int = rowCount()
+  override def length: Int = rowCount
 
   override def apply(idx: Int): DataRow = DataRow(this, idx).get
 
   /** Outputs a more detailed toString implementation. */
   override def toString() = {
-    val tableDetails = "DataTable:" + name + "[Rows:" + rowCount() + "]"
+    val tableDetails = "DataTable:" + name + "[Rows:" + rowCount + "]"
     val colDetails = columns.map(col => "[" + col.toString + "]").mkString(" ")
 
     tableDetails + colDetails

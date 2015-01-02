@@ -33,7 +33,7 @@ class DataRowCollectionRemoveRowSpec extends FlatSpec with Matchers {
     newTable.isSuccess should be(true)
     newTable.get.columns.length should be(2)
 
-    originalTable.rowCount() should be(6)
+    originalTable.rowCount should be(6)
     newTable.get.rowCount should be(5)
 
     newTable.get.columns(0).data should be(Seq(0, 1, 3, 4, 5))
@@ -66,7 +66,7 @@ class DataRowCollectionRemoveRowSpec extends FlatSpec with Matchers {
     newTable.isSuccess should be(true)
     newTable.get.columns.length should be(2)
 
-    originalTable.rowCount() should be(6)
+    originalTable.rowCount should be(6)
     newTable.get.rowCount should be(5)
 
     newTable.get.columns(0).data should be(Seq(0, 1, 3, 4, 5))

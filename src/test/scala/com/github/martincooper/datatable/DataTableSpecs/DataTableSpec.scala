@@ -56,7 +56,7 @@ class DataTableSpec extends FlatSpec with Matchers {
     val result = DataTable("TestTable", Seq(dataColOne, dataColTwo))
 
     result.isSuccess should be(true)
-    result.get.rowCount() should be(20)
+    result.get.rowCount should be(20)
   }
 
   it should "return correct row count when it has no columns" in {
@@ -64,7 +64,7 @@ class DataTableSpec extends FlatSpec with Matchers {
     val result = DataTable("TestTable", Seq[GenericColumn]())
 
     result.isSuccess should be(true)
-    result.get.rowCount() should be(0)
+    result.get.rowCount should be(0)
   }
 
   it should "prevent different column lengths" in {

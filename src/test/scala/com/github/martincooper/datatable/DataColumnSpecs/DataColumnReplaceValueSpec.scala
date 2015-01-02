@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataColumnSpecs
 
-import com.github.martincooper.datatable.{DataValue, DataColumn}
+import com.github.martincooper.datatable.{ DataValue, DataColumn }
 import org.scalatest.{ Matchers, FlatSpec }
 
 class DataColumnReplaceValueSpec extends FlatSpec with Matchers {
@@ -76,5 +76,4 @@ class DataColumnReplaceValueSpec extends FlatSpec with Matchers {
     result.isSuccess should be(false)
     result.failed.get.getMessage should be("Invalid value type on replace.")
   }
-
 }
