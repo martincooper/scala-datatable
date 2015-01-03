@@ -17,7 +17,7 @@
 package com.github.martincooper.datatable.examples
 
 import com.github.martincooper.datatable.TypedDataValueImplicits._
-import com.github.martincooper.datatable.DataTable
+import com.github.martincooper.datatable.{DataColumn, DataTable}
 import scala.util.Try
 
 class DataRowModificationExamples {
@@ -40,5 +40,62 @@ class DataRowModificationExamples {
   def removeRow(dataTable: DataTable): Try[DataTable] = {
     // Remove the row at the specified index.
     dataTable.rows.remove(10)
+  }
+
+  def addRow(): Try[DataTable] = {
+    // First create a table with the required columns.
+    val stringCol = new DataColumn[String]("StringColumn", (1 to 100).map(i => "Cell Value " + i))
+    val integerCol = new DataColumn[Int]("IntegerColumn", (1 to 100).map(i => i * 20))
+    val booleanCol = new DataColumn[Boolean]("BooleanColumn", (1 to 100).map(i => true))
+
+    val dataTable = DataTable("NewTable", Seq(stringCol, integerCol, booleanCol)).get
+
+    // Call rows.add, providing the correct number of values and of the correct type.
+    // This will return a new DataTable with the data appended as a new row at the end.
+    dataTable.rows.add("New Value", 1000, false)
+  }
+
+  def removeRow(): Try[DataTable] = {
+    // First create a table with the required columns.
+    val stringCol = new DataColumn[String]("StringColumn", (1 to 100).map(i => "Cell Value " + i))
+    val integerCol = new DataColumn[Int]("IntegerColumn", (1 to 100).map(i => i * 20))
+    val booleanCol = new DataColumn[Boolean]("BooleanColumn", (1 to 100).map(i => true))
+
+    val dataTable = DataTable("NewTable", Seq(stringCol, integerCol, booleanCol)).get
+
+    // Call rows.remove, providing the rowIndex.
+    // This will return a new DataTable with the row at the specified index removed.
+    val rowIndex = 50
+    dataTable.rows.remove(rowIndex)
+  }
+
+  def insertRow(): Try[DataTable] = {
+    // First create a table with the required columns.
+    val stringCol = new DataColumn[String]("StringColumn", (1 to 100).map(i => "Cell Value " + i))
+    val integerCol = new DataColumn[Int]("IntegerColumn", (1 to 100).map(i => i * 20))
+    val booleanCol = new DataColumn[Boolean]("BooleanColumn", (1 to 100).map(i => true))
+
+    val dataTable = DataTable("NewTable", Seq(stringCol, integerCol, booleanCol)).get
+
+    // Call rows.insert, providing the correct number of values and of the correct type.
+    // This will return a new DataTable with the data provided inserted as a new row
+    // at the specified index.
+    val rowIndex = 50
+    dataTable.rows.insert(rowIndex, "New Value", 1000, false)
+  }
+
+  def replaceRow(): Try[DataTable] = {
+    // First create a table with the required columns.
+    val stringCol = new DataColumn[String]("StringColumn", (1 to 100).map(i => "Cell Value " + i))
+    val integerCol = new DataColumn[Int]("IntegerColumn", (1 to 100).map(i => i * 20))
+    val booleanCol = new DataColumn[Boolean]("BooleanColumn", (1 to 100).map(i => true))
+
+    val dataTable = DataTable("NewTable", Seq(stringCol, integerCol, booleanCol)).get
+
+    // Call rows.replace, providing the correct number of values and of the correct type.
+    // This will return a new DataTable with the data provided replacing the data at
+    // the row at the specified index.
+    val rowIndex = 50
+    dataTable.rows.replace(rowIndex, "New Value", 1000, false)
   }
 }
