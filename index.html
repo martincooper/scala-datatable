@@ -47,8 +47,7 @@ new structure, leaving the old one completely untouched. This is quite efficient
 <li>Table columns can be added, inserted, updated and removed.</li>
 <li>Rows can be added, inserted, updated and removed.</li>
 <li>Individual cell values can be updated.</li>
-<li>Any inserts, updates or deletes keep the original structure completely unchanged.</li>
-<li>Handles typed or untyped data.</li>
+<li>Any inserts, updates or deletes keep the original structure and data completely unchanged.</li>
 <li>Internal type checks and bounds checks to ensure data integrity.</li>
 <li>RowData object allowing typed or untyped data access.</li>
 <li>Full filtering and searching on row data.</li>
@@ -81,7 +80,7 @@ on any out of bounds errors but with potentially faster access on a significantl
 
 <p>If you use SBT, you can include the following line into the build.sbt file.</p>
 
-<div class="highlight highlight-scala"><pre>libraryDependencies <span class="pl-k">+</span><span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">"</span>com.github.martincooper<span class="pl-pds">"</span></span> <span class="pl-k">%%</span> <span class="pl-s1"><span class="pl-pds">"</span>scala-datatable<span class="pl-pds">"</span></span> <span class="pl-k">%</span> <span class="pl-s1"><span class="pl-pds">"</span>0.5.0<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-scala"><pre>libraryDependencies <span class="pl-k">+</span><span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">"</span>com.github.martincooper<span class="pl-pds">"</span></span> <span class="pl-k">%%</span> <span class="pl-s1"><span class="pl-pds">"</span>scala-datatable<span class="pl-pds">"</span></span> <span class="pl-k">%</span> <span class="pl-s1"><span class="pl-pds">"</span>0.6.0<span class="pl-pds">"</span></span></pre></div>
 
 <h1>
 <a id="example-usage" class="anchor" href="#example-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Usage</h1>
@@ -203,6 +202,35 @@ more composable access to the underlying data.</p>
 }</pre></div>
 
 <h2>
+<a id="adding--updating--deleting-rows" class="anchor" href="#adding--updating--deleting-rows" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding / Updating / Deleting rows.</h2>
+
+<p>Individual rows and field values in the table can be modified. As the implementation is fully
+immutable, any add /remove / update / delete operation will return a new table with the changes
+applied leaving the original unchanged.</p>
+
+<p>The examples below assume a table with 4 columns of type [String, Int, Boolean, Double].</p>
+
+<div class="highlight highlight-scala"><pre><span class="pl-k">def</span> <span class="pl-en">addRow</span>(<span class="pl-v">dataTable</span>: <span class="pl-en">DataTable</span>)<span class="pl-k">:</span> <span class="pl-en">Try</span>[<span class="pl-en">DataTable</span>] <span class="pl-k">=</span> {
+  <span class="pl-c">// Add a new row containing 4 values.</span>
+  dataTable.rows.add(<span class="pl-s1"><span class="pl-pds">"</span>New Value<span class="pl-pds">"</span></span>, <span class="pl-c1">100</span> , <span class="pl-c1">true</span>, <span class="pl-c1">5.5d</span>)
+}
+
+<span class="pl-k">def</span> <span class="pl-en">insertRow</span>(<span class="pl-v">dataTable</span>: <span class="pl-en">DataTable</span>)<span class="pl-k">:</span> <span class="pl-en">Try</span>[<span class="pl-en">DataTable</span>] <span class="pl-k">=</span> {
+  <span class="pl-c">// Insert a new row containing 4 values at row index 10.</span>
+  dataTable.rows.insert(<span class="pl-c1">10</span>, <span class="pl-s1"><span class="pl-pds">"</span>New Value<span class="pl-pds">"</span></span>, <span class="pl-c1">100</span>, <span class="pl-c1">true</span>, <span class="pl-c1">5.5d</span>)
+}
+
+<span class="pl-k">def</span> <span class="pl-en">replaceRow</span>(<span class="pl-v">dataTable</span>: <span class="pl-en">DataTable</span>)<span class="pl-k">:</span> <span class="pl-en">Try</span>[<span class="pl-en">DataTable</span>] <span class="pl-k">=</span> {
+  <span class="pl-c">// Replace the row values at row index 10 with the new values.</span>
+  dataTable.rows.replace(<span class="pl-c1">10</span>, <span class="pl-s1"><span class="pl-pds">"</span>New Value<span class="pl-pds">"</span></span>, <span class="pl-c1">100</span>, <span class="pl-c1">true</span>, <span class="pl-c1">5.5d</span>)
+}
+
+<span class="pl-k">def</span> <span class="pl-en">removeRow</span>(<span class="pl-v">dataTable</span>: <span class="pl-en">DataTable</span>)<span class="pl-k">:</span> <span class="pl-en">Try</span>[<span class="pl-en">DataTable</span>] <span class="pl-k">=</span> {
+  <span class="pl-c">// Remove the row at the specified index.</span>
+  dataTable.rows.remove(<span class="pl-c1">10</span>)
+}</pre></div>
+
+<h2>
 <a id="sorting--single-and-multi-column" class="anchor" href="#sorting--single-and-multi-column" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sorting / Single and Multi Column</h2>
 
 <p>A DataTable can sort by specified column or columns, returning a sorted DataView.</p>
@@ -223,8 +251,9 @@ more composable access to the underlying data.</p>
 <a id="additional-examples-" class="anchor" href="#additional-examples-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Additional Examples :</h3>
 
 <ul>
-<li><a href="https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowExamples.md">Data Access with the DataRow</a></li>
-<li><a href="https://github.com/martincooper/scala-datatable/blob/master/docs/DataColumnModificationExamples.md">Modifying Data Columns</a></li>
+<li><a href="https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowAccessExamples.md">Accessing Data with the DataRow</a></li>
+<li><a href="https://github.com/martincooper/scala-datatable/blob/master/docs/DataColumnModifyExamples.md">Modifying Columns</a></li>
+<li><a href="https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowModifyExamples.md">Updating Data</a></li>
 <li><a href="https://github.com/martincooper/scala-datatable/blob/master/docs/SortingDataExamples.md">Sorting Data</a></li>
 </ul>
 
