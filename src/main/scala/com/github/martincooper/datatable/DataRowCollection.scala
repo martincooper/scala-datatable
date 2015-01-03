@@ -23,18 +23,19 @@ import scala.util.{ Success, Failure, Try }
 case class ColumnValuePair(column: GenericColumn, value: DataValue)
 
 /** Implements a collection of DataRows with additional immutable modification methods implemented. */
-class DataRowCollection(dataTable: DataTable)
+class DataRowCollection private (dataTable: DataTable, dataRows: Iterable[DataRow])
     extends IndexedSeq[DataRow]
     with IndexedSeqLike[DataRow, DataRowCollection] {
 
   val table = dataTable
+  val rows = dataRows.toVector
 
-  override def apply(columnIndex: Int): DataRow = table(columnIndex)
+  override def apply(columnIndex: Int): DataRow = rows(columnIndex)
 
   override def length: Int = dataTable.rowCount
 
   override def newBuilder: mutable.Builder[DataRow, DataRowCollection] =
-    DataRowCollection.newBuilder(table)
+    DataRowCollection.newBuilder(table, rows)
 
   /** Returns a new table with the additional row data appended. */
   def add(rowValues: DataValue*): Try[DataTable] = {
@@ -145,11 +146,16 @@ class DataRowCollection(dataTable: DataTable)
 object DataRowCollection {
 
   /** Builder for a new DataRowCollection. */
-  def newBuilder(dataTable: DataTable): mutable.Builder[DataRow, DataRowCollection] =
-    Vector.newBuilder[DataRow] mapResult (vector => new DataRowCollection(dataTable))
+  def newBuilder(dataTable: DataTable, dataRows: Iterable[DataRow]): mutable.Builder[DataRow, DataRowCollection] =
+    Vector.newBuilder[DataRow] mapResult (vector => new DataRowCollection(dataTable, dataRows))
 
   /** Builds a DataRowCollection. */
   def apply(dataTable: DataTable): DataRowCollection = {
-    new DataRowCollection(dataTable)
+    new DataRowCollection(dataTable, dataTable)
+  }
+
+  /** Builds a DataRowCollection. */
+  def apply(dataTable: DataTable, dataRows: Iterable[DataRow]): DataRowCollection = {
+    new DataRowCollection(dataTable, dataRows)
   }
 }
