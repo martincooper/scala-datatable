@@ -20,7 +20,7 @@ import com.github.martincooper.datatable.TypedDataValueImplicits._
 import com.github.martincooper.datatable.{ DataValue, DataColumn, DataTable }
 import org.scalatest.{ FlatSpec, Matchers }
 
-class DataRowCollectionAddRowSpec extends FlatSpec with Matchers {
+class DataRowCollectionReplaceRowSpec extends FlatSpec with Matchers {
 
   def createTestTable: DataTable = {
     val dataColOne = new DataColumn[Int]("ColOne", (0 to 5) map { i => i })
@@ -30,60 +30,69 @@ class DataRowCollectionAddRowSpec extends FlatSpec with Matchers {
     DataTable("TestTable", Seq(dataColOne, dataColTwo, dataColThree)).get
   }
 
-  "DataRowCollection.add" should "allow a valid row to be added to the end of the table" in {
+  "DataRowCollection.replace" should "allow a valid row to be replaced at the specified row index" in {
     val originalTable = createTestTable
 
     // Pass the values as a set of DataValue objects.
-    val newTable = originalTable.rows.add(DataValue(100), DataValue("TestVal"), DataValue(true))
+    val newTable = originalTable.rows.replace(3, DataValue(100), DataValue("TestVal"), DataValue(true))
 
     newTable.isSuccess should be(true)
 
     originalTable.rowCount should be(6)
-    newTable.get.rowCount should be(7)
+    newTable.get.rowCount should be(6)
 
-    newTable.get.columns(0).data should be(Seq(0, 1, 2, 3, 4, 5, 100))
-    newTable.get.columns(1).data should be(Seq("Val0", "Val1", "Val2", "Val3", "Val4", "Val5", "TestVal"))
-    newTable.get.columns(2).data should be(Seq(false, false, false, false, false, false, true))
+    newTable.get.columns(0).data should be(Seq(0, 1, 2, 100, 4, 5))
+    newTable.get.columns(1).data should be(Seq("Val0", "Val1", "Val2", "TestVal", "Val4", "Val5"))
+    newTable.get.columns(2).data should be(Seq(false, false, false, true, false, false))
   }
 
-  it should "allow a valid row to be added to the end of the table using implicit value converters" in {
+  it should "allow a valid row to be replaced in the table using implicit value converters" in {
     val originalTable = createTestTable
 
     // Pass the values using the implicit value converter.
-    val newTable = originalTable.rows.add(100, "TestVal", true)
+    val newTable = originalTable.rows.replace(3, 100, "TestVal", true)
 
     newTable.isSuccess should be(true)
 
     originalTable.rowCount should be(6)
-    newTable.get.rowCount should be(7)
+    newTable.get.rowCount should be(6)
 
-    newTable.get.columns(0).data should be(Seq(0, 1, 2, 3, 4, 5, 100))
-    newTable.get.columns(1).data should be(Seq("Val0", "Val1", "Val2", "Val3", "Val4", "Val5", "TestVal"))
-    newTable.get.columns(2).data should be(Seq(false, false, false, false, false, false, true))
+    newTable.get.columns(0).data should be(Seq(0, 1, 2, 100, 4, 5))
+    newTable.get.columns(1).data should be(Seq("Val0", "Val1", "Val2", "TestVal", "Val4", "Val5"))
+    newTable.get.columns(2).data should be(Seq(false, false, false, true, false, false))
   }
 
-  it should "fail to add a row when a value of invalid type is specified" in {
+  it should "fail when a row is requested to be replaced with invalid index" in {
     val originalTable = createTestTable
 
-    val newTable = originalTable.rows.add("SomeStringValue", "TestVal", true)
+    val newTable = originalTable.rows.replace(99, 100, "TestVal", true)
 
     newTable.isSuccess should be(false)
-    newTable.failed.get.getMessage should be("Invalid value type on add.")
+    newTable.failed.get.getMessage should be("Item index out of bounds for replace.")
   }
 
-  it should "fail to add a row when the number of values is less than the number of columns" in {
+  it should "fail to replace a row when a value of invalid type is specified" in {
     val originalTable = createTestTable
 
-    val newTable = originalTable.rows.add(100, "TestVal")
+    val newTable = originalTable.rows.replace(3, "SomeStringValue", "TestVal", true)
+
+    newTable.isSuccess should be(false)
+    newTable.failed.get.getMessage should be("Invalid value type on replace.")
+  }
+
+  it should "fail to replace a row when the number of values is less than the number of columns" in {
+    val originalTable = createTestTable
+
+    val newTable = originalTable.rows.replace(3, 100, "TestVal")
 
     newTable.isSuccess should be(false)
     newTable.failed.get.getMessage should be("Number of values does not match number of columns.")
   }
 
-  it should "fail to add a row when the number of values is more than the number of columns" in {
+  it should "fail to replace a row when the number of values is more than the number of columns" in {
     val originalTable = createTestTable
 
-    val newTable = originalTable.rows.add(100, "TestVal", true, "Another")
+    val newTable = originalTable.rows.replace(3, 100, "TestVal", true, "Another")
 
     newTable.isSuccess should be(false)
     newTable.failed.get.getMessage should be("Number of values does not match number of columns.")

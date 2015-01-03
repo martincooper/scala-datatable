@@ -46,7 +46,7 @@ class DataRowCollectionInsertRowSpec extends FlatSpec with Matchers {
     newTable.get.columns(2).data should be(Seq(false, false, false, true, false, false, false))
   }
 
-  it should "allow a valid row to be inserted int the table using implicit value converters" in {
+  it should "allow a valid row to be inserted into the table using implicit value converters" in {
     val originalTable = createTestTable
 
     // Pass the values using the implicit value converter.
@@ -60,6 +60,15 @@ class DataRowCollectionInsertRowSpec extends FlatSpec with Matchers {
     newTable.get.columns(0).data should be(Seq(0, 1, 2, 100, 3, 4, 5))
     newTable.get.columns(1).data should be(Seq("Val0", "Val1", "Val2", "TestVal", "Val3", "Val4", "Val5"))
     newTable.get.columns(2).data should be(Seq(false, false, false, true, false, false, false))
+  }
+
+  it should "fail when a row is requested to be inserted with invalid index" in {
+    val originalTable = createTestTable
+
+    val newTable = originalTable.rows.insert(99, 100, "TestVal", true)
+
+    newTable.isSuccess should be(false)
+    newTable.failed.get.getMessage should be("Item index out of bounds for insert.")
   }
 
   it should "fail to insert a row when a value of invalid type is specified" in {

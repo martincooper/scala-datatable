@@ -69,7 +69,10 @@ class DataRowCollection(dataTable: DataTable)
 
   /** Returns a new table with the values at the specified index replaced with the new values. */
   def replace(rowIndex: Int, rowValues: Iterable[DataValue]): Try[DataTable] = {
-    Failure(DataTableException("Not Implemented."))
+    mapValuesToColumns(rowValues.toIndexedSeq) match {
+      case Success(colMap) => replaceValues(rowIndex, colMap)
+      case Failure(ex) => Failure(ex)
+    }
   }
 
   /** Creates a new table with the row removed. */
@@ -80,6 +83,11 @@ class DataRowCollection(dataTable: DataTable)
   /** Returns a new table with the row removed. */
   def remove(rowIndex: Int): Try[DataTable] = {
     removeRow(rowIndex)
+  }
+
+  private def replaceValues(rowIndex: Int, columnValues: IndexedSeq[ColumnValuePair]): Try[DataTable] = {
+    val newCols = allOrFirstFail(columnValues.map(item => item.column.replace(rowIndex, item.value)))
+    buildTable(newCols)
   }
 
   private def insertValues(rowIndex: Int, columnValues: IndexedSeq[ColumnValuePair]): Try[DataTable] = {
