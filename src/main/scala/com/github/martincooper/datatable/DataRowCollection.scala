@@ -19,6 +19,7 @@ package com.github.martincooper.datatable
 import scala.collection.{ mutable, IndexedSeqLike }
 import scala.util.{ Success, Failure, Try }
 
+/** Stores a column and the value to put in it. */
 case class ColumnValuePair(column: GenericColumn, value: DataValue)
 
 /** Implements a collection of DataRows with additional immutable modification methods implemented. */
@@ -48,6 +49,19 @@ class DataRowCollection(dataTable: DataTable)
     }
   }
 
+  /** Creates a new table with the row data inserted at the specified location. */
+  def insert(rowIndex: Int, rowValues: DataValue*): Try[DataTable] = {
+    insert(rowIndex, rowValues)
+  }
+
+  /** Creates a new table with the row data inserted at the specified location. */
+  def insert(rowIndex: Int, rowValues: Iterable[DataValue]): Try[DataTable] = {
+    mapValuesToColumns(rowValues.toIndexedSeq) match {
+      case Success(colMap) => insertValues(rowIndex, colMap)
+      case Failure(ex) => Failure(ex)
+    }
+  }
+
   /** Creates a new table with the column specified replaced with the new column. */
   def replace(oldRow: DataRow, newRow: DataRow): Try[DataTable] = {
     Failure(DataTableException("Not Implemented."))
@@ -55,16 +69,6 @@ class DataRowCollection(dataTable: DataTable)
 
   /** Creates a new table with the column at index replaced with the new column. */
   def replace(rowIndex: Int, value: DataRow): Try[DataTable] = {
-    Failure(DataTableException("Not Implemented."))
-  }
-
-  /** Creates a new table with the column inserted before the specified column. */
-  def insert(rowToInsertAt: DataRow, newColumn: DataRow): Try[DataTable] = {
-    Failure(DataTableException("Not Implemented."))
-  }
-
-  /** Creates a new table with the row inserted at the specified index. */
-  def insert(rowIndex: Int, value: DataRow): Try[DataTable] = {
     Failure(DataTableException("Not Implemented."))
   }
 
@@ -76,6 +80,15 @@ class DataRowCollection(dataTable: DataTable)
   /** Returns a new table with the row removed. */
   def remove(rowIndex: Int): Try[DataTable] = {
     removeRowItems(rowIndex)
+  }
+
+  private def insertValues(rowIndex: Int, columnValues: IndexedSeq[ColumnValuePair]): Try[DataTable] = {
+    val newCols = allOrFirstFail(columnValues.map(item => item.column.insert(rowIndex, item.value)))
+
+    newCols match {
+      case Success(columns) => DataTable(table.name, columns)
+      case Failure(ex) => Failure(ex)
+    }
   }
 
   private def addValues(columnValues: IndexedSeq[ColumnValuePair]): Try[DataTable] = {
