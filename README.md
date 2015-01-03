@@ -12,8 +12,7 @@ new structure, leaving the old one completely untouched. This is quite efficient
  * Table columns can be added, inserted, updated and removed.
  * Rows can be added, inserted, updated and removed.
  * Individual cell values can be updated.
- * Any inserts, updates or deletes keep the original structure completely unchanged.
- * Handles typed or untyped data.
+ * Any inserts, updates or deletes keep the original structure and data completely unchanged.
  * Internal type checks and bounds checks to ensure data integrity.
  * RowData object allowing typed or untyped data access.
  * Full filtering and searching on row data.
@@ -43,7 +42,7 @@ on any out of bounds errors but with potentially faster access on a significantl
 
 If you use SBT, you can include the following line into the build.sbt file.
 ```scala
-libraryDependencies += "com.github.martincooper" %% "scala-datatable" % "0.5.1"
+libraryDependencies += "com.github.martincooper" %% "scala-datatable" % "0.6.0"
 ```
 
 # Example Usage
@@ -187,7 +186,7 @@ def sortTableByMultipleColumns(dataTable: DataTable): Try[DataView] = {
 
 ### Additional Examples :
  * [Data Access with the DataRow](https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowExamples.md)
- * [Modifying Data Columns](https://github.com/martincooper/scala-datatable/blob/master/docs/DataColumnModificationExamples.md)
+ * [Modifying Data Columns](https://github.com/martincooper/scala-datatable/blob/master/docs/DataColumnModifyExamples.md)
  * [Sorting Data](https://github.com/martincooper/scala-datatable/blob/master/docs/SortingDataExamples.md)
 
 ### Contributing
