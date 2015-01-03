@@ -184,7 +184,7 @@ def insertRow(dataTable: DataTable): Try[DataTable] = {
 }
 
 def replaceRow(dataTable: DataTable): Try[DataTable] = {
-  // Replace the row values at row index 10 with the new row values.
+  // Replace the row values at row index 10 with the new values.
   dataTable.rows.replace(10, "New Value", 100, true, 5.5d)
 }
 
@@ -215,8 +215,9 @@ def sortTableByMultipleColumns(dataTable: DataTable): Try[DataView] = {
 ```
 
 ### Additional Examples :
- * [Data Access with the DataRow](https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowExamples.md)
- * [Modifying Data Columns](https://github.com/martincooper/scala-datatable/blob/master/docs/DataColumnModifyExamples.md)
+ * [Accessing Data with the DataRow](https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowAccessExamples.md)
+ * [Modifying Columns](https://github.com/martincooper/scala-datatable/blob/master/docs/DataColumnModifyExamples.md)
+ * [Updating Data](https://github.com/martincooper/scala-datatable/blob/master/docs/DataRowModifyExamples.md)
  * [Sorting Data](https://github.com/martincooper/scala-datatable/blob/master/docs/SortingDataExamples.md)
 
 ### Contributing
