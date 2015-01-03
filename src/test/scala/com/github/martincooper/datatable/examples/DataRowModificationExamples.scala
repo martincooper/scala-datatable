@@ -17,14 +17,14 @@
 package com.github.martincooper.datatable.examples
 
 import com.github.martincooper.datatable.TypedDataValueImplicits._
-import com.github.martincooper.datatable.{DataColumn, DataTable}
+import com.github.martincooper.datatable.{ DataColumn, DataTable }
 import scala.util.Try
 
 class DataRowModificationExamples {
 
   def addRow(dataTable: DataTable): Try[DataTable] = {
     // Add a new row containing 4 values.
-    dataTable.rows.add("New Value", 100 , true, 5.5d)
+    dataTable.rows.add("New Value", 100, true, 5.5d)
   }
 
   def insertRow(dataTable: DataTable): Try[DataTable] = {
