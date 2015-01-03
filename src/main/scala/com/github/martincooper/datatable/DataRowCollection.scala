@@ -79,23 +79,23 @@ class DataRowCollection(dataTable: DataTable)
 
   /** Returns a new table with the row removed. */
   def remove(rowIndex: Int): Try[DataTable] = {
-    removeRowItems(rowIndex)
+    removeRow(rowIndex)
   }
 
   private def insertValues(rowIndex: Int, columnValues: IndexedSeq[ColumnValuePair]): Try[DataTable] = {
     val newCols = allOrFirstFail(columnValues.map(item => item.column.insert(rowIndex, item.value)))
-
-    newCols match {
-      case Success(columns) => DataTable(table.name, columns)
-      case Failure(ex) => Failure(ex)
-    }
+    buildTable(newCols)
   }
 
   private def addValues(columnValues: IndexedSeq[ColumnValuePair]): Try[DataTable] = {
     val newCols = allOrFirstFail(columnValues.map(item => item.column.add(item.value)))
+    buildTable(newCols)
+  }
 
-    newCols match {
-      case Success(columns) => DataTable(table.name, columns)
+  /** Builds a new DataTable from the columns provided if successful. */
+  private def buildTable(columns: Try[Seq[GenericColumn]]): Try[DataTable] = {
+    columns match {
+      case Success(cols) => DataTable(table.name, cols)
       case Failure(ex) => Failure(ex)
     }
   }
@@ -116,13 +116,9 @@ class DataRowCollection(dataTable: DataTable)
   }
 
   /** Removes the item from each column and builds a new DataTable. */
-  private def removeRowItems(rowIndex: Int): Try[DataTable] = {
+  private def removeRow(rowIndex: Int): Try[DataTable] = {
     val newCols = allOrFirstFail(table.columns.map(col => col.remove(rowIndex)))
-
-    newCols match {
-      case Success(columns) => DataTable(table.name, columns)
-      case Failure(ex) => Failure(ex)
-    }
+    buildTable(newCols)
   }
 
   /** Gets the row index from the DataRow, ensuring it belongs to the correct table. */
