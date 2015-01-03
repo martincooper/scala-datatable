@@ -49,12 +49,12 @@ class DataRowCollection(dataTable: DataTable)
     }
   }
 
-  /** Creates a new table with the row data inserted at the specified location. */
+  /** Returns a new table with the row data inserted at the specified location. */
   def insert(rowIndex: Int, rowValues: DataValue*): Try[DataTable] = {
     insert(rowIndex, rowValues)
   }
 
-  /** Creates a new table with the row data inserted at the specified location. */
+  /** Returns a new table with the row data inserted at the specified location. */
   def insert(rowIndex: Int, rowValues: Iterable[DataValue]): Try[DataTable] = {
     mapValuesToColumns(rowValues.toIndexedSeq) match {
       case Success(colMap) => insertValues(rowIndex, colMap)
@@ -62,13 +62,13 @@ class DataRowCollection(dataTable: DataTable)
     }
   }
 
-  /** Creates a new table with the column specified replaced with the new column. */
-  def replace(oldRow: DataRow, newRow: DataRow): Try[DataTable] = {
-    Failure(DataTableException("Not Implemented."))
+  /** Returns a new table with the values at the specified index replaced with the new values. */
+  def replace(rowIndex: Int, rowValues: DataValue*): Try[DataTable] = {
+    replace(rowIndex, rowValues)
   }
 
-  /** Creates a new table with the column at index replaced with the new column. */
-  def replace(rowIndex: Int, value: DataRow): Try[DataTable] = {
+  /** Returns a new table with the values at the specified index replaced with the new values. */
+  def replace(rowIndex: Int, rowValues: Iterable[DataValue]): Try[DataTable] = {
     Failure(DataTableException("Not Implemented."))
   }
 
