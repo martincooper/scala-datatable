@@ -165,6 +165,36 @@ def typedAndCheckedDataAccess(dataRow: DataRow) = {
 }
 ```
 
+## Adding / Updating / Deleting rows.
+Individual rows and field values in the table can be modified. As the implementation is fully
+immutable, any add /remove / update / delete operation will return a new table with the changes
+applied leaving the original unchanged.
+
+The examples below assume a table with 4 columns of type [String, Int, Boolean, Double].
+
+```scala
+def addRow(dataTable: DataTable): Try[DataTable] = {
+  // Add a new row containing 4 values.
+  dataTable.rows.add("New Value", 100 , true, 5.5d)
+}
+
+def insertRow(dataTable: DataTable): Try[DataTable] = {
+  // Insert a new row containing 4 values at row index 10.
+  dataTable.rows.insert(10, "New Value", 100, true, 5.5d)
+}
+
+def replaceRow(dataTable: DataTable): Try[DataTable] = {
+  // Replace the row values at row index 10 with the new row values.
+  dataTable.rows.replace(10, "New Value", 100, true, 5.5d)
+}
+
+def removeRow(dataTable: DataTable): Try[DataTable] = {
+  // Remove the row at the specified index.
+  dataTable.rows.remove(10)
+}
+```
+
+
 ## Sorting / Single and Multi Column
 A DataTable can sort by specified column or columns, returning a sorted DataView.
 
