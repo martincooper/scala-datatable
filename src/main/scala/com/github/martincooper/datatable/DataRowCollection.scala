@@ -82,7 +82,7 @@ class DataRowCollection(dataTable: DataTable)
 
   /** Returns a new table with the row removed. */
   def remove(rowIndex: Int): Try[DataTable] = {
-    removeRow(rowIndex)
+    removeValues(rowIndex)
   }
 
   private def replaceValues(rowIndex: Int, columnValues: IndexedSeq[ColumnValuePair]): Try[DataTable] = {
@@ -97,6 +97,12 @@ class DataRowCollection(dataTable: DataTable)
 
   private def addValues(columnValues: IndexedSeq[ColumnValuePair]): Try[DataTable] = {
     val newCols = allOrFirstFail(columnValues.map(item => item.column.add(item.value)))
+    buildTable(newCols)
+  }
+
+  /** Removes the item from each column and builds a new DataTable. */
+  private def removeValues(rowIndex: Int): Try[DataTable] = {
+    val newCols = allOrFirstFail(table.columns.map(col => col.remove(rowIndex)))
     buildTable(newCols)
   }
 
@@ -121,12 +127,6 @@ class DataRowCollection(dataTable: DataTable)
     values.zipWithIndex.map {
       case (value, index) => ColumnValuePair(table.columns(index), value)
     }
-  }
-
-  /** Removes the item from each column and builds a new DataTable. */
-  private def removeRow(rowIndex: Int): Try[DataTable] = {
-    val newCols = allOrFirstFail(table.columns.map(col => col.remove(rowIndex)))
-    buildTable(newCols)
   }
 
   /** Gets the row index from the DataRow, ensuring it belongs to the correct table. */
