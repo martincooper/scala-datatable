@@ -39,4 +39,31 @@ class DataViewToDataTableSpec extends FlatSpec with Matchers {
     newDataTable.rowCount should be(100)
     newDataTable.columns.length should be(3)
   }
+
+  it can "be converted to a DataTable from a filtered set" in {
+    val dataTable = buildTestTable()
+    val filteredDataView = dataTable.filter(row => row.as[Int]("ColOne") > 49)
+
+    val newDataTable = filteredDataView.toDataTable
+
+    newDataTable.name should be("TestTable")
+    newDataTable.rowCount should be(50)
+    newDataTable.columns.length should be(3)
+  }
+
+  it can "be converted to a DataTable from multiple filtered sets" in {
+    val dataTable = buildTestTable()
+
+    val filteredDataOne = dataTable.filter(row => row.as[Int]("ColOne") > 49)
+    val filteredDataTwo = filteredDataOne.filter(row => !row.as[Boolean]("ColThree"))
+    val filteredDataThree = filteredDataTwo.filter(row => row.as[String]("ColTwo").endsWith("5"))
+
+    val newDataTable = filteredDataThree.toDataTable
+
+    newDataTable.name should be("TestTable")
+    newDataTable.rowCount should be(5)
+    newDataTable.columns.length should be(3)
+
+    newDataTable.columns(0).data should be(Seq(55, 65, 75, 85, 95))
+  }
 }
