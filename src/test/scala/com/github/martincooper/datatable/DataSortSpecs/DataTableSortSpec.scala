@@ -22,7 +22,7 @@ import com.github.martincooper.datatable.{ DataColumn, DataTable }
 
 import org.scalatest.{ Matchers, FlatSpec }
 
-class DataSortSpec extends FlatSpec with Matchers {
+class DataTableSortSpec extends FlatSpec with Matchers {
 
   /** Case Class NOT implementing Ordered[T] */
   private case class TestNotOrderedInt(i: Int) {}

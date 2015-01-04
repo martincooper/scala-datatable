@@ -60,6 +60,12 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
 
     tableDetails + colDetails
   }
+
+  /** Return a new DataView based on this table. */
+  def toDataView: DataView = DataView(this).get
+
+  /** Return a new DataTable based on this table (clone). */
+  def toDataTable: DataTable = DataTable(name, columns).get
 }
 
 object DataTable {
