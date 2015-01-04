@@ -59,7 +59,7 @@ object DataView {
     Vector.newBuilder[DataRow] mapResult (vector => DataView(dataTable, vector).get)
 
   def apply(sourceDataTable: DataTable): Try[DataView] = {
-    Success(new DataView(sourceDataTable, Seq()))
+    Success(new DataView(sourceDataTable, sourceDataTable.rows))
   }
 
   def apply(sourceDataTable: DataTable, dataRows: Iterable[DataRow]): Try[DataView] = {

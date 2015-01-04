@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.martincooper.datatable
+package com.github.martincooper.datatable.DataViewSpecs
 
-import org.scalatest.{ Matchers, FlatSpec }
+import com.github.martincooper.datatable.{ DataColumn, DataTable, DataView }
+import org.scalatest.{ FlatSpec, Matchers }
 
 class DataViewSpec extends FlatSpec with Matchers {
 
@@ -38,9 +39,7 @@ class DataViewSpec extends FlatSpec with Matchers {
   }
 
   it can "be created with no data rows" in {
-    val dataTable = buildTestTable()
-
-    val dataView = DataView(dataTable)
+    val dataView = DataView(DataTable("EmptyTable").get)
 
     dataView.isSuccess should be(true)
     dataView.get.length should be(0)
