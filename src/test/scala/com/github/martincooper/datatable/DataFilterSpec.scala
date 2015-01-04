@@ -34,24 +34,11 @@ class DataFilterSpec extends FlatSpec with Matchers {
     val table = buildTestTable()
 
     // Simple single filter on table, returning collection of rows matching the filter.
-    val filteredRows = table.filter(row => row.as[Int]("IntegerCol") > 10)
+    val dataView = table.filter(row => row.as[Int]("IntegerCol") > 10)
 
-    filteredRows.length should be(40)
-    filteredRows(0).as[Int]("IntegerCol") should be(11)
-    filteredRows(0).as[String]("StringCol") should be("Value : 11")
-    filteredRows(0).as[Boolean]("BoolCol") should be(false)
-    filteredRows(0).as[Long]("LongCol") should be(39)
-  }
-
-  it can "be filtered by row values returning a DataView." in {
-    val table = buildTestTable()
-
-    // Simple single filter on table, returning collection of rows matching the filter.
-    val filteredRows = table.filter(row => row.as[Int]("IntegerCol") > 10)
-    val dataView = DataView(table, filteredRows).get
+    dataView shouldBe a[DataView]
 
     dataView.length should be(40)
-
     dataView(0).as[Int]("IntegerCol") should be(11)
     dataView(0).as[String]("StringCol") should be("Value : 11")
     dataView(0).as[Boolean]("BoolCol") should be(false)
@@ -62,28 +49,11 @@ class DataFilterSpec extends FlatSpec with Matchers {
     val table = buildTestTable()
 
     // Perform filtering, and additional filtering on the previous DataRow results.
-    val filteredRowsOne = table.filter(row => row.as[Int]("IntegerCol") > 10)
-    val filteredRowsTwo = filteredRowsOne.filter(row => row.as[Long]("LongCol") > 10)
-    val filteredRowsThree = filteredRowsTwo.filter(row => row.as[Boolean]("BoolCol"))
+    val dataViewOne = table.filter(row => row.as[Int]("IntegerCol") > 10)
+    val dataViewTwo = dataViewOne.filter(row => row.as[Long]("LongCol") > 10)
+    val dataViewThree = dataViewTwo.filter(row => row.as[Boolean]("BoolCol"))
 
-    val dataView = DataView(table, filteredRowsThree).get
-
-    dataView.length should be(14)
-
-    dataView(0).as[Int]("IntegerCol") should be(12)
-    dataView(0).as[String]("StringCol") should be("Value : 12")
-    dataView(0).as[Boolean]("BoolCol") should be(true)
-    dataView(0).as[Long]("LongCol") should be(38)
-  }
-
-  "A DataView" can "be filtered to return new DataView." in {
-    val table = buildTestTable()
-
-    // Perform filtering, and additional filtering on the previous DataView.
-    val dataViewOne = DataView(table, table.filter(row => row.as[Int]("IntegerCol") > 10)).get
-    val dataViewTwo = DataView(table, dataViewOne.filter(row => row.as[Long]("LongCol") > 10)).get
-    val dataViewThree = DataView(table, dataViewTwo.filter(row => row.as[Boolean]("BoolCol"))).get
-
+    dataViewThree shouldBe a[DataView]
     dataViewThree.length should be(14)
 
     dataViewThree(0).as[Int]("IntegerCol") should be(12)

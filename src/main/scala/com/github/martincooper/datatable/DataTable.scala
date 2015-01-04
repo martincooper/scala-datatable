@@ -18,11 +18,13 @@ package com.github.martincooper.datatable
 
 import com.github.martincooper.datatable.DataSort.TableSort
 
+import scala.collection.{ mutable, IndexedSeqLike }
 import scala.util.{ Failure, Try, Success }
 
 /** DataTable class. Handles the immutable storage and access of data in a Row / Column format. */
 class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn])
     extends IndexedSeq[DataRow]
+    with IndexedSeqLike[DataRow, DataView]
     with TableSort {
 
   val name = tableName
@@ -36,6 +38,9 @@ class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn]
       case _ => columns.head.data.length
     }
   }
+
+  override def newBuilder: mutable.Builder[DataRow, DataView] =
+    DataView.newBuilder(table)
 
   override def length: Int = rowCount
 

@@ -106,24 +106,25 @@ def removeColumn(dataTable: DataTable): Try[DataTable] = {
 ## Row / Data Filtering
 Access to the underlying data in the table the DataRow object can be used. This allows either typed or
 untyped access depending if type info is known at design time. The DataTable object implements IndexSeq[DataRow]
-so supports the standard filter, map operations etc. To filter a table this can be done as follows...
+so supports the standard filter, map operations etc. The results are returned in a DataView object which is a view
+on the underlying table. To filter a table this can be done as follows...
 
 ```scala
 def filterData(dataTable: DataTable) = {
 
   // Filter the data using the RowData object.
-  val dataRows = dataTable.filter(row => {
+  val dataView = dataTable.filter(row => {
     row.as[String]("FirstName").startsWith("Ma") && row.as[Int]("Age") > 18
   })
 
   // Access the filtered results...
-  println(dataRows.length)
+  println(dataView.length)
 
   // Row data can be accessed using indexers with no type information...
-  dataRows.foreach(row => println(row(0).toString + " : " + row(1).toString))
+  dataView.foreach(row => println(row(0).toString + " : " + row(1).toString))
 
   // Or by specifying the columns by name and with full type info.
-  dataRows.foreach(row =>
+  dataView.foreach(row =>
     println(row.as[String]("AddressOne") + " : " + row.as[Int]("HouseNumber")))
 }
 ```

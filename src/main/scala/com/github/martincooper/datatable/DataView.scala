@@ -16,13 +16,19 @@
 
 package com.github.martincooper.datatable
 
+import scala.collection.{ mutable, IndexedSeqLike }
 import scala.util.{ Failure, Success, Try }
 
 /** Provides a view over a DataTable to store filtered data sets. */
-class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow]) extends IndexedSeq[DataRow] {
+class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow])
+    extends IndexedSeq[DataRow]
+    with IndexedSeqLike[DataRow, DataView] {
 
   val table = dataTable
   val rows = dataRows.toVector
+
+  override def newBuilder: mutable.Builder[DataRow, DataView] =
+    DataView.newBuilder(table)
 
   override def length: Int = rows.length
 
@@ -30,6 +36,10 @@ class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow]) exten
 }
 
 object DataView {
+
+  /** Builder for a new DataView. */
+  def newBuilder(dataTable: DataTable): mutable.Builder[DataRow, DataView] =
+    Vector.newBuilder[DataRow] mapResult (vector => DataView(dataTable, vector).get)
 
   def apply(sourceDataTable: DataTable): Try[DataView] = {
     Success(new DataView(sourceDataTable, Seq()))
