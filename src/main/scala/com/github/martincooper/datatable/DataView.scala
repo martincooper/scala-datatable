@@ -16,16 +16,19 @@
 
 package com.github.martincooper.datatable
 
-import scala.collection.{ mutable, IndexedSeqLike }
+import scala.collection.{ IndexedSeqLike, mutable }
 import scala.util.{ Failure, Success, Try }
 
 /** Provides a view over a DataTable to store filtered data sets. */
 class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow])
-    extends IndexedSeq[DataRow]
+    extends BaseTable
     with IndexedSeqLike[DataRow, DataView] {
 
   val table = dataTable
-  val rows = dataRows.toVector
+  val rows = DataRowCollection(table, dataRows)
+  val name = table.name
+  val rowCount = rows.length
+  val columns = table.columns
 
   override def newBuilder: mutable.Builder[DataRow, DataView] =
     DataView.newBuilder(table)
@@ -33,6 +36,14 @@ class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow])
   override def length: Int = rows.length
 
   override def apply(idx: Int): DataRow = rows(idx)
+
+  /** Outputs a more detailed toString implementation. */
+  override def toString() = {
+    val tableDetails = "DataView:" + name + "[Rows:" + rowCount + "]"
+    val colDetails = columns.map(col => "[" + col.toString + "]").mkString(" ")
+
+    tableDetails + colDetails
+  }
 }
 
 object DataView {

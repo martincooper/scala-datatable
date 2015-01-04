@@ -26,6 +26,8 @@ import scala.util.Try
  * Adds Quick Sort methods onto the DataTable.
  */
 trait TableSort {
+
+  val rows: DataRowCollection
   val table: DataTable
 
   /** Performs a quick sort of the DataTable, returning a sorted DataView. */
@@ -35,7 +37,7 @@ trait TableSort {
 
   /** Performs a quick sort of the DataTable, returning a sorted DataView. */
   def quickSort(columnName: String, sortOrder: SortOrder): Try[DataView] = {
-    DataSort.quickSort(table, SortItem(columnName, sortOrder))
+    DataSort.quickSort(table, rows, Seq(SortItem(columnName, sortOrder)))
   }
 
   /** Performs a quick sort of the DataTable, returning a sorted DataView. */
@@ -45,16 +47,16 @@ trait TableSort {
 
   /** Performs a quick sort of the DataTable, returning a sorted DataView. */
   def quickSort(columnIndex: Int, sortOrder: SortOrder): Try[DataView] = {
-    DataSort.quickSort(table, SortItem(columnIndex, sortOrder))
+    DataSort.quickSort(table, rows, Seq(SortItem(columnIndex, sortOrder)))
   }
 
   /** Performs a quick sort of the DataTable, returning a sorted DataView. */
   def quickSort(sortItem: SortItem): Try[DataView] = {
-    DataSort.quickSort(table, Seq(sortItem))
+    DataSort.quickSort(table, rows, Seq(sortItem))
   }
 
   /** Performs a quick sort of the DataTable, returning a sorted DataView. */
   def quickSort(sortItems: Iterable[SortItem]): Try[DataView] = {
-    DataSort.quickSort(table, sortItems)
+    DataSort.quickSort(table, rows, sortItems)
   }
 }

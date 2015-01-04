@@ -29,10 +29,11 @@ class DataRowCollection private (dataTable: DataTable, dataRows: Iterable[DataRo
 
   val table = dataTable
   val rows = dataRows.toVector
+  val rowCount = rows.length
 
   override def apply(columnIndex: Int): DataRow = rows(columnIndex)
 
-  override def length: Int = dataTable.rowCount
+  override def length: Int = rowCount
 
   override def newBuilder: mutable.Builder[DataRow, DataRowCollection] =
     DataRowCollection.newBuilder(table, rows)

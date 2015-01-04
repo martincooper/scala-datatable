@@ -21,28 +21,35 @@ import com.github.martincooper.datatable.DataSort.TableSort
 import scala.collection.{ mutable, IndexedSeqLike }
 import scala.util.{ Failure, Try, Success }
 
+/** Trait specifying common functionality between DataTable and DataView. */
+trait BaseTable extends IndexedSeq[DataRow] with TableSort {
+  val name: String
+  val columns: DataColumnCollection
+  val rows: DataRowCollection
+  val table: DataTable
+  val rowCount: Int
+}
+
 /** DataTable class. Handles the immutable storage and access of data in a Row / Column format. */
 class DataTable private (tableName: String, dataColumns: Iterable[GenericColumn])
-    extends IndexedSeq[DataRow]
-    with IndexedSeqLike[DataRow, DataView]
-    with TableSort {
+    extends BaseTable
+    with IndexedSeqLike[DataRow, DataView] {
 
   val name = tableName
-  val columns = DataColumnCollection(this, dataColumns)
-  val rows = DataRowCollection(this)
   val table: DataTable = this
+  val columns = DataColumnCollection(this, dataColumns)
+  val rowCount = length
+  val rows = DataRowCollection(this)
 
-  def rowCount: Int = {
+  override def newBuilder: mutable.Builder[DataRow, DataView] =
+    DataView.newBuilder(table)
+
+  override def length: Int = {
     columns.length match {
       case 0 => 0
       case _ => columns.head.data.length
     }
   }
-
-  override def newBuilder: mutable.Builder[DataRow, DataView] =
-    DataView.newBuilder(table)
-
-  override def length: Int = rowCount
 
   override def apply(idx: Int): DataRow = DataRow(this, idx).get
 

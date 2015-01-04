@@ -41,8 +41,8 @@ object DataSort {
     quickSort(dataView.table, dataView.rows, sortItems)
   }
 
-  /** Performs a quick sort of a DataView, returning a sorted DataView. */
-  private def quickSort(table: DataTable, dataRows: Iterable[DataRow], sortItems: Iterable[SortItem]): Try[DataView] = {
+  /** Performs a quick sort of the DataRows, returning a sorted DataView. */
+  def quickSort(table: DataTable, dataRows: Iterable[DataRow], sortItems: Iterable[SortItem]): Try[DataView] = {
     validateSortColumns(table, sortItems) match {
       case Success(_) => performQuickSort(table, dataRows, sortItems)
       case Failure(ex) => Failure(ex)
