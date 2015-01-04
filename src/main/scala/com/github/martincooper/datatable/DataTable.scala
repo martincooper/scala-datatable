@@ -28,6 +28,9 @@ trait BaseTable extends IndexedSeq[DataRow] with TableSort {
   val rows: DataRowCollection
   val table: DataTable
   val rowCount: Int
+
+  def toDataView: DataView
+  def toDataTable: DataTable
 }
 
 /** DataTable class. Handles the immutable storage and access of data in a Row / Column format. */

@@ -62,6 +62,6 @@ class DataViewSortSpec extends FlatSpec with Matchers {
     columnDataOne should be(Seq("DD", "DD", "DD", "CC", "CC", "CC", "AA", "AA", "AA"))
 
     val columnDataTwo = sortedView.get.map(row => row.as[String]("ColumnTwo"))
-    columnDataTwo should be(Seq( "A", "B", "C", "R", "S", "T", "X", "Y", "Z"))
+    columnDataTwo should be(Seq("A", "B", "C", "R", "S", "T", "X", "Y", "Z"))
   }
 }

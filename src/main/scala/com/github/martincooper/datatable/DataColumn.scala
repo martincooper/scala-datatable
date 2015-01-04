@@ -100,6 +100,11 @@ class DataColumn[T: TypeTag](columnName: String, columnData: Iterable[T]) extend
   }
 
   override def toString = "Col : " + name
+
+  /** Builds a new DataColumn[T] from the values at the specified index. */
+  def buildFromRows(rowIndexes: Iterable[Int]): Try[DataColumn[T]] = {
+    Try(new DataColumn[T](name, rowIndexes.map(idx => data(idx))))
+  }
 }
 
 object DataColumn {

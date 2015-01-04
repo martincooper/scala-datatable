@@ -40,6 +40,8 @@ trait GenericColumn {
   def replace[V: TypeTag](index: Int, value: V): Try[GenericColumn]
 
   def remove(index: Int): Try[GenericColumn]
+
+  def buildFromRows(rowIndexes: Iterable[Int]): Try[GenericColumn]
 }
 
 object GenericColumn {

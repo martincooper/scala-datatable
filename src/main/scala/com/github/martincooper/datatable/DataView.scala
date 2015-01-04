@@ -44,6 +44,12 @@ class DataView private (dataTable: DataTable, dataRows: Iterable[DataRow])
 
     tableDetails + colDetails
   }
+
+  /** Return a new DataView based on this DataView (clone). */
+  def toDataView: DataView = DataView(table, rows).get
+
+  /** Return a new DataTable based on this DataView. */
+  def toDataTable: DataTable = DataView.toDataTable(this).get
 }
 
 object DataView {
@@ -62,6 +68,17 @@ object DataView {
     validateDataRows(sourceDataTable, indexedData) match {
       case Success(_) => Success(new DataView(sourceDataTable, indexedData))
       case Failure(ex) => Failure(ex)
+    }
+  }
+
+  /** Builds a new DataTable from a DataView. */
+  def toDataTable(dataView: DataView): Try[DataTable] = {
+    val rowIndexes = dataView.map(row => row.rowIndex)
+    val newColumns = dataView.columns.map(col => col.buildFromRows(rowIndexes))
+
+    Try(newColumns.map(_.get)) match {
+      case Failure(ex) => Failure(ex)
+      case Success(cols) => DataTable(dataView.name, cols)
     }
   }
 
