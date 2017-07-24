@@ -11,21 +11,16 @@ object ScalaCSVProject extends Build {
       name := "scala-datatable",
       version := "0.7.0",
       scalaVersion := "2.11.4",
-      crossScalaVersions := Seq("2.11.4"),
+      crossScalaVersions := Seq("2.11.4", "2.12.2"),
       organization := "com.github.martincooper",
       libraryDependencies ++= Seq(
-        "org.scalatest" %% "scalatest" % "2.2.1" % "test"
+        "org.scalatest" %% "scalatest" % "3.0.1" % "test"
       ),
       scalacOptions ++= Seq(
         "-deprecation",
         "-language:_",
-        "-Xfatal-warnings",
         "-Xlint"
       ),
-      scalacOptions ++= {
-        if(scalaVersion.value.startsWith("2.11")) Seq("-Ywarn-unused")
-        else Nil
-      },
       javacOptions in compile ++= Seq("-target", "6", "-source", "6", "-Xlint"),
       initialCommands := """
                            |import com.github.martincooper.datatable._
