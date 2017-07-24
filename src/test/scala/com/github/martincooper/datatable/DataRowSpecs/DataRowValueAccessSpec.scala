@@ -107,11 +107,9 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
   it should "fail when accessing a typed and unchecked cell value by column index and invalid type" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
-    val result = intercept[ClassCastException] {
+    assertThrows[ClassCastException] {
       dataRow.as[Int](1)
     }
-
-    result.getMessage should be("java.lang.String cannot be cast to java.lang.Integer")
   }
 
   it can "access a typed and unchecked cell value by column name" in {
@@ -132,11 +130,9 @@ class DataRowValueAccessSpec extends FlatSpec with Matchers {
   it should "fail when accessing a typed and unchecked cell value by column name and invalid type" in {
     val dataRow = DataRow(buildTestTable(), 5).get
 
-    val result = intercept[ClassCastException] {
+    assertThrows[ClassCastException] {
       dataRow.as[Int]("ColTwo")
     }
-
-    result.getMessage should be("java.lang.String cannot be cast to java.lang.Integer")
   }
 
   it can "access a typed and checked cell value by column index" in {
