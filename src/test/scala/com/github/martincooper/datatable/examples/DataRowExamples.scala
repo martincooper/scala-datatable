@@ -16,9 +16,7 @@
 
 package com.github.martincooper.datatable.examples
 
-import com.github.martincooper.datatable.{ DataTable, DataColumn }
-
-import scala.util.Try
+import com.github.martincooper.datatable.DataTable
 
 class DataRowExamples {
 

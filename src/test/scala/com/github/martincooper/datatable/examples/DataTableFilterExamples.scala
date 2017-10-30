@@ -16,9 +16,9 @@
 
 package com.github.martincooper.datatable.examples
 
-import com.github.martincooper.datatable.{ DataRow, DataTable, DataColumn }
+import com.github.martincooper.datatable.{ DataRow, DataTable }
 
-import scala.util.{ Failure, Success, Random }
+import scala.util.{ Failure, Success }
 
 class DataTableFilterExamples {
 

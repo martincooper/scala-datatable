@@ -10,11 +10,11 @@ object ScalaCSVProject extends Build {
     settings = Defaults.defaultSettings ++ Seq (
       name := "scala-datatable",
       version := "0.7.0",
-      scalaVersion := "2.11.4",
-      crossScalaVersions := Seq("2.11.4", "2.12.2"),
+      scalaVersion := "2.12.4",
+      crossScalaVersions := Seq("2.11.4", "2.12.2", "2.12.4"),
       organization := "com.github.martincooper",
       libraryDependencies ++= Seq(
-        "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+        "org.scalatest" %% "scalatest" % "3.0.4" % "test"
       ),
       scalacOptions ++= Seq(
         "-deprecation",

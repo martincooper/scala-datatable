@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataViewSpecs
 
-import com.github.martincooper.datatable.{ DataColumn, DataTable, DataView }
+import com.github.martincooper.datatable.{ DataColumn, DataTable }
 import org.scalatest.{ FlatSpec, Matchers }
 
 class DataViewToDataTableSpec extends FlatSpec with Matchers {

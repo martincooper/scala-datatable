@@ -16,7 +16,7 @@
 
 package com.github.martincooper.datatable.DataRowCollectionSpecs
 
-import com.github.martincooper.datatable.{ DataColumn, DataColumnCollection, DataTable, DataTableException }
+import com.github.martincooper.datatable.{ DataColumn, DataTable }
 import org.scalatest.{ FlatSpec, Matchers }
 
 class DataRowCollectionRemoveRowSpec extends FlatSpec with Matchers {
