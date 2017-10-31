@@ -42,7 +42,7 @@ on any out of bounds errors but with potentially faster access on a significantl
 
 If you use SBT, you can include the following line into the build.sbt file.
 ```scala
-libraryDependencies += "com.github.martincooper" %% "scala-datatable" % "0.7.0"
+libraryDependencies += "com.github.martincooper" %% "scala-datatable" % "0.8.0"
 ```
 
 # Example Usage
